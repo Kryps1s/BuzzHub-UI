@@ -5,52 +5,62 @@ type ButtonProps = {
   onClick: () => void;
 };
 
-const copyMeetingDetailsToClipboard = () => {
-  const meetingDetails = `
-MEETING June 21st 2023
 
-**General**
+const copyButton = ({upcomingMeetingDetails}) => {
+  const formatRoles = (roles) => roles.map((role) => `• ${role.roleName}: ${role.userName}`).join('\n      ');
+  const formatDate = (date : Object) => {
+  const options = {
+    weekday: 'long',
+    month: 'long',
+    year: 'numeric',
+    day: 'numeric'
+  };
 
-• Meeting Roles
-    • Facilitator: Johanna
-    • Jockey: Nicola
-    • Scribe: Elliot
-
-• Next meeting
-    • Date: 2023-06-21 (Thursday)
-    • Facilitator: Maie-Anne
-    • Jockey: Audrey
-    • Scribe: Elyse
-    • Location: Online
-
-**Recurring (15-30m)**
-  • Attendance
-     # people: 
-  • Check-in
+  return date.toLocaleDateString('en-US', options);
+};
+  const copyMeetingDetailsToClipboard = () => {
+    const meetingDetails = `
+  MEETING ${formatDate( new Date(upcomingMeetingDetails[0].start))}
   
-  • Monthly Check-in
-     Next date for monthly check-in: 2023-07-07 (Vendredi, SR)
+  **General**
+  • Location: ${upcomingMeetingDetails[0].location}
+  • Meeting Roles
+      ${formatRoles(upcomingMeetingDetails[0].roles)}
+  
+  • Next meeting
+    • Date: ${formatDate(new Date(upcomingMeetingDetails[1].start))}
+    • Location: ${upcomingMeetingDetails[1].location}
+    • Meeting Roles
+      ${formatRoles(upcomingMeetingDetails[1].roles)}
+  
+  **Recurring (15-30m)**
+    • Attendance
+       # people: 
+    • Check-in
+    
+    • Monthly Check-in
+       Next date for monthly check-in: 2023-07-07 (Vendredi, SR)
+  
+    • Basement check
+      Is the basement clean? 
+    `;
+  
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = meetingDetails;
+  
+    const plainText = tempElement.textContent || tempElement.innerText;
+  
+    const textarea = document.createElement('textarea');
+    textarea.value = plainText;
+  
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  
+    console.log('Meeting details copied to clipboard.');
+  }
 
-  • Basement check
-    Is the basement clean? 
-  `;
-
-  const tempElement = document.createElement('div');
-  tempElement.innerHTML = meetingDetails;
-
-  const plainText = tempElement.textContent || tempElement.innerText;
-
-  const textarea = document.createElement('textarea');
-  textarea.value = plainText;
-
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-
-  console.log('Meeting details copied to clipboard.');
-}
-const copyButton = () => {
   return (
     <button onClick={copyMeetingDetailsToClipboard}>
       <CopyIcon/>
