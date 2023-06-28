@@ -1,19 +1,20 @@
 'use client'
 import { CopyIcon } from '@radix-ui/react-icons'
+import { Event, Role } from '@/app/types';
 
 type ButtonProps = {
   onClick: () => void;
 };
 
 
-const copyButton = ({upcomingMeetingDetails}) => {
-  const formatRoles = (roles) => roles.map((role) => `• ${role.roleName}: ${role.userName}`).join('\n      ');
-  const formatDate = (date : Object) => {
+const copyButton = ({upcomingMeetingDetails}:{ upcomingMeetingDetails: Event[] }) => {
+  const formatRoles = (roles : Role[]) => roles.map((role : Role) => `• ${role.roleName}: ${role.userName}`).join('\n      ');
+  const formatDate = (date : Date) => {
   const options = {
-    weekday: 'long',
-    month: 'long',
-    year: 'numeric',
-    day: 'numeric'
+    weekday: 'long' as const,
+    month: 'long' as const,
+    year: 'numeric' as const,
+    day: 'numeric' as const
   };
 
   return date.toLocaleDateString('en-US', options);

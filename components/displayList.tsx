@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import CopyButton from './copyButton';
 import { Amplify, API, graphqlOperation } from 'aws-amplify';
-
+import { Event, EventType} from '../app/types';
 const aws_config = {
   aws_appsync_graphqlEndpoint: process.env.NEXT_PUBLIC_API_URL,
   aws_appsync_region: 'ca-central-1',
@@ -11,25 +11,7 @@ const aws_config = {
 };
 Amplify.configure(aws_config);
 
-interface Role {
-  roleName: string;
-  userName: string;
-}
 
-enum EventType {
-  MEETING,
-  COLLECTIVE,
-  BEEKEEPING,
-}
-
-interface Event {
-  eventId?: string;
-  type: EventType;
-  start: string;
-  end: string;
-  roles: Role[];
-  location: string;
-}
 
 const GetUpcomingMeetings = `
   query GetUpcomingMeetings {
@@ -48,10 +30,10 @@ const GetUpcomingMeetings = `
 
 const formatDate = (date: Date): string => {
   const options = {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
+    weekday: 'long' as const,
+    month: 'long' as const,
+    day: 'numeric' as const,
+    hour: 'numeric' as const,
     hour12: true,
   };
 
@@ -70,7 +52,7 @@ const List = (): JSX.Element => {
         const response = await API.graphql(graphqlOperation(GetUpcomingMeetings, {
           limit: 2,
           type: EventType.MEETING,
-        }));
+        })) as {data: {getAllEvents: Event[]}; errors: any[]};
 
         const { getAllEvents } = response.data;
         console.log(getAllEvents);
