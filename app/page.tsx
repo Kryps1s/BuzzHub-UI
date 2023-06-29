@@ -2,15 +2,11 @@
 import Layout from './components/layout';
 import DisplayList from './components/displayList';
 import {  NextPage } from 'next';
-import { Event, EventType } from './lib/types';
+import {  EventType } from './lib/types';
 import { use } from 'react';
 const ONE_DAY = 86400;
 
-interface PageProps {
-  upcomingMeetingDetails: Event[];
-}
-
-const Page : NextPage<PageProps> = () => {
+const Page : NextPage = () => {
   const upcomingMeetingDetails = use(getData()) ;
   return (
     <Layout>
