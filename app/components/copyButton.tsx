@@ -1,6 +1,6 @@
 'use client'
 import { CopyIcon } from '@radix-ui/react-icons'
-import { Event, Role } from '@/app/types';
+import { Event, Role } from '@/app/lib/types';
 
 type ButtonProps = {
   onClick: () => void;
