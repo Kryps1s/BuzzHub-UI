@@ -6,7 +6,7 @@ import utilStyles from "../styles/utils.module.css";
 const title = "Welcome to Buzzhub 🐝";
 const siteTitle = "Buzzhub Demo";
 
-export default function Layout ( { children }: { children: React.ReactNode} ) {
+export default function Layout ( {children }: { children: React.ReactNode} ) {
   return (
     <div className={styles.container}>
       <Head>
