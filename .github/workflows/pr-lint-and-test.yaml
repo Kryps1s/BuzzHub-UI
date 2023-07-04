@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: develop
+          ref: this-pr-should-fail-the-lint-check
 
       - name: Set up Node
         uses: actions/setup-node@v3
