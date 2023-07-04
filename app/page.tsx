@@ -51,7 +51,6 @@ const getData = async ()  => {
     return json.data.getAllEvents;
     }else
     {
-      //test reject push
       console.log("API_URL and API_KEY not set");
       return {};
     }
