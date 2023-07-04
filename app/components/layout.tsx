@@ -1,13 +1,12 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import styles from './layout.module.css';
-import utilStyles from '../styles/utils.module.css';
+import Head from "next/head";
+import Image from "next/image";
+import styles from "./layout.module.css";
+import utilStyles from "../styles/utils.module.css";
 
+const title = "Welcome to Buzzhub 🐝";
+const siteTitle = "Buzzhub Demo";
 
-const title = 'Welcome to Buzzhub 🐝';
-const siteTitle = 'Buzzhub Demo';
-
-export default function Layout({ children }: { children: React.ReactNode}) {
+export default function Layout ( { children }: { children: React.ReactNode} ) {
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode}) {
           name="description"
           content="Small demo site to show to value of buzzhub to stakeholders"
         />
-     
+
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
@@ -26,7 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode}) {
           src="/images/bee.jpg"
           height={144}
           width={144}
-          alt=""
+          alt="BuzzHub logo"
         />
         <h1 className={utilStyles.heading2Xl}>{title}</h1>
       </header>
