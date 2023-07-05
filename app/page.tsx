@@ -18,7 +18,7 @@ const Page: NextPage = () => {
 const getData = async () => {
   const GetUpcomingMeetings = `
       query GetUpcomingMeetings {
-        getAllEvents(limit: 2, type: MEETING) {
+        getAllEvents(limit: 2, type: MEETING, future: true) {
           start
           location
           end
