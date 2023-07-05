@@ -3,21 +3,15 @@ import Image from "next/image";
 import styles from "./layout.module.css";
 import utilStyles from "../styles/utils.module.css";
 
-const title = "Welcome to Buzzhub 🐝";
-const siteTitle = "Buzzhub Demo";
+const title = "Welcome to Buzzhub ALPHA-0.1.0 🐝";
+const siteTitle = "Buzzhub ALPHA-0.1.0";
 
 export default function Layout ( { children }: { children: React.ReactNode} ) {
   return (
     <div className={styles.container}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content="Small demo site to show to value of buzzhub to stakeholders"
-        />
-
         <meta name="og:title" content={siteTitle} />
-        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <header className={styles.header}>
         <Image
