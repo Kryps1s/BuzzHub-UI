@@ -50,7 +50,7 @@ const getData = async () => {
     return json.data.getAllEvents;
   } else {
     console.error( "API_URL and API_KEY not set" );
-    return {};
+    return [];
   }
 };
 
