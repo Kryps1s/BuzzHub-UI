@@ -13,8 +13,10 @@ const formatDate = ( date: Date ) : string => {
 };
 
 const List = ( { upcomingMeetingDetails }:{ upcomingMeetingDetails:Event[] } ): JSX.Element => {
-  if ( !upcomingMeetingDetails ) {
-    return <div>Loading...</div>;
+  if ( !upcomingMeetingDetails.length ) {
+    return <div>There was a problem.</div>;
+  }else if ( upcomingMeetingDetails.length === 1 ) {
+    return <div>Only one event was found. </div>;
   }
   const [ next, following ]: Event[] = upcomingMeetingDetails;
   return (
