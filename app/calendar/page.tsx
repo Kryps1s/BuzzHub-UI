@@ -42,7 +42,6 @@ const getData = async () => {
     `;
   if( process.env.API_URL && process.env.API_KEY ) {
     const res = await fetch( process.env.API_URL, {
-      next: { "revalidate": false },
       method: "POST",
       headers: {
         "Content-Type": "application/json",
