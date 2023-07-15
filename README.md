@@ -10,7 +10,7 @@ To get started with the BuzzHub UI, please follow the instructions below:
 
 `git clone https://github.com/Kryps1s/BuzzHub-UI.git`
 
-2. Navigate to the project directory:
+2. Navigate to the project directory: 
 
 `cd BuzzHub-UI`
 
