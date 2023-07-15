@@ -4,16 +4,23 @@ export interface Role {
   }
 
 export enum EventType {
-    MEETING,
-    COLLECTIVE,
-    BEEKEEPING,
+    MEETING = "MEETING",
+    COLLECTIVE = "COLLECTIVE",
+    BEEKEEPING = "BEEKEEPING"
   }
 
 export interface Event {
     eventId?: string;
     type: EventType;
     start: string;
+    name: string;
     end: string;
     roles: Role[];
     location: string;
+    isMonthly?: boolean;
   }
+
+export interface CalendarEvent {
+  title: string,
+  start: Date
+}
