@@ -1,9 +1,20 @@
 import "./globals.css";
+import { Inter } from "next/font/google";
 
-export default function RootLayout ( { children }: { children: React.ReactNode } ) {
+const inter = Inter ( { subsets: [ "latin" ] } );
+
+export const metadata = {
+  title: "BuzzHub"
+};
+
+export default function RootLayout ( {
+  children
+}: {
+  children: React.ReactNode
+} ) {
   return (
     <html lang="en">
-      <body className="h-screen w-screen overflow-hidden">{children}</body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
