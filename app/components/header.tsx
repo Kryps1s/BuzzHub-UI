@@ -1,5 +1,5 @@
-"use client"
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 import {
   createStyles,
   Container,
@@ -10,9 +10,9 @@ import {
   Menu,
   Tabs,
   Burger,
-  rem,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+  rem
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogout,
   IconHeart,
@@ -22,107 +22,107 @@ import {
   IconPlayerPause,
   IconTrash,
   IconSwitchHorizontal,
-  IconChevronDown,
-} from '@tabler/icons-react';
-import { MantineLogo } from '@mantine/ds';
-import Link from 'next/link';
+  IconChevronDown
+} from "@tabler/icons-react";
+import { MantineLogo } from "@mantine/ds";
+import Link from "next/link";
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles( ( theme ) => ( {
   header: {
     paddingTop: theme.spacing.sm,
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-    borderBottom: `${rem(1)} solid ${
-      theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[2]
+    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+    borderBottom: `${rem( 1 )} solid ${
+      theme.colorScheme === "dark" ? "transparent" : theme.colors.gray[2]
     }`,
-    marginBottom: rem(120),
+    marginBottom: rem( 120 )
   },
 
   mainSection: {
-    paddingBottom: theme.spacing.sm,
+    paddingBottom: theme.spacing.sm
   },
 
   user: {
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
     padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
     borderRadius: theme.radius.sm,
-    transition: 'background-color 100ms ease',
+    transition: "background-color 100ms ease",
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+    "&:hover": {
+      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white
     },
 
-    [theme.fn.smallerThan('xs')]: {
-      display: 'none',
-    },
+    [theme.fn.smallerThan( "xs" )]: {
+      display: "none"
+    }
   },
 
   burger: {
-    [theme.fn.largerThan('xs')]: {
-      display: 'none',
-    },
+    [theme.fn.largerThan( "xs" )]: {
+      display: "none"
+    }
   },
 
   userActive: {
-    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white
   },
 
   tabs: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
+    [theme.fn.smallerThan( "sm" )]: {
+      display: "none"
+    }
   },
 
   tabsList: {
-    borderBottom: '0 !important',
+    borderBottom: "0 !important"
   },
 
   tab: {
     fontWeight: 500,
-    height: rem(38),
-    backgroundColor: 'transparent',
+    height: rem( 38 ),
+    backgroundColor: "transparent",
 
-    '&:hover': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
+    "&:hover": {
+      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.gray[1]
     },
 
-    '&[data-active]': {
-      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
-      borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[2],
-    },
-  },
-}));
+    "&[data-active]": {
+      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+      borderColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[2]
+    }
+  }
+} ) );
 
 interface HeaderTabsProps {
   user: { name: string; image: string };
   tabs: string[];
 }
 
-export function HeaderTabs({ user, tabs }: HeaderTabsProps) {
+export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
   const { classes, theme, cx } = useStyles();
-  const [opened, { toggle }] = useDisclosure(false);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const [ opened, { toggle } ] = useDisclosure( false );
+  const [ userMenuOpened, setUserMenuOpened ] = useState( false );
 
-  const items = tabs.map((tab) => {
-    if (tab === "home") {
+  const items = tabs.map( ( tab ) => {
+    if ( tab === "home" ) {
       return (
-        
-          <Link href="/"> 
-          <Tabs.Tab value={tab} key={tab}>{tab}</Tabs.Tab>
-           </Link>
-        
+
+        <Link key={tab} href="/">
+          <Tabs.Tab value={tab} id={tab} key={tab}>{tab}</Tabs.Tab>
+        </Link>
+
       );
     } else {
       return (
-        
-          <Link href={`/${tab}`}>
-            <Tabs.Tab value={tab} key={tab}>
+
+        <Link key={tab} href={`/${tab}`}>
+          <Tabs.Tab value={tab} id={tab} key={tab}>
             {tab}
-            </Tabs.Tab>
-            </Link>
-        
+          </Tabs.Tab>
+        </Link>
+
       );
     }
-  });
+  } );
 
   return (
     <div className={classes.header}>
@@ -135,21 +135,21 @@ export function HeaderTabs({ user, tabs }: HeaderTabsProps) {
           <Menu
             width={260}
             position="bottom-end"
-            transitionProps={{ transition: 'pop-top-right' }}
-            onClose={() => setUserMenuOpened(false)}
-            onOpen={() => setUserMenuOpened(true)}
+            transitionProps={{ transition: "pop-top-right" }}
+            onClose={() => setUserMenuOpened( false )}
+            onOpen={() => setUserMenuOpened( true )}
             withinPortal
           >
             <Menu.Target>
               <UnstyledButton
-                className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+                className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
               >
                 <Group spacing={7}>
                   <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
                   <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                     {user.name}
                   </Text>
-                  <IconChevronDown size={rem(12)} stroke={1.5} />
+                  <IconChevronDown size={rem( 12 )} stroke={1.5} />
                 </Group>
               </UnstyledButton>
             </Menu.Target>
@@ -199,7 +199,7 @@ export function HeaderTabs({ user, tabs }: HeaderTabsProps) {
           classNames={{
             root: classes.tabs,
             tabsList: classes.tabsList,
-            tab: classes.tab,
+            tab: classes.tab
           }}
         >
           <Tabs.List>{items}</Tabs.List>

@@ -16,7 +16,7 @@ To get started with the BuzzHub UI, please follow the instructions below:
 
 3. Install the project dependencies by running the following command:
 
-`npm install`
+`yarn install`
 
 4. After the dependencies are successfully installed, start the development server using the following command:
 
