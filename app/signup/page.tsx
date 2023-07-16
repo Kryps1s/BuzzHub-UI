@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 };
 
 const Page: NextPage = () => (
-  <main className="h-full flex flex-column items-center  justify-center">
+  <main className="h-full flex flex-column items-start pt-5 sm:items-center  justify-center">
     <div className="w-1/2 h-1/2">
       <SignUpForm />
     </div>
