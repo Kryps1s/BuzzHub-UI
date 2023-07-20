@@ -111,12 +111,13 @@ const SignUpForm = ( { } ) : React.JSX.Element => {
   ];
 
   const [ active, setActive ] = useState ( 0 );
+  const [ password, setPassword ] = useState( "" );
 
   const form = useForm ( {
     initialValues: {
       firstName: "",
       lastName: "",
-      password: "",
+      password: password,
       email: "",
       trello: "",
       code: ""
@@ -164,9 +165,8 @@ const SignUpForm = ( { } ) : React.JSX.Element => {
           <TextInput label="First Name" placeholder="First Name" {...form.getInputProps ( "firstName" )} />
           <TextInput mt="md"label="Last Name" placeholder="Last Name" {...form.getInputProps ( "lastName" )} />
           <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps ( "email" ) } />
-          <PasswordStrength/>
+          <PasswordStrength password={password} setPassword={setPassword} form={form} />
         </Stepper.Step>
-
         <Stepper.Step label="Second step" description="Trello Linking">
           <SearchSelectTable data={ trelloData }/>
         </Stepper.Step>

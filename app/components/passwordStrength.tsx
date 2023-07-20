@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { IconX, IconCheck } from "@tabler/icons-react";
 import { PasswordInput, Progress, Text, Popover, Box } from "@mantine/core";
 
@@ -23,7 +23,7 @@ const requirements = [
 ];
 
 function getStrength ( password: string ) {
-  let multiplier = password.length > 5 ? 0 : 1;
+  let multiplier = password.length > 7 ? 0 : 1;
 
   requirements.forEach( ( requirement ) => {
     if ( !requirement.re.test( password ) ) {
@@ -34,14 +34,19 @@ function getStrength ( password: string ) {
   return Math.max( 100 - ( 100 / ( requirements.length + 1 ) ) * multiplier, 10 );
 }
 
-const PasswordStrength = ( {} ) : React.JSX.Element => {
+interface IPasswordProps {
+  password: string;
+  setPassword: Dispatch<SetStateAction<string>>;
+  form: any
+}
+
+const PasswordStrength = ( { password, setPassword, form }:IPasswordProps ) : React.JSX.Element => {
   const [ popoverOpened, setPopoverOpened ] = useState( false );
-  const [ value, setValue ] = useState( "" );
   const checks = requirements.map( ( requirement, index ) => (
-    <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test( value )} />
+    <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test( password )} />
   ) );
 
-  const strength = getStrength( value );
+  const strength = getStrength( password );
   const color = strength === 100 ? "teal" : strength > 50 ? "yellow" : "red";
 
   return (
@@ -57,14 +62,17 @@ const PasswordStrength = ( {} ) : React.JSX.Element => {
               label="Your password"
               placeholder="Your password"
               mt="md"
-              value={value}
-              onChange={( event ) => setValue( event.currentTarget.value )}
+              value={password}
+              onChange={( event ) => {
+                setPassword( event.currentTarget.value );
+                form.setFieldValue( "password", event.currentTarget.value );
+              }}
             />
           </div>
         </Popover.Target>
         <Popover.Dropdown>
           <Progress color={color} value={strength} size={5} mb="xs" />
-          <PasswordRequirement label="Includes at least 6 characters" meets={value.length > 5} />
+          <PasswordRequirement label="Includes at least 8 characters" meets={password.length > 7} />
           {checks}
         </Popover.Dropdown>
       </Popover>
