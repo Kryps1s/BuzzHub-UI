@@ -17,16 +17,16 @@ const Page: NextPage = () => {
     );
   }
   events.data = events.data
-  .map( ( event: Event ) => ( {
-    title:
+    .map( ( event: Event ) => ( {
+      title:
       event.name
         ? event.name
         : event.type === EventType.MEETING && event.isMonthly
           ? `${event.type} ${event.location} - (Monthly Check-in)`
           : `${event.type} - ${event.location}`,
-    start: new Date( event.start ).toISOString().split( "T" )[0],
-    backgroundColor: event.type === EventType.BEEKEEPING ? "#FF0000" : "#1234FF"
-  } ) );
+      start: new Date( event.start ).toISOString().split( "T" )[0],
+      backgroundColor: event.type === EventType.BEEKEEPING ? "#FF0000" : "#1234FF"
+    } ) );
 
   return (
     <Layout>
@@ -75,7 +75,7 @@ const getData = async () => {
         error: json.errors[0].message
       };
     }
-    return {data:json.data.getEvents};
+    return { data:json.data.getEvents };
   } else {
     console.error( "API_URL and API_KEY not set" );
     return {
