@@ -15,7 +15,6 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
-  IconLogout,
   IconLogin,
   IconChevronDown
 } from "@tabler/icons-react";
@@ -94,7 +93,7 @@ interface HeaderTabsProps {
 }
 
 export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
-  const { classes, theme, cx } = useStyles();
+  const { classes, cx } = useStyles();
   const [ menuOpened, { toggle } ] = useDisclosure( false );
   const [ loginOpened, { open, close } ] = useDisclosure( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
@@ -126,16 +125,15 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
             password: password
           }
         } )
-      } ).then( ( res ) => res.json() )
+      } ).then( ( res ) => res.json() );
       if( res.errors ) {
         setLoginErrorMessage( res.errors[0].message );
         return res.errors[0].message;
       }
-      else {  
-        console.log( res.data.login );
+      else {
         return res.data.login;
-    }
-  }};
+      }
+    }};
 
   const items = tabs.map( ( tab ) => {
     if ( tab === "home" ) {
@@ -161,55 +159,55 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
 
   return (
     <>
-    <div className={classes.header}>
-      <Container className={classes.mainSection}>
-        <Group position="apart">
-          <MantineLogo size={28} />
-          <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
-          <Menu
-            width={260}
-            position="bottom-end"
-            transitionProps={{ transition: "pop-top-right" }}
-            onClose={() => setUserMenuOpened( false )}
-            onOpen={() => setUserMenuOpened( true )}
-            withinPortal
+      <div className={classes.header}>
+        <Container className={classes.mainSection}>
+          <Group position="apart">
+            <MantineLogo size={28} />
+            <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
+            <Menu
+              width={260}
+              position="bottom-end"
+              transitionProps={{ transition: "pop-top-right" }}
+              onClose={() => setUserMenuOpened( false )}
+              onOpen={() => setUserMenuOpened( true )}
+              withinPortal
+            >
+              <Menu.Target>
+                <UnstyledButton
+                  className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                >
+                  <Group spacing={7}>
+                    <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                      {user.name}
+                    </Text>
+                    <IconChevronDown size={rem( 12 )} stroke={1.5} />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item onClick={ open } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+        </Container>
+        <Container>
+          <Tabs
+            defaultValue="Home"
+            variant="outline"
+            classNames={{
+              root: classes.tabs,
+              tabsList: classes.tabsList,
+              tab: classes.tab
+            }}
           >
-            <Menu.Target>
-              <UnstyledButton
-                className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
-              >
-                <Group spacing={7}>
-                  <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
-                  <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                    {user.name}
-                  </Text>
-                  <IconChevronDown size={rem( 12 )} stroke={1.5} />
-                </Group>
-              </UnstyledButton>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item onClick={ open } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-      </Container>
-      <Container>
-        <Tabs
-          defaultValue="Home"
-          variant="outline"
-          classNames={{
-            root: classes.tabs,
-            tabsList: classes.tabsList,
-            tab: classes.tab
-          }}
-        >
-          <Tabs.List>{items}</Tabs.List>
-        </Tabs>
-      </Container>
-    </div>
-    <Modal opened={loginOpened} onClose={close} title="Login to BuzzHub">
-              <LoginForm loginErrorMessage={ loginErrorMessage } login={ login }/>
-    </Modal>
+            <Tabs.List>{items}</Tabs.List>
+          </Tabs>
+        </Container>
+      </div>
+      <Modal opened={loginOpened} onClose={close} title="Login to BuzzHub">
+        <LoginForm loginErrorMessage={ loginErrorMessage } login={ login }/>
+      </Modal>
     </>
   );
 }

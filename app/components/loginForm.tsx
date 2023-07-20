@@ -12,18 +12,18 @@ const LoginForm = ( { login, loginErrorMessage }: LoginFormProps ) : React.JSX.E
   const form = useForm ( {
     initialValues: {
       password: "",
-      email: "",
-    },
+      email: ""
+    }
   } );
 
   return (
     <>
-        <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps ( "email" ) } />
-        <PasswordInput label="Password" placeholder="Password"  mt="md" { ...form.getInputProps ( "password" )}/>
-        <p> {loginErrorMessage} </p>
-        <Group position="right">
-          <Button type="submit" variant="light" color="blue" onClick={() => login(form.values.email, form.values.password)}>Login</Button>
-        </Group>
+      <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps ( "email" ) } />
+      <PasswordInput label="Password" placeholder="Password" mt="md" { ...form.getInputProps ( "password" )}/>
+      <p> {loginErrorMessage} </p>
+      <Group position="right">
+        <Button type="submit" variant="light" color="blue" onClick={() => login( form.values.email, form.values.password )}>Login</Button>
+      </Group>
     </>
   );
 };
