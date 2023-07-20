@@ -56,7 +56,9 @@ const getData = async () => {
       } )
     } );
     const json = await res.json();
-    return json.data.getEvents;
+    const results = [];
+    results.push( ...json.data.getEvents );
+    return results;
   } else {
     console.error( "API_URL and API_KEY not set" );
     return [];

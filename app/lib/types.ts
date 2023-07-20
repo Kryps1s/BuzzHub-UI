@@ -22,5 +22,6 @@ export interface Event {
 
 export interface CalendarEvent {
   title: string,
-  start: Date
+  start: string,
+  backgroundColor: string
 }
