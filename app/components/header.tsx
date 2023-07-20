@@ -10,21 +10,18 @@ import {
   Menu,
   Tabs,
   Burger,
-  rem
+  rem,
+  Modal,
+  Button
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
-  IconSettings,
-  IconPlayerPause,
-  IconTrash,
-  IconSwitchHorizontal,
+  IconLogin,
   IconChevronDown
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
+import LoginForm from "./loginForm";
 import Link from "next/link";
 
 const useStyles = createStyles( ( theme ) => ( {
@@ -99,8 +96,47 @@ interface HeaderTabsProps {
 
 export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
   const { classes, theme, cx } = useStyles();
-  const [ opened, { toggle } ] = useDisclosure( false );
+  const [ menuOpened, { toggle } ] = useDisclosure( false );
+  const [ loginOpened, { open, close } ] = useDisclosure( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
+  const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
+
+  const login = async ( email: string, password: string ) => {
+    //make a graphql call to login
+    if( process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_KEY ) {
+      const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY
+        },
+        body: JSON.stringify( {
+          query: `
+            mutation Login($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                access_token
+                refresh_token
+                name
+                trello
+                email
+              }
+            }
+          `,
+          variables: {
+            email: email,
+            password: password
+          }
+        } )
+      } ).then( ( res ) => res.json() )
+      if( res.errors ) {
+        setLoginErrorMessage( res.errors[0].message );
+        return res.errors[0].message;
+      }
+      else {  
+        console.log( res.data.login );
+        return res.data.login;
+    }
+  }};
 
   const items = tabs.map( ( tab ) => {
     if ( tab === "home" ) {
@@ -125,13 +161,12 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
   } );
 
   return (
+    <>
     <div className={classes.header}>
       <Container className={classes.mainSection}>
         <Group position="apart">
           <MantineLogo size={28} />
-
-          <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
-
+          <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
           <Menu
             width={260}
             position="bottom-end"
@@ -154,40 +189,7 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
               </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item
-                icon={<IconHeart size="0.9rem" color={theme.colors.red[6]} stroke={1.5} />}
-              >
-                Liked posts
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconStar size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5} />}
-              >
-                Saved posts
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconMessage size="0.9rem" color={theme.colors.blue[6]} stroke={1.5} />}
-              >
-                Your comments
-              </Menu.Item>
-
-              <Menu.Label>Settings</Menu.Label>
-              <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
-                Account settings
-              </Menu.Item>
-              <Menu.Item icon={<IconSwitchHorizontal size="0.9rem" stroke={1.5} />}>
-                Change account
-              </Menu.Item>
-              <Menu.Item icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
-
-              <Menu.Divider />
-
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item icon={<IconPlayerPause size="0.9rem" stroke={1.5} />}>
-                Pause subscription
-              </Menu.Item>
-              <Menu.Item color="red" icon={<IconTrash size="0.9rem" stroke={1.5} />}>
-                Delete account
-              </Menu.Item>
+              <Menu.Item onClick={ open } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </Group>
@@ -206,5 +208,9 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
         </Tabs>
       </Container>
     </div>
+    <Modal opened={loginOpened} onClose={close} title="Login to BuzzHub">
+              <LoginForm loginErrorMessage={ loginErrorMessage } login={ login }/>
+    </Modal>
+    </>
   );
 }

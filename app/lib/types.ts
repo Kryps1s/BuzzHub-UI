@@ -25,3 +25,11 @@ export interface CalendarEvent {
   start: string,
   backgroundColor: string
 }
+
+export interface User {
+  name: string;
+  access_token: string;
+  refresh_token: string;
+  email: string;
+  trello: string;
+}
