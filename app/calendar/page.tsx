@@ -5,20 +5,32 @@ import { EventType, Event } from "../lib/types";
 import { use } from "react";
 
 const Page: NextPage = () => {
-  const events = use ( getData() ).map( ( event: Event ) => ( {
-    title:
+  const events = use ( getData() );
+  if( events.error ) {
+    return (
+      <Layout>
+        <div className="w-full sm:w-7/8 2xl:w-3/4 mx-auto">
+          <h1 className="text-2xl text-center">Error</h1>
+          <p className="text-center">{events.error}</p>
+        </div>
+      </Layout>
+    );
+  }
+  events.data = events.data
+    .map( ( event: Event ) => ( {
+      title:
       event.name
         ? event.name
         : event.type === EventType.MEETING && event.isMonthly
           ? `${event.type} ${event.location} - (Monthly Check-in)`
           : `${event.type} - ${event.location}`,
-    start: new Date( event.start ).toISOString().split( "T" )[0],
-    backgroundColor: event.type === EventType.BEEKEEPING ? "#FF0000" : "#1234FF"
-  } ) );
+      start: new Date( event.start ).toISOString().split( "T" )[0],
+      backgroundColor: event.type === EventType.BEEKEEPING ? "#FF0000" : "#1234FF"
+    } ) );
 
   return (
     <Layout>
-      <CalendarContainer events={events} />
+      <CalendarContainer events={events.data} />
     </Layout>
   );
 };
@@ -56,12 +68,19 @@ const getData = async () => {
       } )
     } );
     const json = await res.json();
-    const results = [];
-    results.push( ...json.data.getEvents );
-    return results;
+    //check for graphQl errors
+    if ( json.errors ) {
+      console.error( json.errors );
+      return {
+        error: json.errors[0].message
+      };
+    }
+    return { data:json.data.getEvents };
   } else {
     console.error( "API_URL and API_KEY not set" );
-    return [];
+    return {
+      error: "API_URL and API_KEY not set"
+    };
   }
 };
 export default Page;
