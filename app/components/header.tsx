@@ -11,8 +11,7 @@ import {
   Tabs,
   Burger,
   rem,
-  Modal,
-  Button
+  Modal
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
