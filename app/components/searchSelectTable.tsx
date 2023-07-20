@@ -40,12 +40,13 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
   const [ scrolled, setScrolled ] = useState( false );
   const [ search, setSearch ] = useState( "" );
   const [ localData, setLocalData ] = useState( data );
-  const toggleRow = ( id: string ) =>
+  const [ isCheckboxDisabled, setIsCheckboxDisabled ] = useState( false );
+  const toggleRow = ( id: string ) => {
+    setIsCheckboxDisabled( !isCheckboxDisabled );
     setSelection ( ( current ) =>
-      current.includes ( id ) ? current.filter ( ( item ) => item !== id ) : [ ...current, id ]
+      current.includes ( id ) ? current.filter ( ( item ) => item !== id ) : [ id ]
     );
-  const toggleAll = () =>
-    setSelection( ( current ) => ( current.length === data.length ? [] : data.map( ( item ) => item.id ) ) );
+  };
 
   const rows = localData.map( ( item ) => {
     const selected = selection.includes( item.id );
@@ -56,6 +57,7 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
             checked={selection.includes( item.id )}
             onChange={() => toggleRow( item.id )}
             transitionDuration={0}
+            disabled={selection.includes( item.id ) ? false : isCheckboxDisabled}
           />
         </td>
         <td>
@@ -89,14 +91,7 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
         <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} sx={{ tableLayout: "fixed" }}>
           <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
             <tr>
-              <th style={{ width: rem ( 40 ) }}>
-                <Checkbox
-                  onChange={toggleAll}
-                  checked={selection.length === data.length}
-                  indeterminate={selection.length > 0 && selection.length !== data.length}
-                  transitionDuration={0}
-                />
-              </th>
+              <th style={{ width: rem ( 40 ) }}></th>
               <th>Full Name</th>
               <th>Username</th>
             </tr>
