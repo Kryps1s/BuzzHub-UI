@@ -10,21 +10,16 @@ import {
   Menu,
   Tabs,
   Burger,
-  rem
+  rem,
+  Modal
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
-  IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
-  IconSettings,
-  IconPlayerPause,
-  IconTrash,
-  IconSwitchHorizontal,
+  IconLogin,
   IconChevronDown
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
+import LoginForm from "./loginForm";
 import Link from "next/link";
 
 const useStyles = createStyles( ( theme ) => ( {
@@ -98,9 +93,47 @@ interface HeaderTabsProps {
 }
 
 export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
-  const { classes, theme, cx } = useStyles();
-  const [ opened, { toggle } ] = useDisclosure( false );
+  const { classes, cx } = useStyles();
+  const [ menuOpened, { toggle } ] = useDisclosure( false );
+  const [ loginOpened, { open, close } ] = useDisclosure( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
+  const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
+
+  const login = async ( email: string, password: string ) => {
+    //make a graphql call to login
+    if( process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_KEY ) {
+      const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY
+        },
+        body: JSON.stringify( {
+          query: `
+            mutation Login($email: String!, $password: String!) {
+              login(email: $email, password: $password) {
+                access_token
+                refresh_token
+                name
+                trello
+                email
+              }
+            }
+          `,
+          variables: {
+            email: email,
+            password: password
+          }
+        } )
+      } ).then( ( res ) => res.json() );
+      if( res.errors ) {
+        setLoginErrorMessage( res.errors[0].message );
+        return res.errors[0].message;
+      }
+      else {
+        return res.data.login;
+      }
+    }};
 
   const items = tabs.map( ( tab ) => {
     if ( tab === "home" ) {
@@ -125,86 +158,56 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
   } );
 
   return (
-    <div className={classes.header}>
-      <Container className={classes.mainSection}>
-        <Group position="apart">
-          <MantineLogo size={28} />
-
-          <Burger opened={opened} onClick={toggle} className={classes.burger} size="sm" />
-
-          <Menu
-            width={260}
-            position="bottom-end"
-            transitionProps={{ transition: "pop-top-right" }}
-            onClose={() => setUserMenuOpened( false )}
-            onOpen={() => setUserMenuOpened( true )}
-            withinPortal
+    <>
+      <div className={classes.header}>
+        <Container className={classes.mainSection}>
+          <Group position="apart">
+            <MantineLogo size={28} />
+            <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
+            <Menu
+              width={260}
+              position="bottom-end"
+              transitionProps={{ transition: "pop-top-right" }}
+              onClose={() => setUserMenuOpened( false )}
+              onOpen={() => setUserMenuOpened( true )}
+              withinPortal
+            >
+              <Menu.Target>
+                <UnstyledButton
+                  className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                >
+                  <Group spacing={7}>
+                    <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                      {user.name}
+                    </Text>
+                    <IconChevronDown size={rem( 12 )} stroke={1.5} />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item onClick={ open } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+        </Container>
+        <Container>
+          <Tabs
+            defaultValue="Home"
+            variant="outline"
+            classNames={{
+              root: classes.tabs,
+              tabsList: classes.tabsList,
+              tab: classes.tab
+            }}
           >
-            <Menu.Target>
-              <UnstyledButton
-                className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
-              >
-                <Group spacing={7}>
-                  <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
-                  <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                    {user.name}
-                  </Text>
-                  <IconChevronDown size={rem( 12 )} stroke={1.5} />
-                </Group>
-              </UnstyledButton>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                icon={<IconHeart size="0.9rem" color={theme.colors.red[6]} stroke={1.5} />}
-              >
-                Liked posts
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconStar size="0.9rem" color={theme.colors.yellow[6]} stroke={1.5} />}
-              >
-                Saved posts
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconMessage size="0.9rem" color={theme.colors.blue[6]} stroke={1.5} />}
-              >
-                Your comments
-              </Menu.Item>
-
-              <Menu.Label>Settings</Menu.Label>
-              <Menu.Item icon={<IconSettings size="0.9rem" stroke={1.5} />}>
-                Account settings
-              </Menu.Item>
-              <Menu.Item icon={<IconSwitchHorizontal size="0.9rem" stroke={1.5} />}>
-                Change account
-              </Menu.Item>
-              <Menu.Item icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
-
-              <Menu.Divider />
-
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item icon={<IconPlayerPause size="0.9rem" stroke={1.5} />}>
-                Pause subscription
-              </Menu.Item>
-              <Menu.Item color="red" icon={<IconTrash size="0.9rem" stroke={1.5} />}>
-                Delete account
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
-      </Container>
-      <Container>
-        <Tabs
-          defaultValue="Home"
-          variant="outline"
-          classNames={{
-            root: classes.tabs,
-            tabsList: classes.tabsList,
-            tab: classes.tab
-          }}
-        >
-          <Tabs.List>{items}</Tabs.List>
-        </Tabs>
-      </Container>
-    </div>
+            <Tabs.List>{items}</Tabs.List>
+          </Tabs>
+        </Container>
+      </div>
+      <Modal opened={loginOpened} onClose={close} title="Login to BuzzHub">
+        <LoginForm loginErrorMessage={ loginErrorMessage } login={ login }/>
+      </Modal>
+    </>
   );
 }

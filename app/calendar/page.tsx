@@ -50,14 +50,14 @@ const getData = async () => {
         }
     }
   }
-  
+
     `;
-  if( process.env.API_URL && process.env.API_KEY ) {
-    const res = await fetch( process.env.API_URL, {
+  if( process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_KEY ) {
+    const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Api-Key": process.env.API_KEY
+        "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY
       },
       body: JSON.stringify( {
         query: GetUpcomingMeetings,
