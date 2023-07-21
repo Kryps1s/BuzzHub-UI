@@ -21,6 +21,7 @@ import {
 import { MantineLogo } from "@mantine/ds";
 import LoginForm from "./loginForm";
 import Link from "next/link";
+import GRAPHQL from "../lib/graphql";
 
 const useStyles = createStyles( ( theme ) => ( {
   header: {
@@ -100,40 +101,37 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
 
   const login = async ( email: string, password: string ) => {
-    //make a graphql call to login
-    if( process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_KEY ) {
-      const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY
-        },
-        body: JSON.stringify( {
-          query: `
-            mutation Login($email: String!, $password: String!) {
-              login(email: $email, password: $password) {
-                access_token
-                refresh_token
-                name
-                trello
-                email
-              }
-            }
-          `,
-          variables: {
-            email: email,
-            password: password
+    const req = JSON.stringify( {
+      query: `
+        mutation Login($email: String!, $password: String!) {
+          login(email: $email, password: $password) {
+            access_token
+            refresh_token
+            name
+            trello
+            email
           }
-        } )
-      } ).then( ( res ) => res.json() );
-      if( res.errors ) {
-        setLoginErrorMessage( res.errors[0].message );
-        return res.errors[0].message;
+        }
+      `,
+      variables: {
+        email: email,
+        password: password
       }
-      else {
-        return res.data.login;
+    } );
+    try{
+      const res = await GRAPHQL( req );
+      setLoginErrorMessage( `Welcome ${res.login.email}` );
+    }
+    catch( err : unknown ) {
+      if( err instanceof Error )
+      {
+        setLoginErrorMessage( err.message );
+      }else{
+        console.error( err );
+        setLoginErrorMessage( "Unknown error" );
       }
-    }};
+    }
+  };
 
   const items = tabs.map( ( tab ) => {
     if ( tab === "home" ) {

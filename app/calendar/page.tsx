@@ -3,6 +3,7 @@ import Layout from "../layouts/homeLayout";
 import CalendarContainer from "../components/calendarContainer";
 import { EventType, Event } from "../lib/types";
 import { use } from "react";
+import GRAPHQL from "../lib/graphql";
 
 const Page: NextPage = () => {
   const events = use ( getData() );
@@ -36,51 +37,38 @@ const Page: NextPage = () => {
 };
 
 const getData = async () => {
-  const GetUpcomingMeetings = `
-    query MyQuery($dateRange: [String] = ["2023-07-01T00:00:00.000Z", "2023-07-31T00:00:00.000Z"]) {
-      getEvents(dateRange: $dateRange) {
-        start
-        type
-        ... on MeetingEvent {
-          location
-          isMonthly
-        }
-        ... on BeekeepingEvent {
-          name
-        }
+  const req = JSON.stringify( {
+    query: `
+      query MyQuery($dateRange: [String] = ["2023-07-01T00:00:00.000Z", "2023-07-31T00:00:00.000Z"]) {
+        getEvents(dateRange: $dateRange) {
+          start
+          type
+          ... on MeetingEvent {
+            location
+            isMonthly
+          }
+          ... on BeekeepingEvent {
+            name
+          }
+      }
+    }`,
+    variables: {
+      limit: 2,
+      type: EventType.MEETING
     }
+  } );
+  try{
+    const res = await GRAPHQL( req );
+    return { data: res.getEvents };
   }
-
-    `;
-  if( process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_KEY ) {
-    const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY
-      },
-      body: JSON.stringify( {
-        query: GetUpcomingMeetings,
-        variables: {
-          limit: 2,
-          type: EventType.MEETING
-        }
-      } )
-    } );
-    const json = await res.json();
-    //check for graphQl errors
-    if ( json.errors ) {
-      console.error( json.errors );
-      return {
-        error: json.errors[0].message
-      };
+  catch( err : unknown ) {
+    if( err instanceof Error ) {
+      return { error: err.message };
     }
-    return { data:json.data.getEvents };
-  } else {
-    console.error( "API_URL and API_KEY not set" );
-    return {
-      error: "API_URL and API_KEY not set"
-    };
+    else{
+      console.error( err );
+      return { error: "Unknown error" };
+    }
   }
 };
 export default Page;
