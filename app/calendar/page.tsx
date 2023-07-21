@@ -3,7 +3,7 @@ import Layout from "../layouts/homeLayout";
 import CalendarContainer from "../components/calendarContainer";
 import { EventType, Event } from "../lib/types";
 import { use } from "react";
-import GRAPHQL from "../lib/graphql";
+import { POST } from "../api/graphql/route";
 
 const Page: NextPage = () => {
   const events = use ( getData() );
@@ -37,8 +37,10 @@ const Page: NextPage = () => {
 };
 
 const getData = async () => {
-  const req = JSON.stringify( {
-    query: `
+  const req = new Request( "http://buzzhub.cc", {
+    method: "POST",
+    body:JSON.stringify( {
+      query: `
       query MyQuery($dateRange: [String] = ["2023-07-01T00:00:00.000Z", "2023-07-31T00:00:00.000Z"]) {
         getEvents(dateRange: $dateRange) {
           start
@@ -52,13 +54,14 @@ const getData = async () => {
           }
       }
     }`,
-    variables: {
-      limit: 2,
-      type: EventType.MEETING
-    }
+      variables: {
+        limit: 2,
+        type: EventType.MEETING
+      }
+    } )
   } );
   try{
-    const res = await GRAPHQL( req );
+    const res = await POST( req );
     return { data: res.getEvents };
   }
   catch( err : unknown ) {
