@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   createStyles,
   Container,
@@ -16,12 +16,15 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogin,
-  IconChevronDown
+  IconChevronDown,
+  IconLogout,
+  IconUserPlus
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
 import LoginForm from "./loginForm";
 import Link from "next/link";
-import GRAPHQL from "../lib/graphql";
+import { POST } from "../api/graphql/route";
+import { setCookie, getCookie, hasCookie, deleteCookie } from "cookies-next";
 
 const useStyles = createStyles( ( theme ) => ( {
   header: {
@@ -89,38 +92,59 @@ const useStyles = createStyles( ( theme ) => ( {
 } ) );
 
 interface HeaderTabsProps {
-  user: { name: string; image: string };
   tabs: string[];
 }
 
-export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
+export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const { classes, cx } = useStyles();
   const [ menuOpened, { toggle } ] = useDisclosure( false );
   const [ loginOpened, { open, close } ] = useDisclosure( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
-
-  const login = async ( email: string, password: string ) => {
-    const req = JSON.stringify( {
-      query: `
-        mutation Login($email: String!, $password: String!) {
-          login(email: $email, password: $password) {
-            access_token
-            refresh_token
-            name
-            trello
-            email
-          }
-        }
-      `,
-      variables: {
-        email: email,
-        password: password
+  const [ displayName, setDisplayName ] = useState( "" );
+  useEffect( () => {
+    // This effect runs after the component is mounted on the client
+    if ( hasCookie( "name" ) ) {
+      const name = getCookie( "name" );
+      if ( typeof name === "string" ) {
+        setDisplayName( name.split( " " )[0] );
       }
+    }
+    else{
+      setDisplayName( "Guest" );
+    }
+  }, [] );
+  const login = async ( email: string, password: string ) => {
+    const req = new Request( "", {
+      method: "POST",
+      body: JSON.stringify( {
+        query: `
+          mutation Login($email: String!, $password: String!) {
+            login(email: $email, password: $password) {
+              access_token
+              refresh_token
+              name
+              trello
+              email
+            }
+          }
+        `,
+        variables: {
+          email: email,
+          password: password
+        }
+      } )
     } );
     try{
-      const res = await GRAPHQL( req );
-      setLoginErrorMessage( `Welcome ${res.login.email}` );
+      const res = await POST( req );
+      //set a cookie with the access token, refresh token, and email, name, and trello
+      setCookie( "access_token", res.login.access_token );
+      setCookie( "refresh_token", res.login.refresh_token );
+      setCookie( "email", res.login.email );
+      setCookie( "name", res.login.name );
+      setCookie( "trello", res.login.trello );
+      setDisplayName( res.login.name.split( " " )[0] );
+      close();
     }
     catch( err : unknown ) {
       if( err instanceof Error )
@@ -133,6 +157,19 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
     }
   };
 
+  const handleLoginClick = () => {
+    setLoginErrorMessage( "" );
+    open();
+  };
+
+  const logout = () => {
+    deleteCookie( "access_token" );
+    deleteCookie( "refresh_token" );
+    deleteCookie( "email" );
+    deleteCookie( "name" );
+    deleteCookie( "trello" );
+    setDisplayName( "Guest" );
+  };
   const items = tabs.map( ( tab ) => {
     if ( tab === "home" ) {
       return (
@@ -175,16 +212,26 @@ export function HeaderTabs ( { user, tabs }: HeaderTabsProps ) {
                   className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
                 >
                   <Group spacing={7}>
-                    <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+                    <Avatar radius="xl" size={20} />
                     <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                      {user.name}
+                      {displayName}
                     </Text>
                     <IconChevronDown size={rem( 12 )} stroke={1.5} />
                   </Group>
                 </UnstyledButton>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Item onClick={ open } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
+                {hasCookie( "access_token" ) ? (
+                  <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
+                ) : (
+                  <>
+                    <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
+                    <Link key={"signup"} href={"/signup"}>
+                      <Menu.Item icon={<IconUserPlus size="0.9rem" stroke={1.5} />}>Sign up</Menu.Item>
+                    </Link>
+                  </>
+
+                )}
               </Menu.Dropdown>
             </Menu>
           </Group>
