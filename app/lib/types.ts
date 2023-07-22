@@ -22,5 +22,14 @@ export interface Event {
 
 export interface CalendarEvent {
   title: string,
-  start: Date
+  start: string,
+  backgroundColor: string
+}
+
+export interface User {
+  name: string;
+  access_token: string;
+  refresh_token: string;
+  email: string;
+  trello: string;
 }

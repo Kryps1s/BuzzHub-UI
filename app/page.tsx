@@ -1,6 +1,11 @@
 import Layout from "./layouts/homeLayout";
-import { NextPage } from "next";
+import { NextPage, Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Buzzhub",
+  icons: "/favicon.ico"
+};
 
 const Page: NextPage = () => (
   <Layout>

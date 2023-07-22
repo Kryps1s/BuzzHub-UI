@@ -2,7 +2,7 @@
 
 Welcome to the BuzzHub UI repository! This repository contains the front-end code for the BuzzHub project, built using Next.js and Tailwind CSS. BuzzHub is a platform that aims to manage meetings, beekeeping jobs, and collective events for Santropol Roulant's Apiculture Collective.
 
-## Getting Started
+## Getting Started 
 
 To get started with the BuzzHub UI, please follow the instructions below:
 
@@ -10,13 +10,13 @@ To get started with the BuzzHub UI, please follow the instructions below:
 
 `git clone https://github.com/Kryps1s/BuzzHub-UI.git`
 
-2. Navigate to the project directory:
+2. Navigate to the project directory: 
 
 `cd BuzzHub-UI`
 
 3. Install the project dependencies by running the following command:
 
-`npm install`
+`yarn install`
 
 4. After the dependencies are successfully installed, start the development server using the following command:
 
