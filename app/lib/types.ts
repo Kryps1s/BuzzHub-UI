@@ -33,3 +33,28 @@ export interface User {
   email: string;
   trello: string;
 }
+
+export interface Box {
+  box: string;
+  frames: Frame[];
+}
+
+export interface Frame {
+  frame: string;
+  eggs : boolean
+  queen : boolean
+  honey : boolean
+  pollen : boolean
+  brood : boolean
+  drone : boolean
+  queenCups : boolean
+  nectar : boolean
+  larvae : boolean
+  notes : string
+}
+
+export interface TrelloMember{
+  id: string;
+  fullName: string;
+  username: string;
+}
