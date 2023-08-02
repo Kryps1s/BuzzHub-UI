@@ -168,7 +168,7 @@ const SignUpForm = ( { } ) : React.JSX.Element => {
           <PasswordStrength password={password} setPassword={setPassword} form={form} />
         </Stepper.Step>
         <Stepper.Step label="Second step" description="Trello Linking">
-          <SearchSelectTable data={ trelloData }/>
+          <SearchSelectTable data={ trelloData } form={form} formField={"trello"}/>
         </Stepper.Step>
 
         <Stepper.Step label="Final step" description="Access Code">
