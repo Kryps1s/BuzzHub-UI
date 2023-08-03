@@ -1,11 +1,12 @@
 import { Accordion } from "@mantine/core";
 import FrameForm from "./_inspectFrame";
-import { Box } from "../../lib/types";
+import { Box, InspectionJobFormValues } from "../../lib/types";
+import { UseFormReturnType } from "@mantine/form";
 
 interface BoxFormProps {
     box: Box;
     index: number;
-    form: any;
+    form: UseFormReturnType<InspectionJobFormValues>;
 }
 
 const BoxForm = ( { box, index, form } : BoxFormProps ) => {

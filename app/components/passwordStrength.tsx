@@ -37,10 +37,10 @@ function getStrength ( password: string ) {
 interface IPasswordProps {
   password: string;
   setPassword: Dispatch<SetStateAction<string>>;
-  form: any
+  setFieldValue: ( field: string, value: string ) => void;
 }
 
-const PasswordStrength = ( { password, setPassword, form }:IPasswordProps ) : React.JSX.Element => {
+const PasswordStrength = ( { password, setPassword, setFieldValue }:IPasswordProps ) : React.JSX.Element => {
   const [ popoverOpened, setPopoverOpened ] = useState( false );
   const checks = requirements.map( ( requirement, index ) => (
     <PasswordRequirement key={index} label={requirement.label} meets={requirement.re.test( password )} />
@@ -65,7 +65,7 @@ const PasswordStrength = ( { password, setPassword, form }:IPasswordProps ) : Re
               value={password}
               onChange={( event ) => {
                 setPassword( event.currentTarget.value );
-                form.setFieldValue( "password", event.currentTarget.value );
+                setFieldValue( "password", event.currentTarget.value );
               }}
             />
           </div>
