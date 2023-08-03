@@ -32,40 +32,31 @@ const useStyles = createStyles( ( theme ) => ( {
   }
 } ) );
 
-interface SearchSelectTableProps {
+interface SelectTrelloMembersTableProps {
   data: TrelloMember[];
-  formField: string;
-  form: { values: { [key: string]: any }; setFieldValue: ( field: string, value: any ) => void };
+  setFormValue: ( type: string, value: TrelloMember[] ) => void;
+  formValueName: string;
+  preselectedValues: TrelloMember[];
 }
-const SearchSelectTable = ( { data, formField, form }: SearchSelectTableProps ) : JSX.Element => {
+const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselectedValues }: SelectTrelloMembersTableProps ) : JSX.Element => {
   const { classes, cx } = useStyles();
-  const [ selection, setSelection ] = useState<string[]>( [] );
+  const [ selection, setSelection ] = useState<string[]>( preselectedValues.map( ( value ) => value.id ) );
   const [ scrolled, setScrolled ] = useState<boolean>( false );
   const [ search, setSearch ] = useState<string>( "" );
   const [ localData, setLocalData ] = useState( data );
   const toggleRow = ( id: string ) =>
     setSelection ( ( current:string[] ) => current.includes ( id ) ? current.filter ( ( item ) => item !== id ) : [ ...current, id ]
     );
-  const setFormField = () => {
-    //get all values for each selected id
-    const selected = selection.map( ( id ) => data.find( ( item ) => item.id === id )! );
+
+  useEffect( () => {
+    const selected = data.filter( ( item ) => selection.includes( item.id ) );
     if ( selected.length === 0 ) {
-      form.setFieldValue( formField, [] );
+      setFormValue( formValueName, [] );
     }
     else{
-      form.setFieldValue( formField, selected );
+      setFormValue( formValueName, selected );
     }
-
-  };
-  useEffect( () => {
-    setFormField();
-  }, [ selection ] );
-
-  //select rows that are already selected when the component mounts
-  useEffect( () => {
-    const selected = ( form.values[formField] as TrelloMember[] ).map( ( item ) => item.id );
-    setSelection( selected );
-  } );
+  }, [ selection, data, formValueName, setFormValue ] );
 
   const rows = localData.map( ( item ) => {
     const selected = selection.includes( item.id );
@@ -131,4 +122,4 @@ const SearchSelectTable = ( { data, formField, form }: SearchSelectTableProps ) 
   );
 };
 
-export default SearchSelectTable;
+export default SelectTrelloMembersTable;

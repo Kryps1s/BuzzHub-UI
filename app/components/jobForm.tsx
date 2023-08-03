@@ -2,7 +2,7 @@
 import { useState, useRef } from "react";
 import { Stepper, Button, Group, NumberInput, Title, Textarea, NumberInputHandlers, rem, ActionIcon } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import SearchSelectTable from "./searchSelectTable";
+import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
@@ -126,7 +126,7 @@ const JobForm = ( { trelloMembers } : JobFormProps ) : React.JSX.Element => {
         <Stepper.Step label="Setup" description="Take attendance">
           <div className=" w-full px-4 overflow-x-hidden overflow-y-scroll">
             <Title className="flex justify-center mb-4" order={2}>Check all of the members that are at the inspection.</Title>
-            <SearchSelectTable data={ trelloMembers } formField={"participants"} form={form}/>
+            <SelectTrelloMembersTable data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
         </Stepper.Step>
 

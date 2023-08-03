@@ -58,3 +58,9 @@ export interface TrelloMember{
   fullName: string;
   username: string;
 }
+
+export interface InspectionJobFormValues {
+  participants: TrelloMember[];
+  boxes: Box[];
+  nextSteps: string;
+}
