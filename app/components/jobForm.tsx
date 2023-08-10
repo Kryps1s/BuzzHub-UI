@@ -7,13 +7,15 @@ import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
 import { Box, TrelloMember } from "../lib/types";
+import { POST } from "../api/graphql/route";
 
 interface JobFormProps {
   jobs: string[];
   trelloMembers: TrelloMember[];
+  id: string;
 }
 
-const JobForm = ( { trelloMembers } : JobFormProps ) : React.JSX.Element => {
+const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => {
 
   const createBox = ( index:number ) : Box => ( {
     box: index.toString(),
@@ -32,6 +34,7 @@ const JobForm = ( { trelloMembers } : JobFormProps ) : React.JSX.Element => {
   } );
 
   const [ active, setActive ] = useState ( 0 );
+  const [ submissionError, setSubmissionError ] = useState ( "" );
 
   const handlers = useRef<NumberInputHandlers>();
 
@@ -47,12 +50,35 @@ const JobForm = ( { trelloMembers } : JobFormProps ) : React.JSX.Element => {
   const nextStep = () : void =>
     setActive ( ( current ) => current < 4 ? current + 1 : current );
 
-  const submit = () : void => {
-    const report = createReport();
-    report.pop(); //TODO: send report to api
-    nextStep();
+  const submit = async () => {
+    try{
+      const report = createReport();
+      const req = new Request( "", {
+        method: "POST",
+        body: JSON.stringify( {
+          query: `
+          mutation SaveBeekeepingReport {
+            saveBeekeepingReport(
+                eventId: "${id}"
+                report: "${report}"
+                participants: "${form.values.participants.map( ( participant ) => participant.id )}"
+            ) {
+                message
+            }
+        }
+          `
+        } )
+      } );
+      await POST( req );
+      nextStep();
+    }catch ( error : unknown ) {
+      if ( error instanceof Error )
+      {
+        setSubmissionError( error.message );
+      }
+    }
   };
-  const createReport = () : string[] => {
+  const createReport = () : string => {
     const report = [];
     //check if there are any participants and that
     if ( form.values.participants.length === 0 ) {
@@ -95,7 +121,7 @@ const JobForm = ( { trelloMembers } : JobFormProps ) : React.JSX.Element => {
     report.push( " " );
     report.push( form.values.nextSteps );
     //join with escaped newlines
-    return report;
+    return report.join( "\\n" );
   };
 
   const prevStep = () => setActive ( ( current ) => ( current > 0 ? current - 1 : current ) );
@@ -181,6 +207,7 @@ const JobForm = ( { trelloMembers } : JobFormProps ) : React.JSX.Element => {
               form.setFieldValue ( "nextSteps", event.currentTarget.value );
             }}
           />
+          <Title className="color-red-600">{submissionError}</Title>
         </Stepper.Step>
 
         <Stepper.Completed>
