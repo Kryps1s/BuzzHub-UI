@@ -4,7 +4,13 @@ import JobForm from "@/app/components/jobForm";
 import { use } from "react";
 import { POST } from "../../api/graphql/route";
 
-const Page: NextPage = () => {
+interface Context {
+  params: {
+    id: string;
+  };
+}
+const Page: NextPage = ( context ) => {
+  const ctx = context as Context;
   const trelloMembers = use ( getData() );
   if( trelloMembers.error ) {
     return (
@@ -19,7 +25,7 @@ const Page: NextPage = () => {
 
   return(
     <Layout>
-      <JobForm trelloMembers={trelloMembers.data} jobs={[ "INSPECT" ]} />
+      <JobForm id={ctx.params.id} trelloMembers={trelloMembers.data} jobs={[ "INSPECT" ]} />
     </Layout>
   );
 };
