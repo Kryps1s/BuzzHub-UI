@@ -60,7 +60,7 @@ const Page: NextPage = () => {
 const getData = async () => {
   const today = new Date().toISOString().split( "T" )[0];
   const tomorrow = new Date( Date.now() + 86400000 ).toISOString().split( "T" )[0];
-  const req = new Request( "http://buzzhub.cc", {
+  const req = new Request( "http://buzzhub.com", {
     method: "POST",
     body:JSON.stringify( {
       query: `
