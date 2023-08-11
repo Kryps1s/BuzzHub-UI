@@ -151,7 +151,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       <Stepper className="px-4" active={active} onStepClick={setActive}>
         <Stepper.Step label="Setup" description="Take attendance">
           <div className=" w-full px-4 overflow-x-hidden overflow-y-scroll">
-            <Title className="flex justify-center mb-4" order={2}>Check all of the members that are at the inspection.</Title>
+            <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
             <SelectTrelloMembersTable data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
         </Stepper.Step>
@@ -221,13 +221,13 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
       <Group className=" sticky bottom-0 right-2 md:relative md:bottom-auto mt-8 md:mt-0" position="right" mt="md">
         {active !== 0 && active <3 && (
-          <Button className="mt-4 border border-slate-200" onClick={prevStep}>
+          <Button className="mt-4 border bg-cyan-700 border-slate-200" onClick={prevStep}>
             Back
           </Button>
         )}
-        {active ===4 && <Link href="/"><Button className="mr-4 mt-4 border border-slate-200" >Done</Button></Link>}
-        {active <3 && <Button className="mr-4 mt-4 border border-slate-200" onClick={nextStep}>Next step</Button>}
-        {active === 3 && <Button className="mr-4 mt-4 border border-slate-200" onClick={submit}>Submit</Button>}
+        {active ===4 && <Link href="/"><Button className="mr-4 mt-4 border bg-cyan-700 border-slate-200" >Done</Button></Link>}
+        {active <3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={nextStep}>Next step</Button>}
+        {active === 3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={submit}>Submit</Button>}
       </Group>
     </>
   );

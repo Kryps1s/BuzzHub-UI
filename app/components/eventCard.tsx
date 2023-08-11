@@ -1,10 +1,11 @@
 "use client";
 import { createStyles, Paper, Text, Title, rem } from "@mantine/core";
 import Link from "next/link";
+import { EventCard } from "../lib/types";
 
 const useStyles = createStyles( ( theme ) => ( {
   card: {
-    height: rem( 440 ),
+    height: rem( 150 ),
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -30,19 +31,12 @@ const useStyles = createStyles( ( theme ) => ( {
   }
 } ) );
 
-interface ArticleCardImageProps {
-  image: string;
-  title: string;
-  jobs: string[];
-  id: string;
-}
-
-export function ArticleCardImage ( { image, title, jobs, id }: ArticleCardImageProps ) {
+export function ArticleCardImage ( { image, name, jobs, eventId }: EventCard ) {
   const { classes } = useStyles();
 
   if ( jobs.includes( "INSPECT" ) ) {
     return (
-      <Link href={`/event/${id}`}>
+      <Link href={`/event/${eventId}`}>
         <Paper
           shadow="md"
           p="xl"
@@ -53,7 +47,7 @@ export function ArticleCardImage ( { image, title, jobs, id }: ArticleCardImageP
           <div>
             <Text className={classes.category}>{jobs.join( ", " )}</Text>
             <Title order={3} className={classes.title}>
-              {title}
+              {name}
             </Title>
           </div>
         </Paper>
@@ -72,11 +66,10 @@ export function ArticleCardImage ( { image, title, jobs, id }: ArticleCardImageP
         <div>
           <Text className={classes.category}>{jobs.join( ", " )}</Text>
           <Title order={3} className={classes.title}>
-            {title}
+            {name}
           </Title>
         </div>
       </Paper>
-
     );
 
 }

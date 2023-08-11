@@ -20,6 +20,14 @@ export interface Event {
     isMonthly?: boolean;
   }
 
+export interface EventCard {
+  image: string;
+  name: string;
+  eventId: string;
+  type: string;
+  jobs: string[];
+}
+
 export interface CalendarEvent {
   title: string,
   start: string,

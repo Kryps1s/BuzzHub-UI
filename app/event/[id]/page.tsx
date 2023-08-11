@@ -1,4 +1,4 @@
-import Layout from "@/app/layouts/homeLayout";
+import Layout from "@/app/layouts/headerContent";
 import { NextPage, Metadata } from "next";
 import JobForm from "@/app/components/jobForm";
 import { use } from "react";
