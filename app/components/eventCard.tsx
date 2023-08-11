@@ -38,13 +38,13 @@ export function ArticleCardImage ( { event } : { event: EventCard } ) {
   const { classes } = useStyles();
   let categoryText, titleText;
   switch ( event.type ) {
-    case "BEEKEEPING":
-      titleText = hives.length > 0 ? hives.join( ", " ) : name;
-      categoryText = jobs.join( ", " );
-      break;
-    case "MEETING":
-      titleText = name;
-      categoryText = `${location} MEETING`;
+  case "BEEKEEPING":
+    titleText = hives.length > 0 ? hives.join( ", " ) : name;
+    categoryText = jobs.join( ", " );
+    break;
+  case "MEETING":
+    titleText = name;
+    categoryText = `${location} MEETING`;
   }
   if ( jobs.includes( "INSPECT" ) ) {
     return (

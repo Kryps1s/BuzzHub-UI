@@ -186,13 +186,13 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
           <Group position="apart">
             <Link href="/">
               <Image
-              src="/images/Buzzhub_Logo.svg"
-              alt="Logo"
-              width={75}
-              height={75}
-            />
+                src="/images/Buzzhub_Logo.svg"
+                alt="Logo"
+                width={75}
+                height={75}
+              />
             </Link>
-            
+
             <Menu
               width={260}
               position="bottom-end"
