@@ -17,8 +17,7 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogin,
   IconChevronDown,
-  IconLogout,
-  IconUserPlus
+  IconLogout
 } from "@tabler/icons-react";
 import { MantineLogo } from "@mantine/ds";
 import LoginForm from "./loginForm";
@@ -107,7 +106,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
     if ( hasCookie( "name" ) ) {
       const name = getCookie( "name" );
       if ( typeof name === "string" ) {
-        setDisplayName( name.split( " " )[0] );
+        setDisplayName( "admin" );
       }
     }
     else{
@@ -122,10 +121,6 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
           mutation Login($email: String!, $password: String!) {
             login(email: $email, password: $password) {
               access_token
-              refresh_token
-              name
-              trello
-              email
             }
           }
         `,
@@ -139,11 +134,8 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       const res = await POST( req );
       //set a cookie with the access token, refresh token, and email, name, and trello
       setCookie( "access_token", res.login.access_token );
-      setCookie( "refresh_token", res.login.refresh_token );
-      setCookie( "email", res.login.email );
-      setCookie( "name", res.login.name );
-      setCookie( "trello", res.login.trello );
-      setDisplayName( res.login.name.split( " " )[0] );
+      setCookie( "name", "admin" );
+      setDisplayName( "admin" );
       close();
     }
     catch( err : unknown ) {
@@ -224,13 +216,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                 {hasCookie( "access_token" ) ? (
                   <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
                 ) : (
-                  <>
-                    <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
-                    <Link key={"signup"} href={"/signup"}>
-                      <Menu.Item icon={<IconUserPlus size="0.9rem" stroke={1.5} />}>Sign up</Menu.Item>
-                    </Link>
-                  </>
-
+                  <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
                 )}
               </Menu.Dropdown>
             </Menu>

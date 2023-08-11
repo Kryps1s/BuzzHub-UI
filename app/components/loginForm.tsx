@@ -18,7 +18,7 @@ const LoginForm = ( { login, loginErrorMessage }: LoginFormProps ) : React.JSX.E
 
   return (
     <>
-      <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps ( "email" ) } />
+      <TextInput mt="md" label="Username" placeholder="Username" {...form.getInputProps ( "email" ) } />
       <PasswordInput label="Password" placeholder="Password" mt="md" { ...form.getInputProps ( "password" )}/>
       <p> {loginErrorMessage} </p>
       <Group position="right">
