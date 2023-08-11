@@ -37,7 +37,7 @@ const Page: NextPage = () => {
 };
 
 const getData = async () => {
-  const req = new Request( "http://buzzhub.cc", {
+  const req = new Request( "http://buzzhub.com", {
     method: "POST",
     body:JSON.stringify( {
       query: `
