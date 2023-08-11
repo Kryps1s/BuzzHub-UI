@@ -3,7 +3,17 @@ import { useState } from "react";
 import { Stepper, Button, Group, TextInput, Code } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import PasswordStrength from "./passwordStrength";
-import SearchSelectTable from "./searchSelectTable";
+import SelectTrelloMembersTable from "./selectTrelloMembersTable";
+import { TrelloMember } from "../lib/types";
+
+interface SignUpFormProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  trello: TrelloMember[];
+  code: string;
+}
 
 const SignUpForm = ( { } ) : React.JSX.Element => {
 
@@ -119,9 +129,9 @@ const SignUpForm = ( { } ) : React.JSX.Element => {
       lastName: "",
       password: password,
       email: "",
-      trello: "",
+      trello: [],
       code: ""
-    },
+    } as SignUpFormProps,
 
     validate:  ( values ) => {
       if ( active === 0 ) {
@@ -165,10 +175,10 @@ const SignUpForm = ( { } ) : React.JSX.Element => {
           <TextInput label="First Name" placeholder="First Name" {...form.getInputProps ( "firstName" )} />
           <TextInput mt="md"label="Last Name" placeholder="Last Name" {...form.getInputProps ( "lastName" )} />
           <TextInput mt="md" label="Email" placeholder="Email" {...form.getInputProps ( "email" ) } />
-          <PasswordStrength password={password} setPassword={setPassword} form={form} />
+          <PasswordStrength password={password} setPassword={setPassword} setFieldValue={form.setFieldValue} />
         </Stepper.Step>
         <Stepper.Step label="Second step" description="Trello Linking">
-          <SearchSelectTable data={ trelloData }/>
+          <SelectTrelloMembersTable data={ trelloData } setFormValue={form.setFieldValue} preselectedValues={form.values.trello} formValueName="trello"/>
         </Stepper.Step>
 
         <Stepper.Step label="Final step" description="Access Code">

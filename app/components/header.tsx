@@ -9,7 +9,6 @@ import {
   Text,
   Menu,
   Tabs,
-  Burger,
   rem,
   Modal
 } from "@mantine/core";
@@ -17,12 +16,11 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogin,
   IconChevronDown,
-  IconLogout,
-  IconUserPlus
+  IconLogout
 } from "@tabler/icons-react";
-import { MantineLogo } from "@mantine/ds";
 import LoginForm from "./loginForm";
 import Link from "next/link";
+import Image from "next/image";
 import { POST } from "../api/graphql/route";
 import { setCookie, getCookie, hasCookie, deleteCookie } from "cookies-next";
 
@@ -33,7 +31,7 @@ const useStyles = createStyles( ( theme ) => ( {
     borderBottom: `${rem( 1 )} solid ${
       theme.colorScheme === "dark" ? "transparent" : theme.colors.gray[2]
     }`,
-    marginBottom: rem( 120 )
+    marginBottom: rem( 10 )
   },
 
   mainSection: {
@@ -48,11 +46,8 @@ const useStyles = createStyles( ( theme ) => ( {
 
     "&:hover": {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white
-    },
-
-    [theme.fn.smallerThan( "xs" )]: {
-      display: "none"
     }
+
   },
 
   burger: {
@@ -97,8 +92,8 @@ interface HeaderTabsProps {
 
 export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const { classes, cx } = useStyles();
-  const [ menuOpened, { toggle } ] = useDisclosure( false );
   const [ loginOpened, { open, close } ] = useDisclosure( false );
+  const [ loading, setLoading ] = useState( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
   const [ displayName, setDisplayName ] = useState( "" );
@@ -107,7 +102,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
     if ( hasCookie( "name" ) ) {
       const name = getCookie( "name" );
       if ( typeof name === "string" ) {
-        setDisplayName( name.split( " " )[0] );
+        setDisplayName( "admin" );
       }
     }
     else{
@@ -122,10 +117,6 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
           mutation Login($email: String!, $password: String!) {
             login(email: $email, password: $password) {
               access_token
-              refresh_token
-              name
-              trello
-              email
             }
           }
         `,
@@ -136,14 +127,12 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       } )
     } );
     try{
+      setLoading( true );
       const res = await POST( req );
       //set a cookie with the access token, refresh token, and email, name, and trello
       setCookie( "access_token", res.login.access_token );
-      setCookie( "refresh_token", res.login.refresh_token );
-      setCookie( "email", res.login.email );
-      setCookie( "name", res.login.name );
-      setCookie( "trello", res.login.trello );
-      setDisplayName( res.login.name.split( " " )[0] );
+      setCookie( "name", "admin" );
+      setDisplayName( "admin" );
       close();
     }
     catch( err : unknown ) {
@@ -154,6 +143,9 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
         console.error( err );
         setLoginErrorMessage( "Unknown error" );
       }
+    }
+    finally{
+      setLoading( false );
     }
   };
 
@@ -197,8 +189,15 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       <div className={classes.header}>
         <Container className={classes.mainSection}>
           <Group position="apart">
-            <MantineLogo size={28} />
-            <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
+            <Link href="/">
+              <Image
+                src="/images/Buzzhub_Logo.svg"
+                alt="Logo"
+                width={75}
+                height={75}
+              />
+            </Link>
+
             <Menu
               width={260}
               position="bottom-end"
@@ -224,13 +223,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                 {hasCookie( "access_token" ) ? (
                   <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
                 ) : (
-                  <>
-                    <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
-                    <Link key={"signup"} href={"/signup"}>
-                      <Menu.Item icon={<IconUserPlus size="0.9rem" stroke={1.5} />}>Sign up</Menu.Item>
-                    </Link>
-                  </>
-
+                  <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
                 )}
               </Menu.Dropdown>
             </Menu>
@@ -251,7 +244,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
         </Container>
       </div>
       <Modal opened={loginOpened} onClose={close} title="Login to BuzzHub">
-        <LoginForm loginErrorMessage={ loginErrorMessage } login={ login }/>
+        <LoginForm loginErrorMessage={ loginErrorMessage } login={ login } loading={ loading }/>
       </Modal>
     </>
   );

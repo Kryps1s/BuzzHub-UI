@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createStyles, Table, Checkbox, ScrollArea, Group, Text, rem, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { TrelloMember } from "../lib/types";
 
 const useStyles = createStyles( ( theme ) => ( {
   header: {
@@ -31,21 +32,31 @@ const useStyles = createStyles( ( theme ) => ( {
   }
 } ) );
 
-interface SearchSelectTableProps {
-  data: { fullName: string; username: string; id: string }[];
+interface SelectTrelloMembersTableProps {
+  data: TrelloMember[];
+  setFormValue: ( type: string, value: TrelloMember[] ) => void;
+  formValueName: string;
+  preselectedValues: TrelloMember[];
 }
-const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => {
+const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselectedValues }: SelectTrelloMembersTableProps ) : JSX.Element => {
   const { classes, cx } = useStyles();
-  const [ selection, setSelection ] = useState( [ "1" ] );
-  const [ scrolled, setScrolled ] = useState( false );
-  const [ search, setSearch ] = useState( "" );
+  const [ selection, setSelection ] = useState<string[]>( preselectedValues.map( ( value ) => value.id ) );
+  const [ scrolled, setScrolled ] = useState<boolean>( false );
+  const [ search, setSearch ] = useState<string>( "" );
   const [ localData, setLocalData ] = useState( data );
   const toggleRow = ( id: string ) =>
-    setSelection ( ( current ) =>
-      current.includes ( id ) ? current.filter ( ( item ) => item !== id ) : [ ...current, id ]
+    setSelection ( ( current:string[] ) => current.includes ( id ) ? current.filter ( ( item ) => item !== id ) : [ ...current, id ]
     );
-  const toggleAll = () =>
-    setSelection( ( current ) => ( current.length === data.length ? [] : data.map( ( item ) => item.id ) ) );
+
+  useEffect( () => {
+    const selected = data.filter( ( item ) => selection.includes( item.id ) );
+    if ( selected.length === 0 ) {
+      setFormValue( formValueName, [] );
+    }
+    else{
+      setFormValue( formValueName, selected );
+    }
+  }, [ selection, data, formValueName, setFormValue ] );
 
   const rows = localData.map( ( item ) => {
     const selected = selection.includes( item.id );
@@ -55,7 +66,6 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
           <Checkbox
             checked={selection.includes( item.id )}
             onChange={() => toggleRow( item.id )}
-            transitionDuration={0}
           />
         </td>
         <td>
@@ -65,7 +75,6 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
             </Text>
           </Group>
         </td>
-        <td>{item.username}</td>
       </tr>
     );
   } );
@@ -86,19 +95,12 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
         onChange={handleSearchChange}
       />
       <ScrollArea h={500} onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
-        <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} sx={{ tableLayout: "fixed" }}>
+        <Table horizontalSpacing="md" verticalSpacing="xs" miw={100} sx={{ tableLayout: "fixed" }}>
           <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
             <tr>
               <th style={{ width: rem ( 40 ) }}>
-                <Checkbox
-                  onChange={toggleAll}
-                  checked={selection.length === data.length}
-                  indeterminate={selection.length > 0 && selection.length !== data.length}
-                  transitionDuration={0}
-                />
               </th>
               <th>Full Name</th>
-              <th>Username</th>
             </tr>
           </thead>
           <tbody>
@@ -120,4 +122,4 @@ const SearchSelectTable = ( { data }: SearchSelectTableProps ) : JSX.Element => 
   );
 };
 
-export default SearchSelectTable;
+export default SelectTrelloMembersTable;

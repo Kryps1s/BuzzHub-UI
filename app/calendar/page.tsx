@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import Layout from "../layouts/homeLayout";
+import Layout from "../layouts/headerContent";
 import CalendarContainer from "../components/calendarContainer";
 import { EventType, Event } from "../lib/types";
 import { use } from "react";
