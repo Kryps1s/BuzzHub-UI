@@ -9,7 +9,6 @@ import {
   Text,
   Menu,
   Tabs,
-  Burger,
   rem,
   Modal
 } from "@mantine/core";
@@ -47,11 +46,8 @@ const useStyles = createStyles( ( theme ) => ( {
 
     "&:hover": {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white
-    },
-
-    [theme.fn.smallerThan( "xs" )]: {
-      display: "none"
     }
+
   },
 
   burger: {
@@ -96,7 +92,6 @@ interface HeaderTabsProps {
 
 export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const { classes, cx } = useStyles();
-  const [ menuOpened, { toggle } ] = useDisclosure( false );
   const [ loginOpened, { open, close } ] = useDisclosure( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
@@ -189,13 +184,15 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       <div className={classes.header}>
         <Container className={classes.mainSection}>
           <Group position="apart">
-            <Image
+            <Link href="/">
+              <Image
               src="/images/Buzzhub_Logo.svg"
               alt="Logo"
               width={75}
               height={75}
             />
-            <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
+            </Link>
+            
             <Menu
               width={260}
               position="bottom-end"

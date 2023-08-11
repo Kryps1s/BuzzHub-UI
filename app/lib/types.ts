@@ -25,7 +25,9 @@ export interface EventCard {
   name: string;
   eventId: string;
   type: string;
-  jobs: string[];
+  jobs?: string[];
+  hives?: string[];
+  location?: string;
 }
 
 export interface CalendarEvent {
