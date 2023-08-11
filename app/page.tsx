@@ -4,7 +4,7 @@ import { ArticleCardImage } from "./components/eventCard";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Buzzhub",
+  title: "BuzzHub",
   icons: "/favicon.ico"
 };
 
