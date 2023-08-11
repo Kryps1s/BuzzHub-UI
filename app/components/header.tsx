@@ -93,6 +93,7 @@ interface HeaderTabsProps {
 export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const { classes, cx } = useStyles();
   const [ loginOpened, { open, close } ] = useDisclosure( false );
+  const [ loading, setLoading ] = useState( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
   const [ displayName, setDisplayName ] = useState( "" );
@@ -126,6 +127,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       } )
     } );
     try{
+      setLoading( true );
       const res = await POST( req );
       //set a cookie with the access token, refresh token, and email, name, and trello
       setCookie( "access_token", res.login.access_token );
@@ -141,6 +143,9 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
         console.error( err );
         setLoginErrorMessage( "Unknown error" );
       }
+    }
+    finally{
+      setLoading( false );
     }
   };
 
@@ -239,7 +244,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
         </Container>
       </div>
       <Modal opened={loginOpened} onClose={close} title="Login to BuzzHub">
-        <LoginForm loginErrorMessage={ loginErrorMessage } login={ login }/>
+        <LoginForm loginErrorMessage={ loginErrorMessage } login={ login } loading={ loading }/>
       </Modal>
     </>
   );
