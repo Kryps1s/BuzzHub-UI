@@ -1,6 +1,15 @@
 "use client";
 import { useState, useRef } from "react";
-import { Stepper, Button, Group, NumberInput, Title, Textarea, NumberInputHandlers, rem, ActionIcon } from "@mantine/core";
+import { Stepper,
+  Button,
+  Group,
+  NumberInput,
+  Title,
+  Textarea,
+  NumberInputHandlers,
+  rem,
+  ActionIcon,
+  Loader } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
@@ -34,6 +43,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   } );
 
   const [ active, setActive ] = useState ( 0 );
+  const [ loading, setLoading ] = useState ( false );
   const [ submissionError, setSubmissionError ] = useState ( "" );
 
   const handlers = useRef<NumberInputHandlers>();
@@ -52,6 +62,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
   const submit = async () => {
     try{
+      setLoading( true );
       const report = createReport();
       const req = new Request( "", {
         method: "POST",
@@ -77,6 +88,9 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         setSubmissionError( error.message );
       }
     }
+    finally{
+      setLoading( false );
+    }
   };
   const createReport = () : string => {
     const report = [];
@@ -91,8 +105,8 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     }
 
     report.push( "# Box Overview" );
-    form.values.boxes.forEach( ( box, index ) => {
-      report.push( `## Box ${index + 1}` );
+    form.values.boxes.forEach( ( box ) => {
+      report.push( `## Box ${box.box}` );
       box.frames.forEach( ( frame, index ) => {
         let frameReport = " - Frame " + ( index + 1 ) + ": ";
         //if all boolean properties are false, and notes empty, just write "skipped"
@@ -227,7 +241,8 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         )}
         {active ===4 && <Link href="/"><Button className="mr-4 mt-4 border bg-cyan-700 border-slate-200" >Done</Button></Link>}
         {active <3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={nextStep}>Next step</Button>}
-        {active === 3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={submit}>Submit</Button>}
+        {active === 3 && loading && <Loader/>}
+        {active === 3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" disabled={loading} onClick={submit}>Submit</Button>}
       </Group>
     </>
   );
