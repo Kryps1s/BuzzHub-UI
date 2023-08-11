@@ -183,18 +183,18 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       );
     }
   } );
-    
+
   return (
     <>
       <div className={classes.header}>
         <Container className={classes.mainSection}>
           <Group position="apart">
-          <Image
-            src="/images/Buzzhub_Logo.svg"
-            alt="Logo"
-            width={75}
-            height={75}
-          />
+            <Image
+              src="/images/Buzzhub_Logo.svg"
+              alt="Logo"
+              width={75}
+              height={75}
+            />
             <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
             <Menu
               width={260}
