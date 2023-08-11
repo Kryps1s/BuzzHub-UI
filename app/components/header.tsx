@@ -19,9 +19,9 @@ import {
   IconChevronDown,
   IconLogout
 } from "@tabler/icons-react";
-import { MantineLogo } from "@mantine/ds";
 import LoginForm from "./loginForm";
 import Link from "next/link";
+import Image from "next/image";
 import { POST } from "../api/graphql/route";
 import { setCookie, getCookie, hasCookie, deleteCookie } from "cookies-next";
 
@@ -183,13 +183,18 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       );
     }
   } );
-
+    
   return (
     <>
       <div className={classes.header}>
         <Container className={classes.mainSection}>
           <Group position="apart">
-            <MantineLogo size={28} />
+          <Image
+            src="/images/Buzzhub_Logo.svg"
+            alt="Logo"
+            width={75}
+            height={75}
+          />
             <Burger opened={menuOpened} onClick={toggle} className={classes.burger} size="sm" />
             <Menu
               width={260}

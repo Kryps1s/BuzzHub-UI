@@ -1,8 +1,13 @@
 import Layout from "@/app/layouts/homeLayout";
-import { NextPage } from "next";
+import { NextPage, Metadata } from "next";
 import JobForm from "@/app/components/jobForm";
 import { use } from "react";
 import { POST } from "../../api/graphql/route";
+
+export const metadata: Metadata = {
+  title: "BuzzHub - Inspection Report",
+  icons: "/favicon.ico"
+};
 
 interface Context {
   params: {
