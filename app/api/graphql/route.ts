@@ -19,6 +19,7 @@ export async function POST ( req: Request ) {
     headers.append( "Authorization", auth );
 
     const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
+      cache: "no-store",
       method: "POST",
       headers,
       body
@@ -33,7 +34,8 @@ export async function POST ( req: Request ) {
     }
     if( res.data?.login ) {
       //set cookie
-      setCookie( "token", res.data.login.access_token );
+      setCookie( "access_token", res.data.login.access_token );
+      setCookie( "name", "admin" );
     }
     return res.data ;
   }

@@ -22,7 +22,7 @@ import LoginForm from "./loginForm";
 import Link from "next/link";
 import Image from "next/image";
 import { POST } from "../api/graphql/route";
-import { setCookie, getCookie, hasCookie, deleteCookie } from "cookies-next";
+import { getCookie, hasCookie, deleteCookie } from "cookies-next";
 
 const useStyles = createStyles( ( theme ) => ( {
   header: {
@@ -128,10 +128,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
     } );
     try{
       setLoading( true );
-      const res = await POST( req );
-      //set a cookie with the access token, refresh token, and email, name, and trello
-      setCookie( "access_token", res.login.access_token );
-      setCookie( "name", "admin" );
+      await POST( req );
       setDisplayName( "admin" );
       close();
     }
@@ -156,10 +153,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
 
   const logout = () => {
     deleteCookie( "access_token" );
-    deleteCookie( "refresh_token" );
-    deleteCookie( "email" );
     deleteCookie( "name" );
-    deleteCookie( "trello" );
     setDisplayName( "Guest" );
   };
   const items = tabs.map( ( tab ) => {
