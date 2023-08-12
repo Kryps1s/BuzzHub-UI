@@ -66,7 +66,6 @@ const getData = async () => {
       query: `
       query GetEvents {
         getEvents(
-            limit: 3
             dateRange: ["${today}T00:00:00.000000Z", "${tomorrow}T00:00:00.000000Z"]        
             ) {
             name
