@@ -110,7 +110,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
     }
   }, [] );
   const login = async ( email: string, password: string ) => {
-    const req = new Request( "", {
+    const req = new Request( "http://buzzhub.com", {
       method: "POST",
       body: JSON.stringify( {
         query: `

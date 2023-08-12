@@ -64,7 +64,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     try{
       setLoading( true );
       const report = createReport();
-      const req = new Request( "", {
+      const req = new Request( "http://buzzhub.com", {
         method: "POST",
         body: JSON.stringify( {
           query: `
