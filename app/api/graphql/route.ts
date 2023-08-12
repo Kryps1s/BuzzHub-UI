@@ -34,7 +34,8 @@ export async function POST ( req: Request ) {
     }
     if( res.data?.login ) {
       //set cookie
-      setCookie( "token", res.data.login.access_token );
+      setCookie( "access_token", res.data.login.access_token );
+      setCookie( "name", "admin" );
     }
     return res.data ;
   }
