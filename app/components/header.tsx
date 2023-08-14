@@ -106,7 +106,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       }
     }
     else{
-      setDisplayName( "Guest" );
+      setDisplayName( "Log In" );
     }
   }, [] );
   const login = async ( email: string, password: string ) => {
@@ -154,7 +154,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const logout = () => {
     deleteCookie( "access_token" );
     deleteCookie( "name" );
-    setDisplayName( "Guest" );
+    setDisplayName( "Log In" );
   };
   const items = tabs.map( ( tab ) => {
     if ( tab === "home" ) {
@@ -191,36 +191,46 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                 height={75}
               />
             </Link>
-
-            <Menu
-              width={260}
-              position="bottom-end"
-              transitionProps={{ transition: "pop-top-right" }}
-              onClose={() => setUserMenuOpened( false )}
-              onOpen={() => setUserMenuOpened( true )}
-              withinPortal
-            >
-              <Menu.Target>
-                <UnstyledButton
-                  className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
-                >
-                  <Group spacing={7}>
-                    <Avatar radius="xl" size={20} />
-                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                      {displayName}
-                    </Text>
-                    <IconChevronDown size={rem( 12 )} stroke={1.5} />
-                  </Group>
-                </UnstyledButton>
-              </Menu.Target>
-              <Menu.Dropdown>
-                {hasCookie( "access_token" ) ? (
-                  <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
-                ) : (
-                  <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
-                )}
-              </Menu.Dropdown>
-            </Menu>
+            {hasCookie('name') ? 
+              <Menu
+                width={260}
+                position="bottom-end"
+                transitionProps={{ transition: "pop-top-right" }}
+                onClose={() => setUserMenuOpened( false )}
+                onOpen={() => setUserMenuOpened( true )}
+                withinPortal
+              >
+                <Menu.Target>
+                  <UnstyledButton
+                    className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                  >
+                    <Group spacing={7}>
+                    <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} />
+                      <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                        {displayName}
+                      </Text>
+                      <IconChevronDown size={rem( 12 )} stroke={1.5} />
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
+                </Menu.Dropdown>
+              </Menu> 
+              :
+              <UnstyledButton
+                    className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                    onClick={ handleLoginClick }
+                  >
+                    <Group spacing={7}>
+                      <IconLogin size="0.9rem" stroke={1.5} /> 
+                      <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                        {displayName}
+                      </Text>
+                </Group>
+              </UnstyledButton>
+            }
+            
           </Group>
         </Container>
         <Container>
