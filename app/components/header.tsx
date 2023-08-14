@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import {
   createStyles,
   Container,
-  Avatar,
   UnstyledButton,
   Group,
   Text,
@@ -16,7 +15,11 @@ import { useDisclosure } from "@mantine/hooks";
 import {
   IconLogin,
   IconChevronDown,
-  IconLogout
+  IconLogout,
+  IconHome,
+  IconTie,
+  IconCalendar,
+  IconUsersGroup
 } from "@tabler/icons-react";
 import LoginForm from "./loginForm";
 import Link from "next/link";
@@ -96,17 +99,18 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const [ loading, setLoading ] = useState( false );
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
-  const [ displayName, setDisplayName ] = useState( "" );
+  const [ displayName, setDisplayName ] = useState( "Log In" );
   useEffect( () => {
     // This effect runs after the component is mounted on the client
     if ( hasCookie( "name" ) ) {
       const name = getCookie( "name" );
       if ( typeof name === "string" ) {
         setDisplayName( "admin" );
+        // setUserAvatar( <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} /> );
       }
     }
     else{
-      setDisplayName( "Guest" );
+      setDisplayName( "Log In" );
     }
   }, [] );
   const login = async ( email: string, password: string ) => {
@@ -154,29 +158,33 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const logout = () => {
     deleteCookie( "access_token" );
     deleteCookie( "name" );
-    setDisplayName( "Guest" );
+    setDisplayName( "Log In" );
   };
-  const items = tabs.map( ( tab ) => {
-    if ( tab === "home" ) {
-      return (
-
-        <Link key={tab} href="/">
-          <Tabs.Tab value={tab} id={tab} key={tab}>{tab}</Tabs.Tab>
-        </Link>
-
-      );
-    } else {
-      return (
-
-        <Link key={tab} href={`/${tab}`}>
-          <Tabs.Tab value={tab} id={tab} key={tab}>
-            {tab}
-          </Tabs.Tab>
-        </Link>
-
-      );
+  const items = tabs.map( ( tab:string ) => {
+    let icon;
+    switch ( tab ) {
+    case "home":
+      icon = <IconHome className="mx-auto" size={20} />;
+      break;
+    case "calendar":
+      icon = <IconCalendar className="mx-auto" size={20} />;
+      break;
+    case "meeting":
+      icon = <IconTie className="mx-auto" size={20} />;
+      break;
+    case "collective":
+      icon = <IconUsersGroup className="mx-auto" size={20} />;
     }
-  } );
+    return (
+      <Link key={tab} href={tab === "home" ? "/" : `/${tab}`}>
+        <Tabs.Tab value={tab} id={tab} key={tab} className="flex flex-col items-center m-2">
+          {icon}
+          <p className="invisible md:visible">{tab}</p>
+        </Tabs.Tab>
+      </Link>
+    );
+  }
+  );
 
   return (
     <>
@@ -191,42 +199,55 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                 height={75}
               />
             </Link>
+            {displayName === "admin" ?
+              <Menu
+                width={260}
+                position="bottom-end"
+                transitionProps={{ transition: "pop-top-right" }}
+                onClose={() => setUserMenuOpened( false )}
+                onOpen={() => setUserMenuOpened( true )}
+                withinPortal
+              >
+                <Menu.Target>
+                  <UnstyledButton
+                    className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                  >
+                    <Group spacing={7}>
 
-            <Menu
-              width={260}
-              position="bottom-end"
-              transitionProps={{ transition: "pop-top-right" }}
-              onClose={() => setUserMenuOpened( false )}
-              onOpen={() => setUserMenuOpened( true )}
-              withinPortal
-            >
-              <Menu.Target>
-                <UnstyledButton
-                  className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
-                >
-                  <Group spacing={7}>
-                    <Avatar radius="xl" size={20} />
-                    <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                      {displayName}
-                    </Text>
-                    <IconChevronDown size={rem( 12 )} stroke={1.5} />
-                  </Group>
-                </UnstyledButton>
-              </Menu.Target>
-              <Menu.Dropdown>
-                {hasCookie( "access_token" ) ? (
-                  <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
-                ) : (
-                  <Menu.Item onClick={ handleLoginClick } icon={<IconLogin size="0.9rem" stroke={1.5} />}>Login</Menu.Item>
-                )}
-              </Menu.Dropdown>
-            </Menu>
+                      <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} />
+                      <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                        {displayName}
+                      </Text>
+                      <IconChevronDown size={rem( 12 )} stroke={1.5} />
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item onClick={ logout } icon={<IconLogout size="1rem" stroke={1.5} />}>Logout</Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+              :
+              <UnstyledButton
+                className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                onClick={ handleLoginClick }
+              >
+                <Group spacing={7}>
+
+                  <IconLogin size="1rem" stroke={1.5} />
+                  <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                    {displayName}
+                  </Text>
+                </Group>
+              </UnstyledButton>
+            }
+
           </Group>
         </Container>
         <Container>
           <Tabs
             defaultValue="Home"
             variant="outline"
+            className="flex justify-center space-around"
             classNames={{
               root: classes.tabs,
               tabsList: classes.tabsList,

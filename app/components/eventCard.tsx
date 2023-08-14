@@ -2,6 +2,7 @@
 import { createStyles, Paper, Text, Title, rem } from "@mantine/core";
 import Link from "next/link";
 import { EventCard } from "../lib/types";
+import { useSelectedTabStore } from "../store/selectedTab";
 
 const stockImage = "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80";
 
@@ -33,9 +34,26 @@ const useStyles = createStyles( ( theme ) => ( {
   }
 } ) );
 
-export function ArticleCardImage ( { event } : { event: EventCard } ) {
-  const { name, image = stockImage, jobs = [], hives = [], location = "", eventId } = event;
+interface EventCardProps {
+  past?: EventCard ;
+  upcoming?: EventCard ;
+  happeningNow?: EventCard ;
+}
+
+export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) {
+  const selectedTab = useSelectedTabStore( ( state ) => state.selectedTab );
+  let event;
+  if ( happeningNow ) {
+    event = happeningNow;
+  }else
+  {
+    event = selectedTab === "upcoming" ? upcoming : past;
+  }
   const { classes } = useStyles();
+  if( event === null || event === undefined ) return ( <></> );
+  const { name, image = stockImage, jobs = [], hives = [], location = "", eventId } = event;
+  // const event = past;
+
   let categoryText, titleText;
   switch ( event.type ) {
   case "BEEKEEPING":
