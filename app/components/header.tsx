@@ -176,14 +176,14 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       icon = <IconUsersGroup className="mx-auto" size={20} />;
     }
     return (
-        <Link key={tab} href={tab === "home" ? '/' : `/${tab}`}>
-            <Tabs.Tab value={tab} id={tab} key={tab} className="flex flex-col items-center m-2">
-              {icon}
-              <p className="invisible md:visible">{tab}</p>
-          </Tabs.Tab>
-        </Link>
-      );
-    }
+      <Link key={tab} href={tab === "home" ? "/" : `/${tab}`}>
+        <Tabs.Tab value={tab} id={tab} key={tab} className="flex flex-col items-center m-2">
+          {icon}
+          <p className="invisible md:visible">{tab}</p>
+        </Tabs.Tab>
+      </Link>
+    );
+  }
   );
 
   return (
@@ -213,8 +213,8 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                     className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
                   >
                     <Group spacing={7}>
-                      
-                      <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20}  />
+
+                      <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} />
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {displayName}
                       </Text>
@@ -232,7 +232,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                 onClick={ handleLoginClick }
               >
                 <Group spacing={7}>
-                  
+
                   <IconLogin size="1rem" stroke={1.5} />
                   <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                     {displayName}
