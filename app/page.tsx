@@ -18,8 +18,8 @@ const Page: NextPage = () => {
       type: string;
     };
     return {
-      past : events.past.filter( ( event : Event ) => event.type === type ),
-      upcoming : events.upcoming.filter( ( event : Event ) => event.type === type )
+      past : events.past?.filter( ( event : Event ) => event.type === type ),
+      upcoming : events.upcoming?.filter( ( event : Event ) => event.type === type )
     };
   };
   const beekeepingEvents = getEvents( "BEEKEEPING" );
