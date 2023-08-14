@@ -1,6 +1,5 @@
 import Layout from "./layouts/headerContent";
 import { NextPage, Metadata } from "next";
-import { EventCard } from "./lib/types";
 import { use } from "react";
 import EventContextBar from "./components/eventContextBar";
 import EventRow from "./components/eventRow";
@@ -11,30 +10,20 @@ export const metadata: Metadata = {
   icons: "/favicon.ico"
 };
 
-const demoCard: EventCard = {
-  "type": "BEEKEEPING",
-  "eventId": "w8u8B3L",
-  "image": "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-  "jobs": [
-    "TREAT",
-    "HARVEST"
-  ],
-  "name": "test"
-} ;
-const demoCard2: EventCard = {
-  "type": "BEEKEEPING",
-  "eventId": "w8u8B2CL",
-  "image": "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-  "jobs": [
-    "NUC",
-    "HARVEST"
-  ],
-  "name": "test2"
-} ;
-const demoEvents = [ demoCard, demoCard2, demoCard ];
-
 const Page: NextPage = () => {
   const events = use ( getData() );
+  const getEvents = ( type : string ) => {
+    //get past and upcoming events by type
+    type Event = {
+      type: string;
+    };
+    return {
+      past : events.past?.filter( ( event : Event ) => event.type === type ),
+      upcoming : events.upcoming?.filter( ( event : Event ) => event.type === type )
+    };
+  };
+  const beekeepingEvents = getEvents( "BEEKEEPING" );
+  const collectiveEvents = getEvents( "MEETING" );
   if( events.error ) {
     return (
       <Layout>
@@ -48,10 +37,10 @@ const Page: NextPage = () => {
   return (
     <Layout>
       <div className="w-full flex flex-col align-middle justify-center">
-        <EventRow events={events.data} title="Happening Now" />
+        <EventRow events={events.happeningNow} title="Happening Now" />
         <EventContextBar />
-        <EventRow events={demoEvents} title="Beekeeping (Examples - Work in Progress!)" seeAll={true} />
-        <EventRow events={demoEvents} title="Collective (Examples - Work in Progress!)" seeAll={true}/>
+        <EventRow events={beekeepingEvents} title="Beekeeping " seeAll={true} />
+        <EventRow events={collectiveEvents} title="Collective " seeAll={true}/>
       </div>
 
     </Layout>
@@ -64,30 +53,47 @@ const getData = async () => {
     method: "POST",
     body:JSON.stringify( {
       query: `
-      query GetEvents {
-        getEvents(
-            dateRange: ["${today}T00:00:00.000000Z", "${tomorrow}T00:00:00.000000Z"]        
-            ) {
-            name
-            start
-            type
-            eventId
-            ... on BeekeepingEvent { 
-                hives
-                jobs
-            }
-            ... on MeetingEvent {
-                location
-            }
+      fragment EventDetails on Event {
+        name
+        start
+        type
+        eventId
+        ... on BeekeepingEvent {
+          hives
+          jobs
         }
-      }`,
+        ... on MeetingEvent {
+          location
+        }
+      }
+      
+      query GetEvents {
+        happeningNow: getEvents(
+          dateRange: ["${today}T00:00:00.000000Z", "${tomorrow}T00:00:00.000000Z"]
+        ) {
+          ...EventDetails
+        },
+        upcoming: getEvents(
+          future: true
+          limit: 3
+        ) {
+          ...EventDetails
+        }
+        past: getEvents(
+          future: false
+          limit: 3
+        ) {
+          ...EventDetails
+        }
+      }
+      `,
       variables: {
       }
     } )
   } );
   try{
     const res = await POST( req );
-    return { data: res.getEvents };
+    return res ;
   }
   catch( err : unknown ) {
     if( err instanceof Error ) {

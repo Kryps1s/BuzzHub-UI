@@ -33,8 +33,11 @@ const useStyles = createStyles( ( theme ) => ( {
   }
 } ) );
 
-export function ArticleCardImage ( { event } : { event: EventCard } ) {
-  const { name, image = stockImage, jobs = [], hives = [], location = "", eventId } = event;
+export function ArticleCardImage ( { past, upcoming = null } : { past: EventCard, upcoming: EventCard | null} ) {
+  let temp = upcoming;
+  if ( temp === null ) temp = past;//this will be removed when we have global state management, bypassing ts error for now
+  const { name, image = stockImage, jobs = [], hives = [], location = "", eventId } = past;
+  const event = past;
   const { classes } = useStyles();
   let categoryText, titleText;
   switch ( event.type ) {
