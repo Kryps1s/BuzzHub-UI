@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import {
   createStyles,
   Container,
-  Avatar,
   UnstyledButton,
   Group,
   Text,
@@ -191,7 +190,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                 height={75}
               />
             </Link>
-            {hasCookie('name') ? 
+            {hasCookie( "name" ) ?
               <Menu
                 width={260}
                 position="bottom-end"
@@ -205,7 +204,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                     className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
                   >
                     <Group spacing={7}>
-                    <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} />
+                      <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} />
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {displayName}
                       </Text>
@@ -214,23 +213,23 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
+                  <Menu.Item onClick={ logout } icon={<IconLogout size="0.9rem" stroke={1.5} />}>Logout</Menu.Item>
                 </Menu.Dropdown>
-              </Menu> 
+              </Menu>
               :
               <UnstyledButton
-                    className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
-                    onClick={ handleLoginClick }
-                  >
-                    <Group spacing={7}>
-                      <IconLogin size="0.9rem" stroke={1.5} /> 
-                      <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-                        {displayName}
-                      </Text>
+                className={cx( classes.user, { [classes.userActive]: userMenuOpened } )}
+                onClick={ handleLoginClick }
+              >
+                <Group spacing={7}>
+                  <IconLogin size="0.9rem" stroke={1.5} />
+                  <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+                    {displayName}
+                  </Text>
                 </Group>
               </UnstyledButton>
             }
-            
+
           </Group>
         </Container>
         <Container>
