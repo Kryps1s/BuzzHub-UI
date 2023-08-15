@@ -11,7 +11,7 @@ import {
   rem,
   Modal
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
   IconLogin,
   IconChevronDown,
@@ -100,6 +100,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
   const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
   const [ displayName, setDisplayName ] = useState( "Log In" );
+  const mdOrLargerScreen = useMediaQuery( "(min-width:768px)" );
   useEffect( () => {
     // This effect runs after the component is mounted on the client
     if ( hasCookie( "name" ) ) {
@@ -179,7 +180,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       <Link key={tab} href={tab === "home" ? "/" : `/${tab}`}>
         <Tabs.Tab value={tab} id={tab} key={tab} className="flex flex-col items-center m-2">
           {icon}
-          <p className="invisible md:visible">{tab}</p>
+          {mdOrLargerScreen && <p>{tab}</p>}
         </Tabs.Tab>
       </Link>
     );
