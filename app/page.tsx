@@ -37,7 +37,7 @@ const Page: NextPage = () => {
   return (
     <Layout>
       <div className="w-full flex flex-col align-middle justify-center">
-        <EventRow events={events.happeningNow} title="Happening Now" />
+        <EventRow events={events.happeningNow} title="Happening Today" />
         <EventContextBar />
         <EventRow events={beekeepingEvents} title="Beekeeping " seeAll={true} />
         <EventRow events={collectiveEvents} title="Collective " seeAll={true}/>
@@ -64,6 +64,14 @@ const getData = async () => {
         }
         ... on MeetingEvent {
           location
+          roles {
+            roleName
+            user {
+              username
+              fullName
+              id
+            }
+          }
         }
       }
       
@@ -72,7 +80,7 @@ const getData = async () => {
           dateRange: ["${today}T00:00:00.000000Z", "${tomorrow}T00:00:00.000000Z"]
         ) {
           ...EventDetails
-        },
+        }
         upcoming: getEvents(
           future: true
           limit: 3
@@ -85,7 +93,7 @@ const getData = async () => {
         ) {
           ...EventDetails
         }
-      }
+      }      
       `,
       variables: {
       }
