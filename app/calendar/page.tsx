@@ -37,11 +37,13 @@ const Page: NextPage = () => {
 };
 
 const getData = async () => {
+  const firstDayOfCurrentMonth = new Date( new Date().getFullYear(), new Date().getMonth(), 1 ).toISOString().slice( 0, 10 );
+  const lastDayOfCurrentMonth = new Date( new Date().getFullYear(), new Date().getMonth() + 1, 0 ).toISOString().slice( 0, 10 );
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
     body:JSON.stringify( {
       query: `
-      query MyQuery($dateRange: [String] = ["2023-07-01T00:00:00.000Z", "2023-07-31T00:00:00.000Z"]) {
+      query MyQuery($dateRange: [String] = ["${firstDayOfCurrentMonth}T00:00:00.000000Z", "${lastDayOfCurrentMonth}T00:00:00.000000Z"]) {
         getEvents(dateRange: $dateRange) {
           start
           type
@@ -55,8 +57,6 @@ const getData = async () => {
       }
     }`,
       variables: {
-        limit: 2,
-        type: EventType.MEETING
       }
     } )
   } );
