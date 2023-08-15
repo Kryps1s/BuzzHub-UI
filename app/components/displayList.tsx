@@ -26,7 +26,7 @@ const List = ( { upcomingMeetingDetails }:{ upcomingMeetingDetails:Event[] } ): 
       <ul className="mb-6">
         {next?.roles.map ( ( item, index ) => (
           <li key={index}>
-            <p>{item.roleName} : {item.userName}</p>
+            <p>{item.roleName} : {item.user.username}</p>
           </li>
         ) )}
       </ul>
@@ -35,7 +35,7 @@ const List = ( { upcomingMeetingDetails }:{ upcomingMeetingDetails:Event[] } ): 
       <ul>
         {following?.roles.map( ( item, index ) => (
           <li key={index}>
-            <p>{item.roleName} : {item.userName}</p>
+            <p>{item.roleName} : {item.user.username}</p>
           </li>
         ) ) }
       </ul>
