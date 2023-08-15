@@ -37,8 +37,8 @@ const Page: NextPage = () => {
 };
 
 const getData = async () => {
-  const firstDayOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0, 10);
-  const lastDayOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().slice(0, 10);  
+  const firstDayOfCurrentMonth = new Date( new Date().getFullYear(), new Date().getMonth(), 1 ).toISOString().slice( 0, 10 );
+  const lastDayOfCurrentMonth = new Date( new Date().getFullYear(), new Date().getMonth() + 1, 0 ).toISOString().slice( 0, 10 );
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
     body:JSON.stringify( {
