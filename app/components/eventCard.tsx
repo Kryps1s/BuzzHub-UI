@@ -32,7 +32,7 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
   }
   const { classes } = useStyles();
   const mdOrLargerScreen = useMediaQuery( "(min-width:768px)" );
-  
+
   if( event === null || event === undefined ) return ( <></> );
   const { name, roles = [], jobs = [], hives = [], location = "", type, start, eventId } = event;
   // extract  the full name of the user who is a facilitator, jockey, and scribe
@@ -92,35 +92,35 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
           {titleText}
         </Title>
 
-        {(!happeningNow && selectedTab === "upcoming" && type === "MEETING") || (type === "MEETING" && happeningNow) ? (
-    <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32">
-      <IconSpeakerphone className="h-6 text-buzzhub-navy" size={"1rem"} />
-      {mdOrLargerScreen && (
-        <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>
-      )}
-      <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
-        {facilitator?.user.fullName}
-      </p>
-      <IconTool className="h-6 text-buzzhub-navy" size={"1em"} />
-      {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Jockey: </p>}
-      <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
-        {jockey?.user.fullName}
-      </p>
-      <IconPencil className="h-6 text-buzzhub-navy" size={"1em"} />
-      {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Scribe: </p>}
-      <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
-        {scribe?.user.fullName}
-      </p>
-    </div>
-  ) : (
-    type === "MEETING" && selectedTab === "past" && (
-      <div className="h-32 truncate">
-        <p className="whitespace-break-spaces text-buzzhub-navy ">
+        {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
+          <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32">
+            <IconSpeakerphone className="h-6 text-buzzhub-navy" size={"1rem"} />
+            {mdOrLargerScreen && (
+              <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>
+            )}
+            <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
+              {facilitator?.user.fullName}
+            </p>
+            <IconTool className="h-6 text-buzzhub-navy" size={"1em"} />
+            {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Jockey: </p>}
+            <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
+              {jockey?.user.fullName}
+            </p>
+            <IconPencil className="h-6 text-buzzhub-navy" size={"1em"} />
+            {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Scribe: </p>}
+            <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
+              {scribe?.user.fullName}
+            </p>
+          </div>
+        ) : (
+          type === "MEETING" && selectedTab === "past" && (
+            <div className="h-32 truncate">
+              <p className="whitespace-break-spaces text-buzzhub-navy ">
           Click here to see meeting notes (🐝Coming Soon🐝)
-        </p>
-      </div>
-    )
-  )}
+              </p>
+            </div>
+          )
+        )}
       </Paper>
     );
 
