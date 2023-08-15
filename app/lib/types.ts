@@ -1,6 +1,6 @@
 export interface Role {
     roleName: string;
-    userName: string;
+    user: TrelloMember;
   }
 
 export enum EventType {
@@ -23,11 +23,13 @@ export interface Event {
 export interface EventCard {
   image: string;
   name: string;
+  start: string;
   eventId: string;
   type: string;
   jobs?: string[];
   hives?: string[];
   location?: string;
+  roles?: Role[];
 }
 
 export interface CalendarEvent {
