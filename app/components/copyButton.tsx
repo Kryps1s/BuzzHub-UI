@@ -3,7 +3,7 @@ import { CopyIcon } from "@radix-ui/react-icons";
 import { Event, Role } from "@/app/lib/types";
 
 const copyButton = ( { upcomingMeetingDetails }:{ upcomingMeetingDetails: Event[] } ) => {
-  const formatRoles = ( roles : Role[] ) => roles.map ( ( role : Role ) => `• ${role.roleName}: ${role.userName}` ).join( "\n      " );
+  const formatRoles = ( roles : Role[] ) => roles.map ( ( role : Role ) => `• ${role.user.fullName}: ${role.user.fullName}` ).join( "\n      " );
   const formatDate = ( date : Date ) => {
     const options = {
       weekday: "long" as const,
