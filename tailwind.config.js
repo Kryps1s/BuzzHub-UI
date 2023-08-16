@@ -16,6 +16,9 @@ module.exports = {
         'buzzhub-yellow': '#FCB017',
         'buzzhub-navy': '#2B2D42',
       },
+      minHeight: {
+        '40': '10rem',
+      }
     }
   },
   plugins: [],
