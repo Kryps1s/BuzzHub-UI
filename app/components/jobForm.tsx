@@ -176,14 +176,12 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     <>
       <Stepper id='stepper' className="px-4  h-4/5 " active={active} onStepClick={setActive}>
         <Stepper.Step label="Setup" description="Take attendance">
-          <div className="w-full h-full px-4 ">
+          <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
-            <SelectTrelloMembersTable data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
+            <SelectTrelloMembersTable options={{ "leader":true }} data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
         </Stepper.Step>
-
         <Stepper.Step label="Setup" description="Hive Prep">
-
           <div className="flex flex-col align-middle">
             <Title className="flex justify-center mb-4" order={2}>How many boxes are you inspecting?</Title>
             <Group className="flex justify-center" spacing={5}>
@@ -207,41 +205,41 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
               </ActionIcon>
             </Group>
           </div>
-
         </Stepper.Step>
 
         <Stepper.Step label="Inspection" description="Notes">
+          <div className="w-full max-w-xl mx-auto h-full px-4 ">
+            <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
+            <Accordion defaultValue={form.values.boxes[0].box.toString()}>
 
-          <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
-          <Accordion defaultValue={form.values.boxes[0].box.toString()}>
+              {accordionItems}
 
-            {accordionItems}
-
-          </Accordion>
+            </Accordion>
+          </div>
         </Stepper.Step>
 
         <Stepper.Step label="Inspection" description="Next Steps">
-          <Textarea
-            className="px-6 py-2"
-            placeholder="Write notes for the next inspection here."
-            label="Next Steps"
-            radius="sm"
-            size="xl"
-            value={form.values.nextSteps}
-            onChange={( event ) => {
-              form.setFieldValue ( "nextSteps", event.currentTarget.value );
-            }}
-          />
-          <Title className="color-red-600">{submissionError}</Title>
+          <div className="w-full max-w-xl mx-auto h-full px-4 ">
+            <Textarea
+              className="px-6 py-2"
+              placeholder="Write notes for the next inspection here."
+              label="Next Steps"
+              radius="sm"
+              size="xl"
+              value={form.values.nextSteps}
+              onChange={( event ) => {
+                form.setFieldValue ( "nextSteps", event.currentTarget.value );
+              }}
+            />
+            <Title className="color-red-600">{submissionError}</Title>
+          </div>
         </Stepper.Step>
 
         <Stepper.Completed>
-          <div className="overflow-y-scroll">
+          <div className="overflow-y-scroll w-full max-w-xl mx-auto h-full px-4 ">
             <Title order={2}> Your report has been added to the Trello card. Thank you for trying BuzzHub Beta! 🐝</Title>
-
           </div>
         </Stepper.Completed>
-
       </Stepper>
 
       <Group className="h-1/5 my-auto" position="right" >
