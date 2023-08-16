@@ -41,7 +41,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       notes: ""
     } )
   } );
-  
+
   const [ active, setActive ] = useState ( 0 );
   const [ loading, setLoading ] = useState ( false );
   const [ submissionError, setSubmissionError ] = useState ( "" );
@@ -175,7 +175,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   return (
     <>
       <Stepper id='stepper' className="px-4  h-4/5 " active={active} onStepClick={setActive}>
-        <Stepper.Step  label="Setup" description="Take attendance">
+        <Stepper.Step label="Setup" description="Take attendance">
           <div className="w-full h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
             <SelectTrelloMembersTable data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
