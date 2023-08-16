@@ -86,7 +86,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
   };
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <TextInput
         placeholder="Search"
         mb="md"
@@ -94,7 +94,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
         value={search}
         onChange={handleSearchChange}
       />
-      <ScrollArea h={500} onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
+      <ScrollArea className="flex-grow" onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
         <Table horizontalSpacing="md" verticalSpacing="xs" miw={100} sx={{ tableLayout: "fixed" }}>
           <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
             <tr>
@@ -103,7 +103,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
               <th>Full Name</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="overflow-y-scroll">
             {rows.length > 0 ? (
               rows
             ) : (
@@ -118,7 +118,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
           </tbody>
         </Table>
       </ScrollArea>
-    </>
+    </div>
   );
 };
 

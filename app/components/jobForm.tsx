@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Stepper,
   Button,
   Group,
@@ -41,7 +41,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       notes: ""
     } )
   } );
-
+  
   const [ active, setActive ] = useState ( 0 );
   const [ loading, setLoading ] = useState ( false );
   const [ submissionError, setSubmissionError ] = useState ( "" );
@@ -56,6 +56,18 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       nextSteps: ""
     }
   } );
+
+  useEffect( () => {
+    //get stepper element and apply a css rule to it's first child
+    const stepper = document.getElementById( "stepper" );
+    if ( stepper ) {
+      const firstChild = stepper.firstChild as HTMLElement;
+      firstChild?.setAttribute( "style", "overflow-x: scroll;" );
+      //get second child and apply a css rule to it
+      const secondChild = stepper.children[1] as HTMLElement;
+      secondChild?.setAttribute( "style", "height: 95%;" );
+    }
+  }, [ ] );
 
   const nextStep = () : void =>
     setActive ( ( current ) => current < 4 ? current + 1 : current );
@@ -162,9 +174,9 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
   return (
     <>
-      <Stepper className="px-4" active={active} onStepClick={setActive}>
-        <Stepper.Step label="Setup" description="Take attendance">
-          <div className=" w-full px-4 overflow-x-hidden overflow-y-scroll">
+      <Stepper id='stepper' className="px-4  h-4/5 " active={active} onStepClick={setActive}>
+        <Stepper.Step  label="Setup" description="Take attendance">
+          <div className="w-full h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
             <SelectTrelloMembersTable data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
@@ -178,14 +190,13 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
               <ActionIcon size={42} variant="default" onClick={() => handlers.current?.decrement()}>
             –
               </ActionIcon>
-
               <NumberInput
                 hideControls
                 readOnly
                 value={form.values.boxes.length}
                 onChange={( qty ) => setBoxes( qty )}
                 handlersRef={handlers}
-                max={10}
+                max={6}
                 min={1}
                 step={1}
                 styles={{ input: { width: rem( 54 ), textAlign: "center" } }}
@@ -233,8 +244,8 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
       </Stepper>
 
-      <Group className=" sticky bottom-0 right-2 md:relative md:bottom-auto mt-8 md:mt-0" position="right" mt="md">
-        {active !== 0 && active <3 && (
+      <Group className="h-1/5 my-auto" position="right" >
+        {active !== 0 && active <4 && (
           <Button className="mt-4 border bg-cyan-700 border-slate-200" onClick={prevStep}>
             Back
           </Button>
