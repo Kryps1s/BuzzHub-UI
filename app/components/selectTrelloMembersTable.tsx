@@ -61,7 +61,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
     }
   }, [ selection, data, formValueName, setFormValue ] );
 
-  const rows =  localData.map( ( item ) => {
+  const rows = localData.map( ( item ) => {
     const selected = selection.includes( item.id );
     return (
       <tr key={item.id} className={cx( { [classes.rowSelected]: selected } )}>
@@ -78,7 +78,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
             </Text>
           </Group>
         </td>
-        {options?.leader && 
+        {options?.leader &&
         <td>
           <Radio value={item.id} ></Radio>
         </td>}
@@ -103,32 +103,32 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
       />
       <ScrollArea className="flex-grow" onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
 
-                <Radio.Group>
-        <Table horizontalSpacing="md" verticalSpacing="xs" miw={50} sx={{ tableLayout: "fixed" }}>
-          <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
-            <tr>
-              <th style={{ width: rem ( 40 ) }}>
-              </th>
-              <th>Full Name</th>
-              {options?.leader && <th style={{ width: rem ( 70 ) }}>Leader</th>}
-            </tr>
-          </thead>
-          <tbody className="overflow-y-scroll">
-            {rows.length > 0 ? (
-              rows
-            ) : (
+        <Radio.Group>
+          <Table horizontalSpacing="md" verticalSpacing="xs" miw={50} sx={{ tableLayout: "fixed" }}>
+            <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
               <tr>
-                <td colSpan={Object.keys ( data[0] ).length}>
-                  <Text weight={500} align="center">
-                    Nothing found
-                  </Text>
-                </td>
+                <th style={{ width: rem ( 40 ) }}>
+                </th>
+                <th>Full Name</th>
+                {options?.leader && <th style={{ width: rem ( 70 ) }}>Leader</th>}
               </tr>
-            )}
-          </tbody>
-        </Table>
-          </Radio.Group>
-        
+            </thead>
+            <tbody className="overflow-y-scroll">
+              {rows.length > 0 ? (
+                rows
+              ) : (
+                <tr>
+                  <td colSpan={Object.keys ( data[0] ).length}>
+                    <Text weight={500} align="center">
+                    Nothing found
+                    </Text>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Radio.Group>
+
       </ScrollArea>
     </div>
   );

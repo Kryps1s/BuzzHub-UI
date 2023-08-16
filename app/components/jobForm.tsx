@@ -178,7 +178,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         <Stepper.Step label="Setup" description="Take attendance">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
-            <SelectTrelloMembersTable options={{'leader':true}} data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
+            <SelectTrelloMembersTable options={{ "leader":true }} data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
         </Stepper.Step>
         <Stepper.Step label="Setup" description="Hive Prep">
@@ -208,31 +208,31 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         </Stepper.Step>
 
         <Stepper.Step label="Inspection" description="Notes">
-        <div className="w-full max-w-xl mx-auto h-full px-4 ">
-          <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
-          <Accordion defaultValue={form.values.boxes[0].box.toString()}>
+          <div className="w-full max-w-xl mx-auto h-full px-4 ">
+            <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
+            <Accordion defaultValue={form.values.boxes[0].box.toString()}>
 
-            {accordionItems}
+              {accordionItems}
 
-          </Accordion>
-        </div>
+            </Accordion>
+          </div>
         </Stepper.Step>
 
         <Stepper.Step label="Inspection" description="Next Steps">
-        <div className="w-full max-w-xl mx-auto h-full px-4 ">
-          <Textarea
-            className="px-6 py-2"
-            placeholder="Write notes for the next inspection here."
-            label="Next Steps"
-            radius="sm"
-            size="xl"
-            value={form.values.nextSteps}
-            onChange={( event ) => {
-              form.setFieldValue ( "nextSteps", event.currentTarget.value );
-            }}
-          />
-          <Title className="color-red-600">{submissionError}</Title>
-        </div>
+          <div className="w-full max-w-xl mx-auto h-full px-4 ">
+            <Textarea
+              className="px-6 py-2"
+              placeholder="Write notes for the next inspection here."
+              label="Next Steps"
+              radius="sm"
+              size="xl"
+              value={form.values.nextSteps}
+              onChange={( event ) => {
+                form.setFieldValue ( "nextSteps", event.currentTarget.value );
+              }}
+            />
+            <Title className="color-red-600">{submissionError}</Title>
+          </div>
         </Stepper.Step>
 
         <Stepper.Completed>
