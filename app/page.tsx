@@ -36,7 +36,7 @@ const Page: NextPage = () => {
   }
   return (
     <Layout>
-      <div className="w-full flex flex-col align-middle justify-center">
+      <div className="w-full flex flex-col align-middle justify-center mb-10">
         <EventRow events={events.happeningNow} title="Happening Today" />
         <EventContextBar />
         <EventRow events={beekeepingEvents} title="Beekeeping " seeAll={true} />

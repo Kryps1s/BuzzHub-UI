@@ -81,11 +81,11 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
   }else
     return (
       <Paper
-        shadow="xl"
+        shadow="md"
         p="sm"
         radius="md"
         withBorder
-        className="h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow"
+        className="min-h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow"
       >
         <Text className={classes.category}>{categoryText}</Text>
         <Title order={1} className="text-buzzhub-navy text-sm">
@@ -93,7 +93,7 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
         </Title>
 
         {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
-          <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32">
+          <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32 ">
             <IconSpeakerphone className="h-6 text-buzzhub-navy" size={"1rem"} />
             {mdOrLargerScreen && (
               <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>
