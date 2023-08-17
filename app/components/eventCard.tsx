@@ -1,8 +1,9 @@
 "use client";
 import { createStyles, Paper, Text, Title } from "@mantine/core";
 import Link from "next/link";
-import { EventCard } from "../lib/types";
+import { Event } from "../lib/types";
 import { useSelectedTabStore } from "../store/selectedTab";
+import { useEventsStore } from "../store/events";
 import { IconTool, IconSpeakerphone, IconPencil } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 const useStyles = createStyles( ( theme ) => ( {
@@ -16,23 +17,18 @@ const useStyles = createStyles( ( theme ) => ( {
 } ) );
 
 interface EventCardProps {
-  past?: EventCard ;
-  upcoming?: EventCard ;
-  happeningNow?: EventCard ;
+  past?: Event ;
+  upcoming?: Event ;
+  happeningNow?: Event ;
 }
 
 export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) {
+
   const selectedTab = useSelectedTabStore( ( state ) => state.selectedTab );
-  let event;
-  if ( happeningNow ) {
-    event = happeningNow;
-  }else
-  {
-    event = selectedTab === "upcoming" ? upcoming : past;
-  }
+  const event = happeningNow ? happeningNow : selectedTab === "upcoming" ? upcoming : past;
   const { classes } = useStyles();
   const mdOrLargerScreen = useMediaQuery( "(min-width:768px)" );
-
+  const selectEvent = useEventsStore( ( state ) => state.selectEvent );
   if( event === null || event === undefined ) return ( <></> );
   const { name, roles = [], jobs = [], hives = [], location = "", type, start, eventId } = event;
   // extract  the full name of the user who is a facilitator, jockey, and scribe
@@ -63,6 +59,7 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
     return (
       <Link href={`/event/${eventId}`}>
         <Paper
+          onClick={() => selectEvent( event as Event )}
           shadow="xl"
           p="sm"
           radius="md"

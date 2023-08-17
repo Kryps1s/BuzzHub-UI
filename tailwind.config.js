@@ -18,8 +18,11 @@ module.exports = {
       },
       minHeight: {
         '40': '10rem',
+      },
+      maxHeight: {
+        '4/5': '80%',
       }
-    }
   },
   plugins: [],
+  }
 }

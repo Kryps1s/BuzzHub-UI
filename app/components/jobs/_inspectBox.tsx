@@ -21,7 +21,7 @@ const BoxForm = ( { box, index, form } : BoxFormProps ) => {
   ) );
 
   return (
-    <Accordion className='overflow-scroll h-80 md:h-full'>
+    <Accordion className='overflow-scroll max-h-96'>
 
       {accordionItems}
 
