@@ -115,7 +115,6 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
   const createReport = () : string => {
     const report = [];
-    console.log( form.values.participants.map( ( participant ) => participant.id ) );
     report.push( "# Inspection Report" );
     report.push( " " );
     report.push( `## [Previous Inspection](https://trello.com/c/${link})` );
