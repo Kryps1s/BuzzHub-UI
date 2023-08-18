@@ -16,7 +16,7 @@ const copyButton = ( { upcomingMeetingDetails }:{ upcomingMeetingDetails: Event[
   };
   const copyMeetingDetailsToClipboard = () => {
     const first = upcomingMeetingDetails[0].roles ? upcomingMeetingDetails[0].roles : [];
-    const second = upcomingMeetingDetails[1].roles ? upcomingMeetingDetails[1].roles : []; 
+    const second = upcomingMeetingDetails[1].roles ? upcomingMeetingDetails[1].roles : [];
     const meetingDetails = `
   MEETING ${formatDate( new Date( upcomingMeetingDetails[0].start ) ) }
   
