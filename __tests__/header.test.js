@@ -6,7 +6,7 @@ describe('Header', () => {
     render(<HeaderTabs tabs={["Happening"]}  />)
  
 
-    const happeningToday = screen.getByText(/Log In/i)
+    const happeningToday = screen.getByText(/Log Ign/i)
     expect(happeningToday).toBeInTheDocument()
  
   })
