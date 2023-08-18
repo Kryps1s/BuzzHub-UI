@@ -1,9 +1,9 @@
 import { EventCard } from "./eventCard";
-import { EventCard as IEventCard } from "../lib/types";
+import { Event } from "../lib/types";
 import Link from "next/link";
 
 interface EventRowProps {
-    events: IEventCard[] | {past: IEventCard[], upcoming: IEventCard[]};
+    events: Event[] | {past: Event[], upcoming: Event[]};
     title: string;
     seeAll?: boolean;
 }
