@@ -7,8 +7,8 @@ on:
       - develop
 
 jobs:
-  lint-and-test:
-    name: Lint and Test
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -28,5 +28,23 @@ jobs:
       - name: Run linting
         run: yarn lint
 
-      - name: Run tests
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run Tests
         run: yarn test --watchAll
