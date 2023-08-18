@@ -81,8 +81,8 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     setActive ( ( current ) => current < 4 ? current + 1 : current );
 
   const submit = async () => {
-    const participantsArray = form.values.participants.map((participant) => participant.id);
-    const participantsJSON = `[${participantsArray.map((id) => `"${id}"`).join(',')}]`;
+    const participantsArray = form.values.participants.map( ( participant ) => participant.id );
+    const participantsJSON = `[${participantsArray.map( ( id ) => `"${id}"` ).join( "," )}]`;
     try{
       setLoading( true );
       const report = createReport();
@@ -115,7 +115,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
   const createReport = () : string => {
     const report = [];
-    console.log(form.values.participants.map( ( participant ) => participant.id ))
+    console.log( form.values.participants.map( ( participant ) => participant.id ) );
     report.push( "# Inspection Report" );
     report.push( " " );
     report.push( `## [Previous Inspection](https://trello.com/c/${link})` );
