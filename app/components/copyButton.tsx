@@ -15,19 +15,21 @@ const copyButton = ( { upcomingMeetingDetails }:{ upcomingMeetingDetails: Event[
     return date.toLocaleDateString( "en-US", options );
   };
   const copyMeetingDetailsToClipboard = () => {
+    const first = upcomingMeetingDetails[0].roles ? upcomingMeetingDetails[0].roles : [];
+    const second = upcomingMeetingDetails[1].roles ? upcomingMeetingDetails[1].roles : []; 
     const meetingDetails = `
   MEETING ${formatDate( new Date( upcomingMeetingDetails[0].start ) ) }
   
   **General**
   • Location: ${upcomingMeetingDetails[0].location}
   • Meeting Roles
-      ${formatRoles( upcomingMeetingDetails[0].roles ) }
+      ${formatRoles( first ) }
   
   • Next meeting
     • Date: ${formatDate( new Date( upcomingMeetingDetails[1].start ) ) }
     • Location: ${upcomingMeetingDetails[1].location}
     • Meeting Roles
-      ${formatRoles( upcomingMeetingDetails[1].roles ) }
+      ${formatRoles( second ) }
   
   **Recurring (15-30m)**
     • Attendance
