@@ -38,7 +38,10 @@ interface SelectTrelloMembersTableProps {
   formValueName: string;
   preselectedValues: TrelloMember[];
   options?: {
-    leader: boolean;
+    leader: {
+      leader: string;
+      setLeader: ( value: string ) => void;
+    }
   };
 }
 const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselectedValues, options }: SelectTrelloMembersTableProps ) : JSX.Element => {
@@ -80,7 +83,8 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
         </td>
         {options?.leader &&
         <td>
-          <Radio value={item.id} ></Radio>
+          <Radio value={item.fullName}
+          ></Radio>
         </td>}
       </tr>
     );
@@ -103,7 +107,10 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
       />
       <ScrollArea className="flex-grow" onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
 
-        <Radio.Group>
+        <Radio.Group
+          value={options?.leader?.leader}
+          onChange={( value ) => options?.leader?.setLeader( value )}
+        >
           <Table horizontalSpacing="md" verticalSpacing="xs" miw={50} sx={{ tableLayout: "fixed" }}>
             <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
               <tr>

@@ -51,6 +51,7 @@ const getData = async () => {
   const tomorrow = new Date( Date.now() + 86400000 ).toISOString().split( "T" )[0];
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
+    cache: "no-cache",
     body:JSON.stringify( {
       query: `
       fragment EventDetails on Event {
@@ -61,6 +62,8 @@ const getData = async () => {
         ... on BeekeepingEvent {
           hives
           jobs
+          goal
+          link
         }
         ... on MeetingEvent {
           location

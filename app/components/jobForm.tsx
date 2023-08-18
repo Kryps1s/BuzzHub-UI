@@ -5,48 +5,56 @@ import { Stepper,
   Group,
   NumberInput,
   Title,
+  Text,
   Textarea,
   NumberInputHandlers,
   rem,
   ActionIcon,
-  Loader } from "@mantine/core";
+  Loader,
+  Blockquote,
+  ScrollArea } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useEventsStore } from "../store/events";
 import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
-import { Box, TrelloMember } from "../lib/types";
+import { Box, TrelloMember, Frame } from "../lib/types";
 import { POST } from "../api/graphql/route";
 
 interface JobFormProps {
   jobs: string[];
+
   trelloMembers: TrelloMember[];
   id: string;
 }
 
 const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => {
-
+  const createFrame = (): Frame => ( {
+    eggs: false,
+    queen: false,
+    honey: false,
+    pollen: false,
+    brood: false,
+    drone: false,
+    queenCups: false,
+    nectar: false,
+    larvae: false,
+    empty: false,
+    notes: ""
+  } as Frame );
   const createBox = ( index:number ) : Box => ( {
     box: index.toString(),
-    frames:Array( 10 ).fill( {
-      queen: false,
-      queenCups: false,
-      honey: false,
-      pollen: false,
-      brood: false,
-      drone: false,
-      nectar: false,
-      eggs: false,
-      larvae: false,
-      notes: ""
-    } )
+    frames:Array( 10 ).fill( createFrame() )
   } );
 
   const [ active, setActive ] = useState ( 0 );
   const [ loading, setLoading ] = useState ( false );
   const [ submissionError, setSubmissionError ] = useState ( "" );
-
+  const [ leader, setLeader ] = useState ( "" );
   const handlers = useRef<NumberInputHandlers>();
+  useEventsStore( ( state ) => state.selectedEvent );
+  const { goal = undefined, link = undefined } = useEventsStore( ( state ) => state.selectedEvent ) || {};
 
   const participants : TrelloMember[] = [];
   const form = useForm ( {
@@ -73,23 +81,23 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     setActive ( ( current ) => current < 4 ? current + 1 : current );
 
   const submit = async () => {
+    const participantsArray = form.values.participants.map( ( participant ) => participant.id );
+    const participantsJSON = `[${participantsArray.map( ( id ) => `"${id}"` ).join( "," )}]`;
     try{
       setLoading( true );
       const report = createReport();
       const req = new Request( "http://buzzhub.com", {
         method: "POST",
         body: JSON.stringify( {
-          query: `
-          mutation SaveBeekeepingReport {
-            saveBeekeepingReport(
-                eventId: "${id}"
-                report: "${report}"
-                participants: "${form.values.participants.map( ( participant ) => participant.id )}"
-            ) {
+          query: `mutation SaveBeekeepingReport {
+    saveBeekeepingReport(
+    eventId: "${id}"
+    report: "${report}"
+    participants: ${participantsJSON}
+    ) {
                 message
             }
-        }
-          `
+        }`
         } )
       } );
       await POST( req );
@@ -104,10 +112,23 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       setLoading( false );
     }
   };
+
   const createReport = () : string => {
     const report = [];
-    //check if there are any participants and that
-    if ( form.values.participants.length === 0 ) {
+    report.push( "# Inspection Report" );
+    report.push( " " );
+    report.push( `## [Previous Inspection](https://trello.com/c/${link})` );
+    report.push( " " );
+    if( goal ) {
+      report.push( "# Goals" );
+      report.push( `## ${goal}` );
+      report.push( " " );
+      report.push( "---" );
+    }
+    // //check if there are any participants and that
+    report.push( `# Leader: **${leader}**` );
+    report.push( " " );
+    if ( form.values.participants.length !== 0 ) {
       report.push( "# Participants" );
       report.push( " " );
       const fullNames = form.values.participants.map( ( participant ) => `**${participant.fullName}**` );
@@ -116,7 +137,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       report.push( "---" );
     }
 
-    report.push( "# Box Overview" );
+    report.push( "# Notes" );
     form.values.boxes.forEach( ( box ) => {
       report.push( `## Box ${box.box}` );
       box.frames.forEach( ( frame, index ) => {
@@ -143,11 +164,11 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       report.push( " " );
     } );
     report.push( "---" );
-    report.push( "# Next Steps" );
+    report.push( "# Next Steps➡️" );
     report.push( " " );
     report.push( form.values.nextSteps );
     //join with escaped newlines
-    return report.join( "\\n" );
+    return encodeURIComponent( report.join( "\n" ) );
   };
 
   const prevStep = () => setActive ( ( current ) => ( current > 0 ? current - 1 : current ) );
@@ -174,17 +195,17 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
   return (
     <>
-      <Stepper id='stepper' className="px-4  h-4/5 " active={active} onStepClick={setActive}>
+      <Stepper id='stepper' className="px-4 max-w-4xl mx-auto h-4/5" active={active} onStepClick={setActive}>
         <Stepper.Step label="Setup" description="Take attendance">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
-            <SelectTrelloMembersTable options={{ "leader":true }} data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
+            <SelectTrelloMembersTable options={{ "leader":{ leader, setLeader } }} data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
         </Stepper.Step>
         <Stepper.Step label="Setup" description="Hive Prep">
-          <div className="flex flex-col align-middle">
+          <div className="flex flex-col align-middle h-full">
             <Title className="flex justify-center mb-4" order={2}>How many boxes are you inspecting?</Title>
-            <Group className="flex justify-center" spacing={5}>
+            <Group className="flex justify-center mx-auto my-5" spacing={5}>
               <ActionIcon size={42} variant="default" onClick={() => handlers.current?.decrement()}>
             –
               </ActionIcon>
@@ -204,13 +225,24 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
             +
               </ActionIcon>
             </Group>
+            {goal ?
+              <div className="flex flex-col h-3/4">
+                <Title className="flex justify-center mb-4" order={2}>Goals for this inspection:</Title>
+                <ScrollArea className="flex-grow"><Blockquote className="flex justify-center mt-4 whitespace-break-spaces "> {goal}</Blockquote></ScrollArea>
+              </div> :
+              <>
+                <Text className="flex justify-center mt-4"> No Next Steps from previous inspection found.
+              Be sure to include a Next Steps emoji (➡️) in your report!</Text>
+              </>
+            }
+
           </div>
         </Stepper.Step>
 
         <Stepper.Step label="Inspection" description="Notes">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
-            <Accordion defaultValue={form.values.boxes[0].box.toString()}>
+            <Accordion className="h-full" defaultValue={form.values.boxes[0].box.toString()}>
 
               {accordionItems}
 
@@ -242,7 +274,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         </Stepper.Completed>
       </Stepper>
 
-      <Group className="h-1/5 my-auto" position="right" >
+      <Group className="h-1/5 max-w-xl mx-auto my-auto" position="right" >
         {active !== 0 && active <4 && (
           <Button className="mt-4 border bg-cyan-700 border-slate-200" onClick={prevStep}>
             Back
