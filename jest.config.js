@@ -39,5 +39,8 @@ module.exports = {
       '/node_modules/',
       '^.+\\.module\\.(css|sass|scss)$',
     ],
-    setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+    modulePaths: [
+      "<rootDir>"
+    ],
   }
