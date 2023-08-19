@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createStyles, Table, Checkbox, ScrollArea, Group, Text, rem, TextInput } from "@mantine/core";
+import { createStyles, Table, Checkbox, ScrollArea, Group, Text, rem, TextInput, Radio } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { TrelloMember } from "../lib/types";
 
@@ -37,8 +37,14 @@ interface SelectTrelloMembersTableProps {
   setFormValue: ( type: string, value: TrelloMember[] ) => void;
   formValueName: string;
   preselectedValues: TrelloMember[];
+  options?: {
+    leader: {
+      leader: string;
+      setLeader: ( value: string ) => void;
+    }
+  };
 }
-const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselectedValues }: SelectTrelloMembersTableProps ) : JSX.Element => {
+const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselectedValues, options }: SelectTrelloMembersTableProps ) : JSX.Element => {
   const { classes, cx } = useStyles();
   const [ selection, setSelection ] = useState<string[]>( preselectedValues.map( ( value ) => value.id ) );
   const [ scrolled, setScrolled ] = useState<boolean>( false );
@@ -75,6 +81,11 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
             </Text>
           </Group>
         </td>
+        {options?.leader &&
+        <td>
+          <Radio value={item.fullName}
+          ></Radio>
+        </td>}
       </tr>
     );
   } );
@@ -86,7 +97,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
   };
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <TextInput
         placeholder="Search"
         mb="md"
@@ -94,31 +105,39 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
         value={search}
         onChange={handleSearchChange}
       />
-      <ScrollArea h={500} onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
-        <Table horizontalSpacing="md" verticalSpacing="xs" miw={100} sx={{ tableLayout: "fixed" }}>
-          <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
-            <tr>
-              <th style={{ width: rem ( 40 ) }}>
-              </th>
-              <th>Full Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length > 0 ? (
-              rows
-            ) : (
+      <ScrollArea className="flex-grow" onScrollPositionChange={( { y } ) => setScrolled( y !== 0 )}>
+
+        <Radio.Group
+          value={options?.leader?.leader}
+          onChange={( value ) => options?.leader?.setLeader( value )}
+        >
+          <Table horizontalSpacing="md" verticalSpacing="xs" miw={50} sx={{ tableLayout: "fixed" }}>
+            <thead className={`${cx( classes.header, { [classes.scrolled]: scrolled } )} z-[1]`}>
               <tr>
-                <td colSpan={Object.keys ( data[0] ).length}>
-                  <Text weight={500} align="center">
-                    Nothing found
-                  </Text>
-                </td>
+                <th style={{ width: rem ( 40 ) }}>
+                </th>
+                <th>Full Name</th>
+                {options?.leader && <th style={{ width: rem ( 70 ) }}>Leader</th>}
               </tr>
-            )}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody className="overflow-y-scroll">
+              {rows.length > 0 ? (
+                rows
+              ) : (
+                <tr>
+                  <td colSpan={Object.keys ( data[0] ).length}>
+                    <Text weight={500} align="center">
+                    Nothing found
+                    </Text>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </Radio.Group>
+
       </ScrollArea>
-    </>
+    </div>
   );
 };
 

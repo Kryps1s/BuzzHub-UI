@@ -19,7 +19,7 @@ export async function POST ( req: Request ) {
     headers.append( "Authorization", auth );
 
     const res = await fetch( process.env.NEXT_PUBLIC_API_URL, {
-      cache: "no-store",
+      cache: req.cache ? req.cache : "no-store",
       method: "POST",
       headers,
       body

@@ -10,27 +10,19 @@ export enum EventType {
   }
 
 export interface Event {
-    eventId?: string;
+    eventId: string;
     type: EventType;
     start: string;
     name: string;
     end: string;
-    roles: Role[];
-    location: string;
+    roles?: Role[];
+    location?: string;
     isMonthly?: boolean;
+    goal?: string;
+    jobs?: string[];
+    hives?: string[];
+    link?: string;
   }
-
-export interface EventCard {
-  image: string;
-  name: string;
-  start: string;
-  eventId: string;
-  type: string;
-  jobs?: string[];
-  hives?: string[];
-  location?: string;
-  roles?: Role[];
-}
 
 export interface CalendarEvent {
   title: string,
@@ -62,6 +54,7 @@ export interface Frame {
   queenCups : boolean
   nectar : boolean
   larvae : boolean
+  empty : boolean
   notes : string
 }
 

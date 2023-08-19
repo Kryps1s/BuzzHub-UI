@@ -38,6 +38,7 @@ const Page: NextPage = ( context ) => {
 const getData = async () => {
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
+    cache: "force-cache",
     body:JSON.stringify( {
       query: `
        query GetTrelloMembers {

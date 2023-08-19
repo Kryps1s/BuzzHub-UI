@@ -1,8 +1,9 @@
 "use client";
 import { createStyles, Paper, Text, Title } from "@mantine/core";
 import Link from "next/link";
-import { EventCard } from "../lib/types";
+import { Event } from "../lib/types";
 import { useSelectedTabStore } from "../store/selectedTab";
+import { useEventsStore } from "../store/events";
 import { IconTool, IconSpeakerphone, IconPencil } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 const useStyles = createStyles( ( theme ) => ( {
@@ -16,23 +17,18 @@ const useStyles = createStyles( ( theme ) => ( {
 } ) );
 
 interface EventCardProps {
-  past?: EventCard ;
-  upcoming?: EventCard ;
-  happeningNow?: EventCard ;
+  past?: Event ;
+  upcoming?: Event ;
+  happeningNow?: Event ;
 }
 
 export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) {
+
   const selectedTab = useSelectedTabStore( ( state ) => state.selectedTab );
-  let event;
-  if ( happeningNow ) {
-    event = happeningNow;
-  }else
-  {
-    event = selectedTab === "upcoming" ? upcoming : past;
-  }
+  const event = happeningNow ? happeningNow : selectedTab === "upcoming" ? upcoming : past;
   const { classes } = useStyles();
   const mdOrLargerScreen = useMediaQuery( "(min-width:768px)" );
-
+  const selectEvent = useEventsStore( ( state ) => state.selectEvent );
   if( event === null || event === undefined ) return ( <></> );
   const { name, roles = [], jobs = [], hives = [], location = "", type, start, eventId } = event;
   // extract  the full name of the user who is a facilitator, jockey, and scribe
@@ -44,25 +40,29 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
   }
 
   let categoryText, titleText;
+  const startFormatted = titleText = new Date( start ).toLocaleString( "en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true
+  } );
   switch ( event.type ) {
   case "BEEKEEPING":
-    titleText = hives.length > 0 ? hives.join( ", " ) : name;
-    categoryText = jobs.join( ", " );
+    titleText = startFormatted;
+    categoryText = `${jobs.join( ", " )} - ${hives.length > 0 ? hives.join( ", " ) : name}`;
     break;
   case "MEETING":
     //convert date to human readable format
-    titleText = new Date( start ).toLocaleString( "en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short"
-    }
-    );
+    titleText = startFormatted;
     categoryText = `${location} MEETING`;
   }
   if ( jobs.includes( "INSPECT" ) ) {
     return (
       <Link href={`/event/${eventId}`}>
         <Paper
+          onClick={() => selectEvent( event as Event )}
           shadow="xl"
           p="sm"
           radius="md"
@@ -81,11 +81,11 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
   }else
     return (
       <Paper
-        shadow="xl"
+        shadow="md"
         p="sm"
         radius="md"
         withBorder
-        className="h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow"
+        className="min-h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow"
       >
         <Text className={classes.category}>{categoryText}</Text>
         <Title order={1} className="text-buzzhub-navy text-sm">
@@ -93,7 +93,7 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
         </Title>
 
         {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
-          <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32">
+          <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32 ">
             <IconSpeakerphone className="h-6 text-buzzhub-navy" size={"1rem"} />
             {mdOrLargerScreen && (
               <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>

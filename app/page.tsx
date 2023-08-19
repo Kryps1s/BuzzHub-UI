@@ -36,7 +36,7 @@ const Page: NextPage = () => {
   }
   return (
     <Layout>
-      <div className="w-full flex flex-col align-middle justify-center">
+      <div className="w-full flex flex-col align-middle justify-center mb-10">
         <EventRow events={events.happeningNow} title="Happening Today" />
         <EventContextBar />
         <EventRow events={beekeepingEvents} title="Beekeeping " seeAll={true} />
@@ -51,6 +51,7 @@ const getData = async () => {
   const tomorrow = new Date( Date.now() + 86400000 ).toISOString().split( "T" )[0];
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
+    cache: "no-cache",
     body:JSON.stringify( {
       query: `
       fragment EventDetails on Event {
@@ -61,6 +62,8 @@ const getData = async () => {
         ... on BeekeepingEvent {
           hives
           jobs
+          goal
+          link
         }
         ... on MeetingEvent {
           location
