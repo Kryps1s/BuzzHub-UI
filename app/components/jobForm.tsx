@@ -225,15 +225,11 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
             +
               </ActionIcon>
             </Group>
-            {goal ?
+            {goal &&
               <div className="flex flex-col h-3/4">
                 <Title className="flex justify-center mb-4" order={2}>Goals for this inspection:</Title>
                 <ScrollArea className="flex-grow"><Blockquote className="flex justify-center mt-4 whitespace-break-spaces "> {goal}</Blockquote></ScrollArea>
-              </div> :
-              <>
-                <Text className="flex justify-center mt-4"> No Next Steps from previous inspection found.
-              Be sure to include a Next Steps emoji (➡️) in your report!</Text>
-              </>
+              </div>
             }
 
           </div>
