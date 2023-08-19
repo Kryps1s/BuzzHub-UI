@@ -47,7 +47,7 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
     hour: "numeric",
     minute: "numeric",
     hour12: true
-  });
+  } );
   switch ( event.type ) {
   case "BEEKEEPING":
     titleText = startFormatted;
