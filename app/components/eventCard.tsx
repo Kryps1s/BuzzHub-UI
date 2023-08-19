@@ -40,19 +40,22 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
   }
 
   let categoryText, titleText;
+  const startFormatted = titleText = new Date( start ).toLocaleString( "en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true
+  } );
   switch ( event.type ) {
   case "BEEKEEPING":
-    titleText = hives.length > 0 ? hives.join( ", " ) : name;
-    categoryText = jobs.join( ", " );
+    titleText = startFormatted;
+    categoryText = `${jobs.join( ", " )} - ${hives.length > 0 ? hives.join( ", " ) : name}`;
     break;
   case "MEETING":
     //convert date to human readable format
-    titleText = new Date( start ).toLocaleString( "en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short"
-    }
-    );
+    titleText = startFormatted;
     categoryText = `${location} MEETING`;
   }
   if ( jobs.includes( "INSPECT" ) ) {
