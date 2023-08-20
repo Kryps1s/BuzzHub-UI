@@ -40,7 +40,7 @@ export function EventCard ( { past, upcoming, happeningNow } : EventCardProps ) 
   }
 
   let categoryText, titleText;
-  const startFormatted = titleText = new Date( start ).toLocaleString( "en-GB", {
+  const startFormatted = new Date( start ).toLocaleString( "en-CA", {
     weekday: "short",
     day: "numeric",
     month: "short",

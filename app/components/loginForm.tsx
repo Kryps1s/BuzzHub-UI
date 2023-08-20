@@ -22,9 +22,9 @@ const LoginForm = ( { login, loginErrorMessage, loading }: LoginFormProps ) : Re
       <TextInput mt="md" label="Username" placeholder="Username" {...form.getInputProps ( "email" ) } />
       <PasswordInput label="Password" placeholder="Password" mt="md" { ...form.getInputProps ( "password" )}/>
       <p> {loginErrorMessage} </p>
-      { loading && <Loader className="mx-auto mt-4" />}
+      { loading && <Loader id="loginLoader" className="mx-auto mt-4" />}
       <Group position="right">
-        <Button type="submit" disabled={ loading } variant="light" color="blue" onClick={() => login( form.values.email, form.values.password )}>Login</Button>
+        <Button id="loginButton" type="submit" disabled={ loading } variant="light" color="blue" onClick={() => login( form.values.email, form.values.password )}>Login</Button>
       </Group>
     </>
   );
