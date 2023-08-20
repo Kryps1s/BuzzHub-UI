@@ -1,0 +1,18 @@
+name: e2e Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cypress run with env
+        uses: cypress-io/github-action@v5
+        with:
+          env: baseUrl=http://dev.buzzhub.com,password=${{ secrets.CYPRESS_PASSWORD }}
