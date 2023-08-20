@@ -276,7 +276,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
           </Button>
         )}
         {active ===4 && <Link href="/"><Button className="mr-4 mt-4 border bg-cyan-700 border-slate-200" >Done</Button></Link>}
-        {active <3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={nextStep}>Next step</Button>}
+        {active <3 && <Button id="nextStep" className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={nextStep}>Next step</Button>}
         {active === 3 && loading && <Loader/>}
         {active === 3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" disabled={loading} onClick={submit}>Submit</Button>}
       </Group>

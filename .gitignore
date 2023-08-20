@@ -38,3 +38,7 @@ next-env.d.ts
 *.env
 
 __tests__/__snapshots__/
+cypress.env.json
+cypress/videos/
+cypress/screenshots/
+```
