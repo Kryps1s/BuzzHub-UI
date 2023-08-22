@@ -27,7 +27,8 @@ export interface Event {
 export interface CalendarEvent {
   title: string,
   start: string,
-  backgroundColor: string
+  backgroundColor: string,
+  url?: string
 }
 
 export interface User {

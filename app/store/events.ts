@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Event } from "../lib/types";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface EventsStore {
     events: Event[];
@@ -8,9 +9,16 @@ interface EventsStore {
     selectEvent: ( event: Event ) => void;
 }
 
-export const useEventsStore = create<EventsStore>( ( set ) => ( {
-  selectedEvent: undefined,
-  events: [],
-  setEvents: ( events: Event[] ) => set( { events } ),
-  selectEvent: ( event: Event ) => set( { selectedEvent: event } )
-} ) );
+const useEventsStore = create<EventsStore>()( persist(
+  ( set ) => ( {
+    selectedEvent: undefined,
+    events: [],
+    setEvents: ( events: Event[] ) => set( { events } ),
+    selectEvent: ( event: Event ) => set( { selectedEvent: event } )
+  } ),
+  {
+    name: "events",
+    storage: createJSONStorage( () => sessionStorage ) } )
+);
+
+export default useEventsStore;

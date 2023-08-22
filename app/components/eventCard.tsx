@@ -3,7 +3,7 @@ import { createStyles, Paper, Text, Title } from "@mantine/core";
 import Link from "next/link";
 import { Event } from "../lib/types";
 import { useSelectedTabStore } from "../store/selectedTab";
-import { useEventsStore } from "../store/events";
+import useEventsStore from "../store/events";
 import { IconTool, IconSpeakerphone, IconPencil } from "@tabler/icons-react";
 import { useMediaQuery } from "@mantine/hooks";
 const useStyles = createStyles( ( theme ) => ( {
