@@ -39,7 +39,7 @@ const CalendarContainer = ( { events }:{ events: CalendarEvent[] } ): React.JSX.
         headerToolbar={ { end: "dayGridMonth listMonth" } }
         aspectRatio={ aspectRatio }
         eventClick={ ( info ) => {
-          if ( info.event.url) {
+          if ( info.event.url ) {
             useEventsStore.getState().selectEvent( info.event.extendedProps.event );
           }
         } }

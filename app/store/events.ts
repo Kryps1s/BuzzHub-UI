@@ -11,14 +11,14 @@ interface EventsStore {
 
 const useEventsStore = create<EventsStore>()( persist(
   ( set ) => ( {
-  selectedEvent: undefined,
-  events: [],
-  setEvents: ( events: Event[] ) => set( { events } ),
-  selectEvent: ( event: Event ) => set( { selectedEvent: event } )
-} ),
+    selectedEvent: undefined,
+    events: [],
+    setEvents: ( events: Event[] ) => set( { events } ),
+    selectEvent: ( event: Event ) => set( { selectedEvent: event } )
+  } ),
   {
     name: "events",
-    storage: createJSONStorage(() => sessionStorage)  } )
+    storage: createJSONStorage( () => sessionStorage ) } )
 );
 
 export default useEventsStore;
