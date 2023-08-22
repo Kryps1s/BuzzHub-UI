@@ -26,7 +26,9 @@ const Page: NextPage = () => {
           ? `${event.type} ${event.location} - (Monthly Check-in)`
           : `${event.type} - ${event.location}`,
       start: new Date( event.start ).toISOString().split( "T" )[0],
-      backgroundColor: event.type === EventType.BEEKEEPING ? "#FF0000" : "#1234FF"
+      url : event.type == "BEEKEEPING" && event?.jobs?.includes( "INSPECT" ) ? `/event/${event.eventId}` : undefined,
+      backgroundColor: event.type === EventType.BEEKEEPING ? "#FCB017" : "#B5D6B2",
+      event: event
     } ) );
 
   return (
@@ -41,20 +43,34 @@ const getData = async () => {
   const lastDayOfCurrentMonth = new Date( new Date().getFullYear(), new Date().getMonth() + 1, 0 ).toISOString().slice( 0, 10 );
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
+    cache: "no-cache",
     body:JSON.stringify( {
       query: `
       query MyQuery($dateRange: [String] = ["${firstDayOfCurrentMonth}T00:00:00.000000Z", "${lastDayOfCurrentMonth}T00:00:00.000000Z"]) {
         getEvents(dateRange: $dateRange) {
+          name
           start
           type
+          eventId
+          ... on BeekeepingEvent {
+            hives
+            jobs
+            goal
+            link
+          }
           ... on MeetingEvent {
             location
             isMonthly
+            roles {
+              roleName
+              user {
+                username
+                fullName
+                id
+              }
+            }
           }
-          ... on BeekeepingEvent {
-            name
-          }
-      }
+        }
     }`,
       variables: {
       }

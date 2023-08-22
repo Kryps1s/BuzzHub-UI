@@ -13,7 +13,7 @@ import { Stepper,
   Blockquote,
   ScrollArea } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEventsStore } from "../store/events";
+import useEventsStore from "../store/events";
 import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";

@@ -3,8 +3,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { CalendarEvent } from "@/app/lib/types";
-import React, { useState } from "react";
+import { useState } from "react";
 import listPlugin from "@fullcalendar/list";
+import useEventsStore from "../store/events";
 
 const CalendarContainer = ( { events }:{ events: CalendarEvent[] } ): React.JSX.Element => {
   const getAspectRatio = () => {
@@ -34,9 +35,14 @@ const CalendarContainer = ( { events }:{ events: CalendarEvent[] } ): React.JSX.
       <FullCalendar
         plugins={ [ dayGridPlugin, interactionPlugin, listPlugin ] }
         events={ events }
-        editable={ true }
+        editable={ false }
         headerToolbar={ { end: "dayGridMonth listMonth" } }
         aspectRatio={ aspectRatio }
+        eventClick={ ( info ) => {
+          if ( info.event.url) {
+            useEventsStore.getState().selectEvent( info.event.extendedProps.event );
+          }
+        } }
       />
     </div>
   );

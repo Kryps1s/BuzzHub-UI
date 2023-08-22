@@ -43,4 +43,7 @@ module.exports = {
     modulePaths: [
       "<rootDir>"
     ],
+    testEnvironmentOptions: {
+      customExportConditions: [] // don't load "browser" field
+    }
   }
