@@ -28,7 +28,7 @@ jobs:
       - name: Run linting
         run: yarn lint
 
-  component test:
+  component-test:
     name: cypress component test
     runs-on: ubuntu-latest
 
@@ -49,7 +49,7 @@ jobs:
       - name: Run Tests
         run: yarn cypress run --component --headless --browser chrome
   
-  unit test:
+  unit-test:
     name: jest test
     runs-on: ubuntu-latest
 
