@@ -2,7 +2,7 @@ import React from 'react'
 import EventRow from '../../app/components/eventRow'
 import { RowType } from '../../app/lib/types/types'
 import { createEvents } from '../../fixtures/events'
-import { SWRConfig, Cache } from 'swr'
+import { SWRConfig, mutate } from 'swr'
 
 
 const testProps = {
@@ -11,9 +11,13 @@ const testProps = {
 }
 
 describe('<EventRow />', () => {
+  beforeEach(() => {
+    // mutate(()=>true,undefined,false)
+  })
+
   it('renders a collective row', () => {
     cy.mount(
-      <SWRConfig value={{ dedupingInterval: 0 }}>
+      <SWRConfig value={{ dedupingInterval: 0}}>
         <EventRow {...testProps}  />
       </SWRConfig>
     )
@@ -33,31 +37,33 @@ describe('<EventRow />', () => {
 
   it('renders a row with no events', () => {
     cy.mount(
-      <SWRConfig value={{ dedupingInterval: 0 }}>
+      <SWRConfig value={{ dedupingInterval: 0}}>
         <EventRow {...testProps}  />
       </SWRConfig>
     )
     cy.fixture('events').then((data) => {
       data.data.getEvents = createEvents([""],["past","today","future"] )
-      cy.intercept('POST', "**/graphql", data).as('getEvents')
+      cy.intercept('POST', "**/graphql", data).as('getEvents2')
     })
     cy.get('#loader').should('not.exist')
   })
 
   it('renders 2 events', () => {
     cy.mount(
-      <SWRConfig value={{ dedupingInterval: 0 }}>
+      <SWRConfig value={{ dedupingInterval: 0}}>
         <EventRow {...testProps}  />
       </SWRConfig>
     )
    cy.fixture('events').then((data) => {
       data.data.getEvents = createEvents(["MEETING"],["future"] ).slice(1,3)
-      cy.intercept('POST', "**/graphql", data).as('getEvents')
+      cy.intercept('POST', "**/graphql", data).as('getEvents3')
     })
       cy.get('.mantine-Paper-root').should('have.length', 2)
   })
 
+
   it('renders a row with an error', () => {
+
     cy.mount(
       <SWRConfig value={{ dedupingInterval: 0 }}>
         <EventRow {...testProps}  />
@@ -71,7 +77,7 @@ describe('<EventRow />', () => {
         }
     ]
       data.data = undefined;
-      cy.intercept('POST', "**/graphql", data).as('getEvents')
+      cy.intercept('POST', "**/graphql", data).as('getEvents4')
     })
       cy.contains('This is an error test.')
   })
