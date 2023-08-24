@@ -1,7 +1,0 @@
-{"events":[{
-  "title": 'test event',
-  "start": new Date().toISOString(),
-  "backgroundColor": 'red',
-}]
-}
-  

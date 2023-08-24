@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Layout from "../layouts/headerContent";
 import CalendarContainer from "../components/calendarContainer";
-import { EventType, Event } from "../lib/types";
+import { EventType, Event } from "../lib/types/types";
 import { use } from "react";
 import { POST } from "../api/graphql/route";
 

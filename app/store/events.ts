@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Event } from "../lib/types";
+import { Event } from "../lib/types/types";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface EventsStore {
