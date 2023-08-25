@@ -116,7 +116,6 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
       const name = getCookie( "name" );
       if ( typeof name === "string" ) {
         setDisplayName( "admin" );
-        // setUserAvatar( <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} /> );
       }
     }
     else{
@@ -224,7 +223,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                   >
                     <Group spacing={7}>
 
-                      <Image src="/images/SR_avatar_transparent.png" alt="Avatar" width={20} height={20} />
+                      <Image src="/images/SR_avatar_transparent.png" alt="Avatar" className="h-5 w-5" width={20} height={20}/>
                       <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                         {displayName}
                       </Text>
@@ -233,7 +232,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item onClick={ logout } icon={<IconLogout size="1rem" stroke={1.5} />}>Logout</Menu.Item>
+                  <Menu.Item onClick={ logout } icon={<IconLogout className="h-4 w-4" stroke={1.5} />}>Logout</Menu.Item>
                 </Menu.Dropdown>
               </Menu>
               :
@@ -243,7 +242,7 @@ export function HeaderTabs ( { tabs }: HeaderTabsProps ) {
               >
                 <Group spacing={7}>
 
-                  <IconLogin size="1rem" stroke={1.5} />
+                  <IconLogin className="h-4 w-4" stroke={1.5} />
                   <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
                     {displayName}
                   </Text>
