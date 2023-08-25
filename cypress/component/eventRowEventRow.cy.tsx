@@ -2,7 +2,7 @@ import React from 'react'
 import EventRow from '../../app/components/eventRow'
 import { RowType } from '../../app/lib/types/types'
 import { createEvents } from '../../fixtures/events'
-import { SWRConfig, mutate } from 'swr'
+import { SWRConfig } from 'swr'
 
 
 const testProps = {
@@ -11,20 +11,14 @@ const testProps = {
 }
 
 describe('<EventRow />', () => {
-  beforeEach(() => {
-    // mutate(()=>true,undefined,false)
-  })
-
   it('renders a collective row', () => {
+
     cy.mount(
-      <SWRConfig value={{ dedupingInterval: 0}}>
-        <EventRow {...testProps}  />
-      </SWRConfig>
-    )
-    cy.fixture('events').then((data) => {
-      data.data.getEvents = createEvents(["MEETING"],["past","today","future"] )
-      cy.intercept('POST', "**/graphql", data).as('getEvents')
-    })
+        <SWRConfig value={{ dedupingInterval: 0}}>
+          <EventRow {...testProps}  />
+        </SWRConfig>
+      )
+    cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents(["MEETING"],["past","today","future"] ) } }).as('getEvents')
     cy.get('#loader')
     cy.contains('See all')
     cy.contains('Collective')
@@ -41,11 +35,10 @@ describe('<EventRow />', () => {
         <EventRow {...testProps}  />
       </SWRConfig>
     )
-    cy.fixture('events').then((data) => {
-      data.data.getEvents = createEvents([""],["past","today","future"] )
-      cy.intercept('POST', "**/graphql", data).as('getEvents2')
-    })
+    cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents([""],["past","today","future"] ) } }).as('getEvents')
     cy.get('#loader').should('not.exist')
+    cy.get('.mantine-Paper-root').should('have.length', 0)
+
   })
 
   it('renders 2 events', () => {
@@ -54,31 +47,23 @@ describe('<EventRow />', () => {
         <EventRow {...testProps}  />
       </SWRConfig>
     )
-   cy.fixture('events').then((data) => {
-      data.data.getEvents = createEvents(["MEETING"],["future"] ).slice(1,3)
-      cy.intercept('POST', "**/graphql", data).as('getEvents3')
-    })
+      cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents(["MEETING"],["future"] ).slice(1,3) } }).as('getEvents')
       cy.get('.mantine-Paper-root').should('have.length', 2)
   })
 
-
   it('renders a row with an error', () => {
 
+      cy.intercept('POST', "**/graphql", { errors: [
+        {
+            "errorType": "UnauthorizedException",
+            "message": "This is an error test."
+        }
+      ] }).as('getEvents')
     cy.mount(
       <SWRConfig value={{ dedupingInterval: 0 }}>
         <EventRow {...testProps}  />
       </SWRConfig>
     )
-    cy.fixture('events').then((data) => {
-      data.errors = [
-        {
-            "errorType": "UnauthorizedException",
-            "message": "This is an error test."
-        }
-    ]
-      data.data = undefined;
-      cy.intercept('POST', "**/graphql", data).as('getEvents4')
-    })
       cy.contains('This is an error test.')
   })
 })
