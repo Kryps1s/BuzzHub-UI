@@ -127,19 +127,19 @@ export function EventCard ( { rowType, index } : EventCardProps )
 
       {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
         <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32 ">
-          <IconSpeakerphone id="speakerphone" className="h-6 text-buzzhub-navy" size={"1rem"} />
+          <IconSpeakerphone id="speakerphone" className="h-6 w-4 text-buzzhub-navy" />
           {mdOrLargerScreen && (
             <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>
           )}
           <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
             {facilitator?.user.fullName}
           </p>
-          <IconTool id="tool" className="h-6 text-buzzhub-navy" size={"1em"} />
+          <IconTool id="tool" className="h-6 w-4 flex text-buzzhub-navy"/>
           {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Jockey: </p>}
           <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
             {jockey?.user.fullName}
           </p>
-          <IconPencil id="pencil" className="h-6 text-buzzhub-navy" size={"1em"} />
+          <IconPencil id="pencil" className="h-6 w-4 text-buzzhub-navy"/>
           {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Scribe: </p>}
           <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
             {scribe?.user.fullName}
