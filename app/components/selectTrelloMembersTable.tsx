@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createStyles, Table, Checkbox, ScrollArea, Group, Text, rem, TextInput, Radio } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import { TrelloMember } from "../lib/types";
+import { TrelloMember } from "../lib/types/types";
 
 const useStyles = createStyles( ( theme ) => ( {
   header: {

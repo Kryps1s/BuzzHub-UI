@@ -1,0 +1,36 @@
+{"data":{
+  "getEvents":[{
+      "eventId": "TQ0Yuxnm",
+      "notes": "📣Facilitator: @elliotoreilly\n\n🔧Jockey: @elliotoreilly\n\n✏️Scribe: @elliotoreilly",
+      "start": "2023-08-29T22:00:00.000Z",
+      "type": "MEETING",
+      "name": "29 août 2023",
+      "location": "IN-PERSON",
+      "roles": [
+        {
+          "roleName": "Facilitator",
+          "user": {
+            "id": "626194d4c9873f601f82fd0f",
+            "fullName": "Elliot O'Reilly",
+            "username": "elliotoreilly"
+          }
+        },
+        {
+          "roleName": "Jockey",
+          "user": {
+            "id": "626194d4c9873f601f82fd0f",
+            "fullName": "Elliot O'Reilly",
+            "username": "elliotoreilly"
+          }
+        },
+        {
+          "roleName": "Scribe",
+          "user": {
+            "id": "626194d4c9873f601f82fd0f",
+            "fullName": "Elliot O'Reilly",
+            "username": "elliotoreilly"
+          }
+        }
+      ]
+    }]
+}}

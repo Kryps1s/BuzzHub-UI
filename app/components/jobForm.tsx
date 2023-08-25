@@ -18,7 +18,7 @@ import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
-import { Box, TrelloMember, Frame } from "../lib/types";
+import { Box, TrelloMember, Frame } from "../lib/types/types";
 import { POST } from "../api/graphql/route";
 
 interface JobFormProps {

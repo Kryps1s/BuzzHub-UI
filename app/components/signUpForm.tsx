@@ -4,7 +4,7 @@ import { Stepper, Button, Group, TextInput, Code } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import PasswordStrength from "./passwordStrength";
 import SelectTrelloMembersTable from "./selectTrelloMembersTable";
-import { TrelloMember } from "../lib/types";
+import { TrelloMember } from "../lib/types/types";
 
 interface SignUpFormProps {
   firstName: string;

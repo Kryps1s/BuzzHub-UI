@@ -1,5 +1,5 @@
 import { Chip, TextInput } from "@mantine/core";
-import { Frame, InspectionJobFormValues } from "../../lib/types";
+import { Frame, InspectionJobFormValues } from "../../lib/types/types";
 import { UseFormReturnType } from "@mantine/form";
 
 interface FrameFormProps {
