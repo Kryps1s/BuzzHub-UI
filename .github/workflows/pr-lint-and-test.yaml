@@ -50,6 +50,7 @@ jobs:
         run: yarn cypress run --component --headless --browser chrome
         env:
           NEXT_PUBLIC_API_URL: https://test.com/graphql
+          NEXT_PUBLIC_API_KEY: test
   
   unit-test:
     name: jest test
