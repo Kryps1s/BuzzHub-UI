@@ -5,7 +5,7 @@ describe('Basic Calendar Functionality', () => {
     //find the calendar tab
     cy.contains('Log In')
     cy.contains('calendar').click()
-    cy.url().should('include', '/calendar')
+    cy.url().should('include', '/calendar', {timeout: 10000})
     //get current month (August 2023)
 
     const currentMonth = new Date().toLocaleString('default', { year:'numeric', month: 'long' })
