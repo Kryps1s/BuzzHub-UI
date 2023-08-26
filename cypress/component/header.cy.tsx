@@ -25,7 +25,6 @@ describe('<Header/>', () => {
     cy.get('#loginModalOpen').click()
     cy.get('#username').type('admin')
     cy.get('#password').type('admin')
-    cy.get('#loginButton').click()
     cy.intercept('POST', '**/graphql', {
       statusCode: 200,
       body: {
@@ -37,6 +36,7 @@ describe('<Header/>', () => {
         }
       }
     })
+    cy.get('#loginButton').click()
     cy.contains('admin')
   })
 
