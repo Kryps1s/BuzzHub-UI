@@ -1,7 +1,7 @@
 describe('Inspection Report', () => {
   it('saves a report after some validations', () => {
     cy.visit(Cypress.env('baseUrl'))
-    cy.contains('Happening Today')
+    cy.contains('Happening today')
     cy.contains('Beekeeping')
     cy.contains('INSPECT').click()
     cy.url().should('include', '/event')

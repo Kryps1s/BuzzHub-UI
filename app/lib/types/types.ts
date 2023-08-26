@@ -9,19 +9,26 @@ export enum EventType {
     BEEKEEPING = "BEEKEEPING"
   }
 
+export enum RowType {
+  TODAY= "TODAY",
+  BEEKEEPING= "BEEKEEPING",
+  COLLECTIVE= "COLLECTIVE",
+}
+
 export interface Event {
     eventId: string;
     type: EventType;
     start: string;
     name: string;
-    end: string;
+    end?: string;
     roles?: Role[];
     location?: string;
     isMonthly?: boolean;
-    goal?: string;
+    goal?: string | null;
     jobs?: string[];
     hives?: string[];
-    link?: string;
+    link?: string | null;
+    notes?: string;
   }
 
 export interface CalendarEvent {

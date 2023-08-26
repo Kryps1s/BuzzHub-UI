@@ -1,6 +1,6 @@
 import { Accordion } from "@mantine/core";
 import FrameForm from "./_inspectFrame";
-import { Box, InspectionJobFormValues } from "../../lib/types";
+import { Box, InspectionJobFormValues } from "../../lib/types/types";
 import { UseFormReturnType } from "@mantine/form";
 
 interface BoxFormProps {

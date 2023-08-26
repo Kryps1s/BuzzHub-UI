@@ -28,8 +28,8 @@ jobs:
       - name: Run linting
         run: yarn lint
 
-  test:
-    name: Test
+  component-test:
+    name: cypress component test
     runs-on: ubuntu-latest
 
     steps:
@@ -48,3 +48,27 @@ jobs:
 
       - name: Run Tests
         run: yarn cypress run --component --headless --browser chrome
+        env:
+          NEXT_PUBLIC_API_URL: https://test.com/graphql
+          NEXT_PUBLIC_API_KEY: test
+  
+  unit-test:
+    name: jest test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run Tests
+        run: yarn test:ci
