@@ -19,8 +19,8 @@ const LoginForm = ( { login, loginErrorMessage, loading }: LoginFormProps ) : Re
 
   return (
     <>
-      <TextInput mt="md" label="Username" placeholder="Username" {...form.getInputProps ( "email" ) } />
-      <PasswordInput label="Password" placeholder="Password" mt="md" { ...form.getInputProps ( "password" )}/>
+      <TextInput id="username" mt="md" label="Username" placeholder="Username" {...form.getInputProps ( "email" ) } />
+      <PasswordInput id="password" label="Password" placeholder="Password" mt="md" { ...form.getInputProps ( "password" )}/>
       <p> {loginErrorMessage} </p>
       { loading && <Loader id="loginLoader" className="mx-auto mt-4" />}
       <Group position="right">
