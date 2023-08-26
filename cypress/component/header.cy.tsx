@@ -3,7 +3,7 @@ import { Header } from '../../app/components/header/header'
 describe('<Header/>', () => {
 
   beforeEach(() => {
-    cy.mount(<Header tabs={["home", "calendar", "meeting", "collective"]} />)
+    cy.mount(<Header/>)
     cy.viewport(1920, 1080)
   })
 

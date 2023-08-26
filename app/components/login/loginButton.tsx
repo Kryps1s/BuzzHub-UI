@@ -24,7 +24,6 @@ const LoginButton = () => {
   const [ loading, setLoading ] = useState( false );
   const [ loginErrorMessage, setLoginErrorMessage ] = useState( "" );
   const [ loginOpened, { open, close } ] = useDisclosure( false );
-  const [ userMenuOpened, setUserMenuOpened ] = useState( false );
   useEffect( () => {
     // This effect runs after the component is mounted on the client
     if ( hasCookie( "name" ) ) {
@@ -91,8 +90,6 @@ const LoginButton = () => {
           width={260}
           position="bottom-end"
           transitionProps={{ transition: "pop-top-right" }}
-          onClose={() => setUserMenuOpened( false )}
-          onOpen={() => setUserMenuOpened( true )}
           withinPortal
         >
           <Menu.Target>
@@ -114,7 +111,7 @@ const LoginButton = () => {
         :
         <UnstyledButton
           id="loginModalOpen"
-          className="text-black px-2 py-1 rounded-md hover:bg-gray-200 radius-sm transition-colors duration-100 ease-linear"
+          className="text-black my-auto h-6 px-2 py-1 rounded-md hover:bg-gray-200 radius-sm transition-colors duration-100 ease-linear"
           onClick={ handleLoginClick }
         >
           <Group spacing={7}>
