@@ -7,6 +7,9 @@ describe('Inspection Report', () => {
     cy.url().should('include', '/event')
     cy.get('input[type="radio"]').eq(1).click()
     cy.get('#nextStep').click()
+    cy.get('#errorMessage')
+    cy.get('input[type="checkbox"]').eq(1).click()
+    cy.get('#nextStep').click()
     cy.get('button').contains('+').click()
     cy.get('#nextStep').click()
     cy.contains('Box #3')
@@ -27,10 +30,6 @@ describe('Inspection Report', () => {
     cy.get('button').contains('Login').click()
     cy.contains('Login to BuzzHub').should('not.exist')    
     cy.get('button').contains('Submit').click()
-    cy.contains('there must be at least one attendee')
-    cy.contains('Take attendance').click()
-    cy.get('input[type="checkbox"]').check()
-    cy.contains('Next Steps').click()
     cy.intercept('POST', '/graphql', () => {
     }).as('graphqlRequest');
     cy.contains('Submit').click()
