@@ -38,4 +38,26 @@ describe('Inspection Form Tests', () => {
         cy.get('[data-rotate="true"]').should('not.exist')
     })
 
+    it('does not go to step 2 if no members are selected', () => {
+        cy.get('#nextStep').click()
+        cy.get('#errorMessage').should('exist')
+    })
+    it('does not go to step 2 if no leader selected', () => {
+        cy.get('#checkbox-123').click()
+        cy.get('#nextStep').click()
+        cy.get('#errorMessage').should('exist')
+    })
+
+    it('does not go to another step through the stepper if no members', () => {
+        cy.get('#notes').click()
+        cy.get('#errorMessage').should('exist')
+    })
+    
+    it('goes to step 2 if members and leader are selected', () => {
+        cy.get('#checkbox-123').click()
+        cy.get('#radio-123').click()
+        cy.get('#nextStep').click()
+        cy.get('#errorMessage').should('not.exist')
+    })
+
 })

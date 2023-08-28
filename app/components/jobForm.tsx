@@ -61,6 +61,17 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       participants,
       boxes: [ createBox( 2 ), createBox( 1 ) ],
       nextSteps: ""
+    },
+    validate: {
+      participants: ( value ) => {
+        if ( value.length === 0 ) {
+          return "Please select at least one participant.";
+        }
+        if ( !leader ) {
+          return "Please select a leader.";
+        }
+        return null;
+      }
     }
   } );
 
@@ -76,8 +87,12 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     }
   }, [ ] );
 
-  const nextStep = () : void =>
-    setActive ( ( current ) => current < 4 ? current + 1 : current );
+  const goToStep = ( item :number ) : void =>{
+    form.validate();
+    if( form.isValid() ) {
+      setActive( item );
+    }
+  };
 
   const submit = async () => {
     const participantsArray = form.values.participants.map( ( participant ) => participant.id );
@@ -100,7 +115,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         } )
       } );
       await POST( req );
-      nextStep();
+      goToStep( active+1 );
     }catch ( error : unknown ) {
       if ( error instanceof Error )
       {
@@ -193,12 +208,13 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   };
 
   return (
-    <>
-      <Stepper id='stepper' className="px-4 max-w-4xl mx-auto h-4/5" active={active} onStepClick={setActive}>
+    <form>
+      <Stepper id='stepper' className="px-4 max-w-4xl mx-auto h-4/5" active={active} onStepClick={goToStep}>
 
         <Stepper.Step label="Setup" description="Take attendance">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
+            <Title className="flex justify-center mb-4" order={2} id="errorMessage" color="red">{form.errors.participants}</Title>
             <SelectTrelloMembersTable options={{ "leader":{ leader, setLeader } }} data={ trelloMembers } formValueName={"participants"} setFormValue={form.setFieldValue} preselectedValues={form.values.participants}/>
           </div>
         </Stepper.Step>
@@ -278,11 +294,11 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
           </Button>
         )}
         {active ===4 && <Link href="/"><Button className="mr-4 mt-4 border bg-cyan-700 border-slate-200" >Done</Button></Link>}
-        {active <3 && <Button id="nextStep" className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={nextStep}>Next step</Button>}
+        {active <3 && <Button id="nextStep" className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={() => goToStep( active+1 )}>Next step</Button>}
         {active === 3 && loading && <Loader/>}
         {active === 3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" disabled={loading} onClick={submit}>Submit</Button>}
       </Group>
-    </>
+    </form>
   );
 };
 
