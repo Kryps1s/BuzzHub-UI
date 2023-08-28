@@ -53,6 +53,16 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   const [ leader, setLeader ] = useState ( "" );
   const handlers = useRef<NumberInputHandlers>();
   useEventsStore( ( state ) => state.selectedEvent );
+  useEffect( () => {
+    //on unload of the page, warn the user if they have unsaved changes
+    const unload = ( event : BeforeUnloadEvent ) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener( "beforeunload", unload );
+    return () => window.removeEventListener( "beforeunload", unload );
+  }, [ ] );
+
   const { goal = undefined, link = undefined } = useEventsStore( ( state ) => state.selectedEvent ) || {};
 
   const participants : TrelloMember[] = [];
