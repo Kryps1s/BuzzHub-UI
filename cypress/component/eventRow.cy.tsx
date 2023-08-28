@@ -1,4 +1,3 @@
-import React from 'react'
 import EventRow from '../../app/components/eventRow'
 import { RowType } from '../../app/lib/types/types'
 import { createEvents } from '../../fixtures/events'
