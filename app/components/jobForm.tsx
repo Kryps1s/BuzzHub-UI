@@ -195,7 +195,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   return (
     <>
       <Stepper id='stepper' className="px-4 max-w-4xl mx-auto h-4/5" active={active} onStepClick={setActive}>
-        
+
         <Stepper.Step label="Setup" description="Take attendance">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Select who is at the inspection.</Title>
@@ -236,7 +236,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
           </div>
         </Stepper.Step>
 
-        <Stepper.Step label="Inspection"  id="notes" description="Notes">
+        <Stepper.Step label="Inspection" id="notes" description="Notes">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
             <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
             <Accordion className="h-full">
