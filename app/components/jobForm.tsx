@@ -11,7 +11,9 @@ import { Stepper,
   ActionIcon,
   Loader,
   Blockquote,
-  ScrollArea } from "@mantine/core";
+  ScrollArea,
+  TextInput } from "@mantine/core";
+import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import useEventsStore from "../store/events";
 import SelectTrelloMembersTable from "./selectTrelloMembersTable";
@@ -129,6 +131,12 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   const form = useForm ( {
     initialValues: {
       participants,
+      general: {
+        weather: "",
+        overview: "",
+        temperment: "",
+        time: new Date()
+      },
       boxes: [ createBox( 2 ), createBox( 1 ) ],
       nextSteps: ""
     },
@@ -222,6 +230,22 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     }
 
     report.push( "# Notes" );
+    report.push( " " );
+    report.push( "## General" );
+    report.push( " " );
+    report.push( `### Time of Inspection: ${form.values.general.time.toLocaleString()}` );
+    if( form.values.general.weather !== "" ) {
+      report.push( " " );
+      report.push( `### Weather: ${form.values.general.weather}` );
+    }
+    if( form.values.general.overview !== "" ) {
+      report.push( " " );
+      report.push( `### Overview: ${form.values.general.overview}` );
+    }
+    if( form.values.general.temperment !== "" ) {
+      report.push( " " );
+      report.push( `### Overview: ${form.values.general.temperment}` );
+    }
     form.values.boxes.forEach( ( box ) => {
       report.push( `## Box ${box.box}` );
       box.frames.forEach( ( frame, index ) => {
@@ -272,7 +296,55 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         <BoxForm box={box} index={index} form={form}/>
       </Accordion.Panel>
     </Accordion.Item>
-  )
+  ) );
+  accordionItems.unshift(
+    <Accordion.Item value="0" key="0">
+      <Accordion.Control>General</Accordion.Control>
+      <Accordion.Panel>
+        <Textarea
+          className="px-6 py-2"
+          placeholder="General inspection notes"
+          label="Overview"
+          radius="sm"
+          size="md"
+          value={form.values.general.overview}
+          onChange={( event ) => {
+            form.setFieldValue ( "general.overview", event.currentTarget.value );
+          }}
+        />
+        <TextInput
+          className="px-6 py-2"
+          placeholder="Describe the weather"
+          label="Weather"
+          radius="sm"
+          size="md"
+          value={form.values.general.weather}
+          onChange={( event ) => {
+            form.setFieldValue ( "general.weather", event.currentTarget.value );
+          }
+          }/>
+        <TextInput
+          className="px-6 py-2"
+          placeholder="Describe the bee's temperment"
+          label="Temperment"
+          radius="sm"
+          size="md"
+          value={form.values.general.temperment}
+          onChange={( event ) => {
+            form.setFieldValue ( "general.temperment", event.currentTarget.value );
+          }
+          }/>
+        <DateTimePicker
+          className="px-6 py-2"
+          value={form.values.general.time}
+          onChange={( value ) => {
+            form.setFieldValue ( "general.time", value );
+          }
+          }
+          label="Time of inspection"
+        />
+      </Accordion.Panel>
+    </Accordion.Item>
   );
   const setBoxes = ( boxes:number | "" ) => {
     if( typeof boxes === "number" ) {

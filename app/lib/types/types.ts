@@ -109,4 +109,10 @@ export interface InspectionJobFormValues {
   participants: TrelloMember[];
   boxes: Box[];
   nextSteps: string;
+  general: {
+    weather: string;
+    overview: string;
+    time: Date;
+    temperment: string;
+  }
 }
