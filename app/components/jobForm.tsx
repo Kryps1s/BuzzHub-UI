@@ -227,7 +227,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       box.frames.forEach( ( frame, index ) => {
         const frameReport = " - Frame " + ( index + 1 ) + ": ";
         //if all boolean properties are false, and notes empty, just write "skipped"
-        if ( Object.values( frame ).every( ( value ) => ( (typeof value === "object" && !value.selected) || (typeof value === "string" && value==="") ) ) && frame.notes === "" ) {
+        if ( Object.values( frame ).every( ( value ) => ( ( typeof value === "object" && !value.selected ) || ( typeof value === "string" && value==="" ) ) ) && frame.notes === "" ) {
           report.push( frameReport + "_skipped_" );
         }
         else {
