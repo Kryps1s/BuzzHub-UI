@@ -18,7 +18,7 @@ import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
-import { Box, TrelloMember, Frame } from "../lib/types/types";
+import { Box, TrelloMember, Frame, BroodFrame, FrameItemType, FrameItemGroup } from "../lib/types/types";
 import { POST } from "../api/graphql/route";
 
 interface JobFormProps {
@@ -30,18 +30,78 @@ interface JobFormProps {
 
 const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => {
   const createFrame = (): Frame => ( {
-    eggs: false,
-    queen: false,
-    honey: false,
-    pollen: false,
-    brood: false,
-    drone: false,
-    queenCups: false,
-    nectar: false,
-    larvae: false,
-    empty: false,
+    eggs: {
+      label: "Eggs",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    queen: {
+      label: "Queen",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    honey: {
+      label: "Honey",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    pollen: {
+      label: "Pollen",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    brood: {
+      label: "Brood",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    drone: {
+      label: "Drone",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    queenCups: {
+      label: "Queen Cups",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    nectar: {
+      label: "Nectar",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    larvae: {
+      label: "Larvae",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    empty: {
+      label: "Empty",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
     notes: ""
-  } as Frame );
+  } as BroodFrame );
   const createBox = ( index:number ) : Box => ( {
     box: index.toString(),
     frames:Array( 10 ).fill( createFrame() )
@@ -63,7 +123,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     return () => window.removeEventListener( "beforeunload", unload );
   }, [ ] );
 
-  const { goal = undefined, link = undefined } = useEventsStore( ( state ) => state.selectedEvent ) || {};
+  const { goal = null, link = null } = useEventsStore( ( state ) => state.selectedEvent ) || {};
 
   const participants : TrelloMember[] = [];
   const form = useForm ( {
@@ -165,20 +225,28 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     form.values.boxes.forEach( ( box ) => {
       report.push( `## Box ${box.box}` );
       box.frames.forEach( ( frame, index ) => {
-        let frameReport = " - Frame " + ( index + 1 ) + ": ";
+        const frameReport = " - Frame " + ( index + 1 ) + ": ";
         //if all boolean properties are false, and notes empty, just write "skipped"
-        if ( Object.values( frame ).every( ( value ) => typeof value !== "boolean" || value === false ) && frame.notes === "" ) {
+        if ( Object.values( frame ).every( ( value ) => ( (typeof value === "object" && !value.selected) || (typeof value === "string" && value==="") ) ) && frame.notes === "" ) {
           report.push( frameReport + "_skipped_" );
         }
         else {
-        //loop over each property of the frame
+          report.push( frameReport );
           Object.entries( frame ).forEach( ( [ key, value ] ) => {
-          //if the value is true, add it to the report
-            if ( value === true ) {
-              frameReport += `${key}, `;
+            if ( typeof frame[key as keyof Frame] === "object" && value.selected ) {
+              switch ( value.type ) {
+              case FrameItemType.RADIO:
+                break;
+              case FrameItemType.PERCENTAGE:
+                report.push( `${value.label}: ${value.values[0]}%/${value.values[1]}%` );
+                break;
+              case FrameItemType.QUANTITY:
+                break;
+              default:
+                break;
+              }
             }
           } );
-          report.push( frameReport );
           //if there are notes, add them to the report
           if ( frame.notes !== "" ) {
             report.push( `  - ${frame.notes}` );
@@ -264,7 +332,6 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
         <Stepper.Step label="Inspection" id="notes" description="Notes">
           <div className="w-full max-w-xl mx-auto h-full px-4 ">
-            <Title className="flex justify-center mb-4" order={2}>Log your notes</Title>
             <Accordion className="h-full">
 
               {accordionItems}

@@ -1,6 +1,30 @@
 describe('Inspection Report', () => {
   it('saves a report after some validations', () => {
+    cy.intercept('/graphql', {times:1},{
+      "data":{
+        "getEvents":
+        [
+          {
+            "eventId": "hp11wDiI",
+            "start": "2023-08-31T21:54:00.000Z",
+            "type": "BEEKEEPING",
+            "name": "CYPRESS E2E",
+            "hives": [
+                "ROSE"
+            ],
+            "jobs": [
+                "INSPECT"
+            ],
+            "goal": "\n \npost this to slack.... nevermind it's done automatically now :)",
+            "link": "Bziq481c"
+        }
+      ]
+    }
+     
+    }).as('getInitialData');
+    //set data
     cy.visit(Cypress.env('baseUrl'))
+    cy.get('#loader' , {timeout : 10000}).should('not.exist')
     cy.contains('Happening today')
     cy.contains('Beekeeping')
     cy.contains('INSPECT').click()
@@ -12,10 +36,12 @@ describe('Inspection Report', () => {
     cy.get('#nextStep').click()
     cy.get('button').contains('+').click()
     cy.get('#nextStep').click()
-    cy.contains('Box #3')
+    cy.contains('Box #3').click()
     cy.contains('Frame #2').click()
     cy.contains('Frame #1').click()
-    cy.contains('Brood').click()
+    cy.get('#frameItemPicker').click()
+    cy.contains('Honey').click()
+    cy.contains('Side A')
     cy.get('#nextStep').click()
     cy.get('textarea').type('cypress e2e test')
     cy.get('button').contains('Submit').click()
