@@ -48,6 +48,7 @@ export interface User {
 
 export interface Box {
   box: string;
+  type: BoxType;
   frames: Frame[];
 }
 
@@ -55,6 +56,11 @@ export enum FrameItemType {
   QUANTITY = "QUANTITY",
   PERCENTAGE = "PERCENTAGE",
   RADIO = "RADIO"
+}
+
+export enum BoxType {
+  BROOD = "BROOD",
+  HONEY = "HONEY",
 }
 
 export enum FrameItemGroup {
@@ -97,7 +103,7 @@ export interface BroodFrame extends Frame {
 }
 
 export interface HoneyFrame extends Frame {
-  harvested : FrameItem
+  harvested : boolean
 }
 
 export interface TrelloMember{
@@ -109,7 +115,7 @@ export interface TrelloMember{
 export interface InspectionJobFormValues {
   participants: TrelloMember[];
   boxes: Box[];
-  nextSteps: string;
+    nextSteps: string;
   general: {
     weather: string;
     overview: string;
