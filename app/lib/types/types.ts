@@ -69,10 +69,12 @@ export interface FrameItem
   name: string;
   label: string;
   type: FrameItemType;
-  values: ( string | number )[];
+  values?: ( string | number )[];
+  value?: string | number;
   group: FrameItemGroup;
   radioOptions?: string[];
   selected:boolean;
+  destroyed?:boolean;
 }
 
 export interface Frame {
@@ -88,11 +90,10 @@ export interface Frame {
 export interface BroodFrame extends Frame {
   queenCups : FrameItem,
   drone : FrameItem
-eggs : FrameItem
- queen : FrameItem
+  eggs : FrameItem
+  queen : FrameItem
   larvae : FrameItem
-brood : FrameItem
-
+  brood : FrameItem
 }
 
 export interface HoneyFrame extends Frame {

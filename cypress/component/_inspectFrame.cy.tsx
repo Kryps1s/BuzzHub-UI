@@ -1,5 +1,5 @@
 import InspectFrame from '@/app/components/jobs/_inspectFrame';
-import { BroodFrame, FrameItemGroup, FrameItemType, InspectionJobFormValues } from '@/app/lib/types/types';
+import { Box, BroodFrame, Frame, FrameItemGroup, FrameItemType, InspectionJobFormValues } from '@/app/lib/types/types';
 import { UseFormReturnType } from '@mantine/form';
 
 describe('InspectFrame', () => {
@@ -47,11 +47,12 @@ describe('InspectFrame', () => {
               selected: false
             },
             drone: {
-              label: "Drone",
-              values: [ "0", "0" ],
-              type: FrameItemType.RADIO,
+              label: "Drone Cells",
+              value:  1,
+              type: FrameItemType.QUANTITY,
               group: FrameItemGroup.BROOD,
-              selected: false
+              selected: false,
+              destroyed: false
             },
             queenCups: {
               label: "Queen Cups",
@@ -86,6 +87,14 @@ describe('InspectFrame', () => {
         const index = 0;
         const frameIndex = 0;
         const form = {
+            values: {
+                boxes: [
+                  {
+                    frames:[
+                      frame] as Frame[]
+                  }
+              ] as Box[]
+            },
             getInputProps: (name: string) => {},
         } as UseFormReturnType<InspectionJobFormValues>
          ;
@@ -99,33 +108,33 @@ describe('InspectFrame', () => {
 
     it('displays everything', () => {
         cy.get('#frame');
+        cy.get('#frameItemPicker-0-0');
         cy.contains('Notes');
-        cy.contains('Other');
     });
 
     it('opens the item picker', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Eggs');
         cy.contains('Queen');
         cy.contains('Honey');
     });
 
     it('selects an item', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Eggs').click();
-        cy.get('#frameItem-0-0-Eggs').should('exist');
+        cy.get('#frameItem-0-0-eggs').should('exist');
     });
 
     it('selects multiple items', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Eggs').click();
         cy.contains('Queen').click();
-        cy.get('#frameItem-0-0-Eggs').should('exist');
-        cy.get('#frameItem-0-0-Queen').should('exist');
+        cy.get('#frameItem-0-0-eggs').should('exist');
+        cy.get('#frameItem-0-0-queen').should('exist');
     });
 
     it('selects an item and keeps the picker open', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Eggs').click();
         cy.contains('Queen');
     });
@@ -133,18 +142,18 @@ describe('InspectFrame', () => {
     it('scrolls on overflow', () => {});
 
     it('shows sliders on percentage type items', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
-        cy.get('#frameItem-0-0-Honey').should('exist');
-        cy.get('#frameItem-0-0-Honey > :nth-child(2)').contains('Side A');
-        cy.get('#frameItem-0-0-Honey > :nth-child(4)').contains('Side B');
+        cy.get('#frameItem-0-0-honey').should('exist');
+        cy.get('#frameItem-0-0-honey > :nth-child(2)').contains('Side A');
+        cy.get('#frameItem-0-0-honey > :nth-child(4)').contains('Side B');
         
     });
 
     it('moves the slider', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
-        cy.get('#frameItem-0-0-Honey-sliderA').should('exist');
+        cy.get('#frameItem-0-0-honey-sliderA').should('exist');
         cy.get('.mantine-Slider-thumb').first().trigger('mousedown', { which: 1 })
         cy.contains('0')
         .trigger('mousemove', { clientX: 1600, clientY: 0, force: true })
@@ -156,18 +165,43 @@ describe('InspectFrame', () => {
     });
 
     it('clears an item', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
-        cy.get('#frameItem-0-0-Honey')
+        cy.get('#frameItem-0-0-honey')
         cy.get('.mantine-MultiSelect-defaultValue > .mantine-UnstyledButton-root').should('exist');
         cy.get('.mantine-MultiSelect-defaultValue > .mantine-UnstyledButton-root').click();
-        cy.get('#frameItem-0-0-Honey').should('not.exist');
+        cy.get('#frameItem-0-0-honey').should('not.exist');
     })
 
     it('clears all items', () => {
-        cy.get('#frameItemPicker').click();
+        cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
         cy.contains('Eggs').click();
         cy.get('.mantine-UnstyledButton-root').last().click();
+    });
+
+    it('adds a quantity item', () => {
+        cy.get('#frameItemPicker-0-0').click();
+        cy.contains('Drone Cells').click();
+        cy.get('#frameItem-0-0-drone').should('exist');
+        cy.get('#frameItem-0-0-drone-quantity')
+        cy.contains('Destroyed');
+    });
+
+    it('adds a quantity item and marks as destroyed', () => {
+        cy.get('#frameItemPicker-0-0').click();
+        cy.contains('Drone Cells').click();
+        cy.get('#frameItem-0-0-drone').should('exist');
+        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '1');
+        cy.contains('+').click();
+        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '2');
+        cy.contains('–').click();
+        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '1');
+        cy.contains('–').click();
+        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '1');
+        cy.get('#frameItem-0-0-drone-quantity').type('{backspace}');
+        cy.get('#frameItem-0-0-drone-quantity').type('13');
+        cy.get('#frameItem-0-0-drone-quantity').type('{enter}');
+        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '13');
     });
 });

@@ -60,4 +60,23 @@ describe('Inspection Form Tests', () => {
         cy.get('#errorMessage').should('not.exist')
     })
 
+    it('only adds frame items to the correct frame', () => {
+        cy.get('#checkbox-123').click()
+        cy.get('#radio-123').click()
+        cy.get('#notes').click()
+        cy.contains('Box #2').should('exist').click()
+        cy.contains('Frame #1').should('exist').click()
+        cy.get('#frameItemPicker-0-0').click()
+        cy.contains('Drone Cells').click()
+        cy.get('body').type('{esc}')
+        cy.get('#backStep').click()
+        cy.get('#nextStep').click()
+        cy.contains('Box #2').should('exist').click()
+        cy.contains('Frame #1').should('exist').click()
+        cy.contains('Destroyed').should('exist')
+        cy.contains('Frame #1').should('exist').click()
+        cy.contains('Frame #2').should('exist').click()
+        cy.get('#frameItem-0-1').should('not.exist')
+    })
+
 })

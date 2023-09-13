@@ -6,7 +6,7 @@ describe('Inspection Report', () => {
         [
           {
             "eventId": "hp11wDiI",
-            "start": "2023-08-31T21:54:00.000Z",
+            "start": "2024-08-31T21:54:00.000Z",
             "type": "BEEKEEPING",
             "name": "CYPRESS E2E",
             "hives": [
@@ -39,7 +39,7 @@ describe('Inspection Report', () => {
     cy.contains('Box #3').click()
     cy.contains('Frame #2').click()
     cy.contains('Frame #1').click()
-    cy.get('#frameItemPicker').click()
+    cy.get('#frameItemPicker-0-0').click()
     cy.contains('Honey').click()
     cy.contains('Side A')
     cy.get('#nextStep').click()
@@ -55,10 +55,10 @@ describe('Inspection Report', () => {
     cy.get('input[placeholder="Password"]').type(Cypress.env('password'))
     cy.get('button').contains('Login').click()
     cy.contains('Login to BuzzHub').should('not.exist')    
-    cy.get('button').contains('Submit').click()
     cy.intercept('POST', '/graphql', () => {
     }).as('graphqlRequest');
-    cy.contains('Submit').click()
+    
+    cy.get('#submitForm').click({ force: true })
     cy.wait('@graphqlRequest').then((interception) => {
       const response = interception.response;
       if (!response) {

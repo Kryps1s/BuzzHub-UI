@@ -1,14 +1,10 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Stepper,
   Button,
   Group,
-  NumberInput,
   Title,
   Textarea,
-  NumberInputHandlers,
-  rem,
-  ActionIcon,
   Loader,
   Blockquote,
   ScrollArea,
@@ -22,6 +18,7 @@ import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
 import { Box, TrelloMember, Frame, BroodFrame, FrameItemType, FrameItemGroup } from "../lib/types/types";
 import { POST } from "../api/graphql/route";
+import Quantity from "./jobs/quantity";
 
 interface JobFormProps {
   jobs: string[];
@@ -68,16 +65,18 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       selected: false
     },
     drone: {
-      label: "Drone",
-      values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
+      label: "Drone Cells",
+      value:  1,
+      type: FrameItemType.QUANTITY,
+      destroyed: false,
       group: FrameItemGroup.BROOD,
       selected: false
     },
     queenCups: {
       label: "Queen Cups",
-      values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
+      value: 1,
+      type: FrameItemType.QUANTITY,
+      destroyed: false,
       group: FrameItemGroup.BROOD,
       selected: false
     },
@@ -113,7 +112,6 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   const [ loading, setLoading ] = useState ( false );
   const [ submissionError, setSubmissionError ] = useState ( "" );
   const [ leader, setLeader ] = useState ( "" );
-  const handlers = useRef<NumberInputHandlers>();
   useEventsStore( ( state ) => state.selectedEvent );
   useEffect( () => {
     //on unload of the page, warn the user if they have unsaved changes
@@ -265,6 +263,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
                 report.push( `${value.label}: ${value.values[0]}%/${value.values[1]}%` );
                 break;
               case FrameItemType.QUANTITY:
+                report.push( `${value.label}: ${value.value} ${value.destroyed? "" : "NOT "}destroyed` );
                 break;
               default:
                 break;
@@ -372,33 +371,13 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         <Stepper.Step label="Setup" description="Hive Prep">
           <div className="flex flex-col align-middle h-full">
             <Title className="flex justify-center mb-4" order={2}>How many boxes are you inspecting?</Title>
-            <Group className="flex justify-center mx-auto my-5" spacing={5}>
-              <ActionIcon size={42} variant="default" onClick={() => handlers.current?.decrement()}>
-            –
-              </ActionIcon>
-              <NumberInput
-                hideControls
-                readOnly
-                value={form.values.boxes.length}
-                onChange={( qty ) => setBoxes( qty )}
-                handlersRef={handlers}
-                max={6}
-                min={1}
-                step={1}
-                styles={{ input: { width: rem( 54 ), textAlign: "center" } }}
-              />
-
-              <ActionIcon size={42} variant="default" onClick={() => handlers.current?.increment()}>
-            +
-              </ActionIcon>
-            </Group>
+            <Quantity onChangeCallback={setBoxes} value={form.values.boxes.length} />
             {goal &&
               <div className="flex flex-col h-3/4">
                 <Title className="flex justify-center mb-4" order={2}>Goals for this inspection:</Title>
                 <ScrollArea className="flex-grow"><Blockquote className="flex justify-center mt-4 whitespace-break-spaces "> {goal}</Blockquote></ScrollArea>
               </div>
             }
-
           </div>
         </Stepper.Step>
 
@@ -438,14 +417,14 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
       <Group className="h-1/5 max-w-xl mx-auto my-auto" position="right" >
         {active !== 0 && active <4 && (
-          <Button className="mt-4 border bg-cyan-700 border-slate-200" onClick={prevStep}>
+          <Button id="backStep" className="mt-4 border bg-cyan-700 border-slate-200" onClick={prevStep}>
             Back
           </Button>
         )}
         {active ===4 && <Link href="/"><Button className="mr-4 mt-4 border bg-cyan-700 border-slate-200" >Done</Button></Link>}
         {active <3 && <Button id="nextStep" className="mr-4 mt-4 bg-cyan-700 border border-slate-200" onClick={() => goToStep( active+1 )}>Next step</Button>}
         {active === 3 && loading && <Loader/>}
-        {active === 3 && <Button className="mr-4 mt-4 bg-cyan-700 border border-slate-200" disabled={loading} onClick={submit}>Submit</Button>}
+        {active === 3 && <Button id="submitForm" className="mr-4 mt-4 bg-cyan-700 border border-slate-200" disabled={loading} onClick={submit}>Submit</Button>}
       </Group>
     </form>
   );
