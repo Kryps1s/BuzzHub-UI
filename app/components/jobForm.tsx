@@ -16,7 +16,7 @@ import SelectTrelloMembersTable from "./selectTrelloMembersTable";
 import { Accordion } from "@mantine/core";
 import BoxForm from "./jobs/_inspectBox";
 import Link from "next/link";
-import { Box, TrelloMember, Frame, BroodFrame, FrameItemType, FrameItemGroup } from "../lib/types/types";
+import { Box, TrelloMember, Frame, BroodFrame, FrameItemType, FrameItemGroup, BoxType, HoneyFrame } from "../lib/types/types";
 import { POST } from "../api/graphql/route";
 import Quantity from "./jobs/quantity";
 
@@ -28,7 +28,7 @@ interface JobFormProps {
 }
 
 const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => {
-  const createFrame = (): Frame => ( {
+  const createBroodFrame = (): Frame => ( {
     eggs: {
       label: "Eggs",
       values: [ "0", "0" ],
@@ -103,9 +103,58 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     },
     notes: ""
   } as BroodFrame );
-  const createBox = ( index:number ) : Box => ( {
+
+  const createHoneyFrame = (): Frame => ( {
+    
+    honey: {
+      label: "Honey",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    pollen: {
+      label: "Pollen",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    cappedHoney: {
+      label: "Capped Honey",
+      values:  [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    nectar: {
+      label: "Nectar",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    empty: {
+      label: "Empty",
+      values: [ "0", "0" ],
+      type: FrameItemType.RADIO,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    harvested: false,
+    notes: ""
+  } as HoneyFrame );
+
+  const createBroodBox = ( index:number ) : Box => ( {
     box: index.toString(),
-    frames:Array( 10 ).fill( createFrame() )
+    type: BoxType.BROOD,
+    frames:Array( 10 ).fill( createBroodFrame() )
+  } );
+
+  const createHoneyBox = ( index:number ) : Box => ( {
+    box: index.toString(),
+    type: BoxType.HONEY,
+    frames:Array( 10 ).fill( createHoneyFrame() )
   } );
 
   const [ active, setActive ] = useState ( 0 );
@@ -135,7 +184,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         temperment: "",
         time: new Date()
       },
-      boxes: [ createBox( 2 ), createBox( 1 ) ],
+      boxes: [ createBroodBox( 2 ), createBroodBox( 1 ) ],
       nextSteps: ""
     },
     validate: {
@@ -204,7 +253,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   };
 
   const createReport = () : string => {
-    const report = [];
+        const report = [];
     report.push( "# Inspection Report" );
     report.push( " " );
     report.push( `## [Previous Inspection](https://trello.com/c/${link})` );
@@ -345,16 +394,52 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       </Accordion.Panel>
     </Accordion.Item>
   );
-  const setBoxes = ( boxes:number | "" ) => {
+  const setBroodBoxes = ( boxes:number | "" ) => {
+    let newBoxes = form.values.boxes.filter( ( box ) => box.type !== "BROOD" );
+
     if( typeof boxes === "number" ) {
-      const newBoxes = [];
       //reverse the order of the boxes so that the newest box is first
       for ( let i = boxes; i > 0; i-- ) {
-        newBoxes.push( createBox( i ) );
+        newBoxes.push( createBroodBox( i ) );
       }
+      setBoxNames( newBoxes );
+      form.setValues( { ...form.values, boxes: newBoxes } );
+    }
+  };  
+  const setHoneyBoxes = ( boxes:number | "" ) => {
+    let broodQty = getBoxTypeQuantity( form.values.boxes, "BROOD" as BoxType );
+    //remove old honey boxes
+    let newBoxes = form.values.boxes.filter( ( box ) => box.type !== "HONEY" );
+
+    if( typeof boxes === "number" ) {
+      //reverse the order of the boxes so that the newest box is first
+      for ( let i = 0; i < boxes; i++ ) {
+        newBoxes.unshift( createHoneyBox( i + 1 + broodQty) );
+      }
+      setBoxNames( newBoxes );
       form.setValues( { ...form.values, boxes: newBoxes } );
     }
   };
+
+  const setBoxNames = ( boxes : Box[] ) => {
+    //reverse loop through boxes,
+    //set box name to index + type
+    for ( let i = boxes.length - 1; i >= 0; i-- ) {
+      boxes[i].box = `${boxes.length-i}-${boxes[i].type.toLowerCase()}`;
+    }
+  };
+
+
+  const getBoxTypeQuantity = ( boxes:Box[], type:BoxType ) : number => {
+    let quantity = 0;
+    boxes.forEach( ( box ) => {
+      if( box.type === type ) {
+        quantity++;
+      }
+    } );
+    return quantity;
+  };
+
 
   return (
     <form>
@@ -370,12 +455,22 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
 
         <Stepper.Step label="Setup" description="Hive Prep">
           <div className="flex flex-col align-middle h-full">
-            <Title className="flex justify-center mb-4" order={2}>How many boxes are you inspecting?</Title>
-            <Quantity onChangeCallback={setBoxes} value={form.values.boxes.length} />
+            <Title className="flex justify-center mb-4" order={2}>How many boxes are in the hive?</Title>
+            <div className="flex flex-row justify-evenly">
+              <div className="flex flex-col">
+                <Title className="flex justify-center mb-4" order={2}>Brood</Title>
+                <Quantity onChangeCallback={setBroodBoxes} min={1} max={3} value={getBoxTypeQuantity(form.values.boxes, "BROOD" as BoxType)} />
+              </div>
+              <div className="flex flex-col">
+                <Title className="flex justify-center mb-4" order={2}>Honey</Title>
+                <Quantity onChangeCallback={setHoneyBoxes} max={2} min={0} value={getBoxTypeQuantity(form.values.boxes, "HONEY" as BoxType)} />
+              </div>
+
+            </div>
             {goal &&
               <div className="flex flex-col h-3/4">
-                <Title className="flex justify-center mb-4" order={2}>Goals for this inspection:</Title>
-                <ScrollArea className="flex-grow"><Blockquote className="flex justify-center mt-4 whitespace-break-spaces "> {goal}</Blockquote></ScrollArea>
+                <Title className="flex justify-center mt-8" order={4}>Notes from last inspection:</Title>
+                <ScrollArea className="flex-grow"><Blockquote className="flex justify-center whitespace-break-spaces "> {goal}</Blockquote></ScrollArea>
               </div>
             }
           </div>
