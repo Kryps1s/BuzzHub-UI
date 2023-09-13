@@ -105,7 +105,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   } as BroodFrame );
 
   const createHoneyFrame = (): Frame => ( {
-    
+
     honey: {
       label: "Honey",
       values: [ "0", "0" ],
@@ -253,7 +253,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   };
 
   const createReport = () : string => {
-        const report = [];
+    const report = [];
     report.push( "# Inspection Report" );
     report.push( " " );
     report.push( `## [Previous Inspection](https://trello.com/c/${link})` );
@@ -395,7 +395,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     </Accordion.Item>
   );
   const setBroodBoxes = ( boxes:number | "" ) => {
-    let newBoxes = form.values.boxes.filter( ( box ) => box.type !== "BROOD" );
+    const newBoxes = form.values.boxes.filter( ( box ) => box.type !== "BROOD" );
 
     if( typeof boxes === "number" ) {
       //reverse the order of the boxes so that the newest box is first
@@ -405,16 +405,16 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       setBoxNames( newBoxes );
       form.setValues( { ...form.values, boxes: newBoxes } );
     }
-  };  
+  };
   const setHoneyBoxes = ( boxes:number | "" ) => {
-    let broodQty = getBoxTypeQuantity( form.values.boxes, "BROOD" as BoxType );
+    const broodQty = getBoxTypeQuantity( form.values.boxes, "BROOD" as BoxType );
     //remove old honey boxes
-    let newBoxes = form.values.boxes.filter( ( box ) => box.type !== "HONEY" );
+    const newBoxes = form.values.boxes.filter( ( box ) => box.type !== "HONEY" );
 
     if( typeof boxes === "number" ) {
       //reverse the order of the boxes so that the newest box is first
       for ( let i = 0; i < boxes; i++ ) {
-        newBoxes.unshift( createHoneyBox( i + 1 + broodQty) );
+        newBoxes.unshift( createHoneyBox( i + 1 + broodQty ) );
       }
       setBoxNames( newBoxes );
       form.setValues( { ...form.values, boxes: newBoxes } );
@@ -429,7 +429,6 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     }
   };
 
-
   const getBoxTypeQuantity = ( boxes:Box[], type:BoxType ) : number => {
     let quantity = 0;
     boxes.forEach( ( box ) => {
@@ -439,7 +438,6 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     } );
     return quantity;
   };
-
 
   return (
     <form>
@@ -459,11 +457,11 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
             <div className="flex flex-row justify-evenly">
               <div className="flex flex-col">
                 <Title className="flex justify-center mb-4" order={2}>Brood</Title>
-                <Quantity onChangeCallback={setBroodBoxes} min={1} max={3} value={getBoxTypeQuantity(form.values.boxes, "BROOD" as BoxType)} />
+                <Quantity onChangeCallback={setBroodBoxes} min={1} max={3} value={getBoxTypeQuantity( form.values.boxes, "BROOD" as BoxType )} />
               </div>
               <div className="flex flex-col">
                 <Title className="flex justify-center mb-4" order={2}>Honey</Title>
-                <Quantity onChangeCallback={setHoneyBoxes} max={2} min={0} value={getBoxTypeQuantity(form.values.boxes, "HONEY" as BoxType)} />
+                <Quantity onChangeCallback={setHoneyBoxes} max={2} min={0} value={getBoxTypeQuantity( form.values.boxes, "HONEY" as BoxType )} />
               </div>
 
             </div>
