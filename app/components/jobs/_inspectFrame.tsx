@@ -57,6 +57,13 @@ const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
     if ( !itemKey ) {
       return null;
     }
+    const frameItem = form.values.boxes[index].frames[frameIndex][itemKey as keyof Frame] as FrameItem;
+    let val, destroyed;
+    if ( item?.type === FrameItemType.QUANTITY ) {
+      val = frameItem.value as number;
+      destroyed = frameItem.destroyed as boolean;
+    }
+
     return (
       <div id={`frameItem-${index}-${frameIndex}-${itemKey}`} key={label} className="row-span-1 flex items-center flex-col h-32 border rounded-md border-buzzhub-green">
         <label className="ml-2">{label}</label>
@@ -83,7 +90,7 @@ const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
                   {...form.getInputProps( `boxes.${index}.frames.${frameIndex}.${itemKey}.value` )}
                   handlersRef={handlers}
                   max={99}
-                  value={form.values.boxes[index].frames[frameIndex][itemKey as keyof Frame].value}
+                  value={val}
                   min={1}
                   step={1}
                   styles={{ input: { width: rem( 54 ), textAlign: "center" } }}
@@ -94,7 +101,7 @@ const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
                 </ActionIcon>
               </Group>
               <Switch
-                checked={form.values.boxes[index].frames[frameIndex][itemKey as keyof Frame].destroyed}
+                checked={destroyed}
                 size="md"
                 id={`frameItem-${index}-${frameIndex}-${itemKey}-destroyed`}
                 label="Destroyed"
