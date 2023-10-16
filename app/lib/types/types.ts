@@ -115,7 +115,11 @@ export interface TrelloMember{
 export interface InspectionJobFormValues {
   participants: TrelloMember[];
   boxes: Box[];
-    nextSteps: string;
+  nextSteps: {
+    goal: string;
+    full: boolean;
+    date: Date;
+  };
   general: {
     weather: string;
     overview: string;

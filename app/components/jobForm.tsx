@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { Stepper,
   Button,
   Group,
+  Switch,
   Title,
   Textarea,
   Loader,
   Blockquote,
   ScrollArea,
   TextInput } from "@mantine/core";
-import { DateTimePicker } from "@mantine/dates";
+import { DatePicker, DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import useEventsStore from "../store/events";
 import SelectTrelloMembersTable from "./selectTrelloMembersTable";
@@ -185,7 +186,11 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         time: new Date()
       },
       boxes: [ createBroodBox( 2 ), createBroodBox( 1 ) ],
-      nextSteps: ""
+      nextSteps: {
+        goal: "",
+        date: new Date(),
+        full: true
+      }
     },
     validate: {
       participants: ( value ) => {
@@ -225,18 +230,40 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     try{
       setLoading( true );
       const report = createReport();
+      const nextInspection = form.values.nextSteps.date ?
+        {
+          //get date as yyyy-mm-dd string
+          date: form.values.nextSteps.date.toISOString().split( "T" )[0],
+          full: form.values.nextSteps.full,
+          goal: form.values.nextSteps.goal
+        }
+        : null;
+      let mutation = `mutation SaveBeekeepingReport {
+        saveBeekeepingReport(
+            eventId: "${id}"
+            report: "${report}"
+            participants: ${participantsJSON}`;
+
+      if ( nextInspection ) {
+        mutation += `
+        nextInspection: "${nextInspection.date}"
+        full: ${nextInspection.full}
+        goal: "${nextInspection.goal}"`;
+      }else{
+        mutation += `
+            nextInspection: null`;
+      }
+
+      mutation += `
+        ) {
+            message
+        }
+    }`;
+
       const req = new Request( "http://buzzhub.com", {
         method: "POST",
         body: JSON.stringify( {
-          query: `mutation SaveBeekeepingReport {
-    saveBeekeepingReport(
-    eventId: "${id}"
-    report: "${report}"
-    participants: ${participantsJSON}
-    ) {
-                message
-            }
-        }`
+          query: mutation
         } )
       } );
       await POST( req );
@@ -291,7 +318,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     }
     if( form.values.general.temperment !== "" ) {
       report.push( " " );
-      report.push( `### Overview: ${form.values.general.temperment}` );
+      report.push( `### Temperment: ${form.values.general.temperment}` );
     }
     form.values.boxes.forEach( ( box ) => {
       report.push( `## Box ${box.box}` );
@@ -330,7 +357,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     report.push( "---" );
     report.push( "# Next Steps➡️" );
     report.push( " " );
-    report.push( form.values.nextSteps );
+    report.push( form.values.nextSteps.goal );
     //join with escaped newlines
     return encodeURIComponent( report.join( "\n" ) );
   };
@@ -485,16 +512,39 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
         </Stepper.Step>
 
         <Stepper.Step label="Inspection" description="Next Steps">
-          <div className="w-full max-w-xl mx-auto h-full px-4 ">
+          <div className="w-full flex flex-col max-w-xl mx-auto h-full px-4 ">
+            <Title className="flex justify-center mb-4" order={2}>Next Inspection</Title>
+            <DatePicker
+              placeholder="Pick date"
+              value={form.values.nextSteps.date}
+              onChange={( value ) => {
+                form.setFieldValue ( "nextSteps.date", value );
+              }}
+              allowDeselect
+              maw={400}
+              mx="auto"
+            />
+            <Switch
+              checked={form.values.nextSteps.full}
+
+              {...form.getInputProps( "nextSteps.full" )}
+              labelPosition="left"
+              label="Inspection type"
+              className="mx-auto"
+              size="xl"
+              onLabel="FULL"
+              offLabel="PARTIAL"
+            />
+
             <Textarea
               className="px-6 py-2"
-              placeholder="Write notes for the next inspection here."
+              placeholder="Write the goal of the next inspection here."
               label="Next Steps"
               radius="sm"
               size="xl"
-              value={form.values.nextSteps}
+              value={form.values.nextSteps.goal}
               onChange={( event ) => {
-                form.setFieldValue ( "nextSteps", event.currentTarget.value );
+                form.setFieldValue ( "nextSteps.goal", event.currentTarget.value );
               }}
             />
             <Title className="color-red-600">{submissionError}</Title>
