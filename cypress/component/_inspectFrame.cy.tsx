@@ -153,7 +153,7 @@ describe('InspectFrame', () => {
         cy.contains('Eggs').click();
         cy.contains('Queen').click();
         cy.get('#frameItem-0-0-eggs').should('exist');
-        cy.get('#frameItem-0-0-queen').should('exist');
+        cy.get('#frameItem-0-0-practiceQueenCells').should('exist');
     });
 
     it('selects an item and keeps the picker open', () => {
@@ -167,16 +167,16 @@ describe('InspectFrame', () => {
     it('shows sliders on percentage type items', () => {
         cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
-        cy.get('#frameItem-0-0-honey').should('exist');
-        cy.get('#frameItem-0-0-honey > :nth-child(2)').contains('Side A');
-        cy.get('#frameItem-0-0-honey > :nth-child(4)').contains('Side B');
+        cy.get('#frameItem-0-0-cappedHoney').should('exist');
+        cy.get('#frameItem-0-0-cappedHoney > :nth-child(2)').contains('Side A');
+        cy.get('#frameItem-0-0-cappedHoney > :nth-child(4)').contains('Side B');
         
     });
 
     it('moves the slider', () => {
         cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
-        cy.get('#frameItem-0-0-honey-sliderA').should('exist');
+        cy.get('#frameItem-0-0-cappedHoney-sliderA').should('exist');
         cy.get('.mantine-Slider-thumb').first().trigger('mousedown', { which: 1 })
         cy.contains('0')
         .trigger('mousemove', { clientX: 1600, clientY: 0, force: true })
@@ -190,10 +190,10 @@ describe('InspectFrame', () => {
     it('clears an item', () => {
         cy.get('#frameItemPicker-0-0').click();
         cy.contains('Honey').click();
-        cy.get('#frameItem-0-0-honey')
+        cy.get('#frameItem-0-0-cappedHoney')
         cy.get('.mantine-MultiSelect-defaultValue > .mantine-UnstyledButton-root').should('exist');
         cy.get('.mantine-MultiSelect-defaultValue > .mantine-UnstyledButton-root').click();
-        cy.get('#frameItem-0-0-honey').should('not.exist');
+        cy.get('#frameItem-0-0-cappedHoney').should('not.exist');
     })
 
     it('clears all items', () => {
@@ -206,25 +206,25 @@ describe('InspectFrame', () => {
     it('adds a quantity item', () => {
         cy.get('#frameItemPicker-0-0').click();
         cy.contains('Drone Cells').click();
-        cy.get('#frameItem-0-0-drone').should('exist');
-        cy.get('#frameItem-0-0-drone-quantity')
+        cy.get('#frameItem-0-0-droneCells').should('exist');
+        cy.get('#frameItem-0-0-droneCells-quantity')
         cy.contains('Destroyed');
     });
 
     it('adds a quantity item and marks as destroyed', () => {
         cy.get('#frameItemPicker-0-0').click();
         cy.contains('Drone Cells').click();
-        cy.get('#frameItem-0-0-drone').should('exist');
-        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '1');
+        cy.get('#frameItem-0-0-droneCells').should('exist');
+        cy.get('#frameItem-0-0-droneCells-quantity').should('have.value', '1');
         cy.contains('+').click();
-        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '2');
+        cy.get('#frameItem-0-0-droneCells-quantity').should('have.value', '2');
         cy.contains('–').click();
-        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '1');
+        cy.get('#frameItem-0-0-droneCells-quantity').should('have.value', '1');
         cy.contains('–').click();
-        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '1');
-        cy.get('#frameItem-0-0-drone-quantity').type('{backspace}');
-        cy.get('#frameItem-0-0-drone-quantity').type('13');
-        cy.get('#frameItem-0-0-drone-quantity').type('{enter}');
-        cy.get('#frameItem-0-0-drone-quantity').should('have.value', '13');
+        cy.get('#frameItem-0-0-droneCells-quantity').should('have.value', '1');
+        cy.get('#frameItem-0-0-droneCells-quantity').type('{backspace}');
+        cy.get('#frameItem-0-0-droneCells-quantity').type('13');
+        cy.get('#frameItem-0-0-droneCells-quantity').type('{enter}');
+        cy.get('#frameItem-0-0-droneCells-quantity').should('have.value', '13');
     });
 });
