@@ -33,39 +33,39 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     eggs: {
       label: "Eggs",
       values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
-      group: FrameItemGroup.BROOD,
-      selected: false
-    },
-    queen: {
-      label: "Queen",
-      values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
-      group: FrameItemGroup.BROOD,
-      selected: false
-    },
-    honey: {
-      label: "Honey",
-      values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
       group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    cappedHoney: {
+      label: "Capped Honey",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.HONEY,
+      selected: false
+    },
+    uncappedHoney: {
+      label: "Uncapped Honey",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.HONEY,
       selected: false
     },
     pollen: {
       label: "Pollen",
       values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
-      group: FrameItemGroup.BROOD,
+      group: FrameItemGroup.HONEY,
       selected: false
     },
     brood: {
-      label: "Brood",
+      label: "Capped Brood",
       values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
       group: FrameItemGroup.BROOD,
       selected: false
     },
-    drone: {
+    droneCells: {
       label: "Drone Cells",
       value:  1,
       type: FrameItemType.QUANTITY,
@@ -73,87 +73,114 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       group: FrameItemGroup.BROOD,
       selected: false
     },
-    queenCups: {
-      label: "Queen Cups",
+    droneFrame: {
+      label: "Drone Frame",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.BROOD,
+      selected: false
+    },
+    practiceQueenCells: {
+      label: "Practice Queen Cups",
       value: 1,
       type: FrameItemType.QUANTITY,
       destroyed: false,
-      group: FrameItemGroup.BROOD,
+      group: FrameItemGroup.QUEEN,
+      selected: false
+    },
+    supercedureQueenCells: {
+      label: "Supercedure Queen Cups",
+      value: 1,
+      type: FrameItemType.QUANTITY,
+      destroyed: false,
+      group: FrameItemGroup.QUEEN,
       selected: false
     },
     nectar: {
       label: "Nectar",
       values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
-      group: FrameItemGroup.BROOD,
+      group: FrameItemGroup.HONEY,
       selected: false
     },
     larvae: {
       label: "Larvae",
       values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
+      type: FrameItemType.PERCENTAGE,
       group: FrameItemGroup.BROOD,
       selected: false
     },
     empty: {
       label: "Empty",
       values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
-      group: FrameItemGroup.BROOD,
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.EMPTY,
+      selected: false
+    },
+    unbuilt: {
+      label: "Unbuilt",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.EMPTY,
       selected: false
     },
     notes: ""
   } as BroodFrame );
 
   const createHoneyFrame = (): Frame => ( {
-
-    honey: {
-      label: "Honey",
+    cappedHoney: {
+      label: "Capped Honey",
       values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
-      group: FrameItemGroup.BROOD,
+      group: FrameItemGroup.HONEY,
+      selected: false
+    },
+    uncappedHoney: {
+      label: "Uncapped Honey",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.HONEY,
       selected: false
     },
     pollen: {
       label: "Pollen",
       values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
-      group: FrameItemGroup.BROOD,
-      selected: false
-    },
-    cappedHoney: {
-      label: "Capped Honey",
-      values:  [ "0", "0" ],
-      type: FrameItemType.PERCENTAGE,
-      group: FrameItemGroup.BROOD,
+      group: FrameItemGroup.HONEY,
       selected: false
     },
     nectar: {
       label: "Nectar",
       values: [ "0", "0" ],
       type: FrameItemType.PERCENTAGE,
-      group: FrameItemGroup.BROOD,
+      group: FrameItemGroup.HONEY,
       selected: false
     },
     empty: {
       label: "Empty",
       values: [ "0", "0" ],
-      type: FrameItemType.RADIO,
-      group: FrameItemGroup.BROOD,
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.EMPTY,
       selected: false
     },
-    harvested: false,
+    unbuilt: {
+      label: "Unbuilt",
+      values: [ "0", "0" ],
+      type: FrameItemType.PERCENTAGE,
+      group: FrameItemGroup.EMPTY,
+      selected: false
+    },
     notes: ""
   } as HoneyFrame );
 
   const createBroodBox = ( index:number ) : Box => ( {
-    box: index.toString(),
+    box: index.toString()+"-brood",
     type: BoxType.BROOD,
     frames:Array( 10 ).fill( createBroodFrame() )
   } );
 
   const createHoneyBox = ( index:number ) : Box => ( {
-    box: index.toString(),
+    box: index.toString()+"-honey",
     type: BoxType.HONEY,
     frames:Array( 10 ).fill( createHoneyFrame() )
   } );
@@ -162,6 +189,13 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   const [ loading, setLoading ] = useState ( false );
   const [ submissionError, setSubmissionError ] = useState ( "" );
   const [ leader, setLeader ] = useState ( "" );
+  const [ boxState, setBoxState ] = useState( Array( 2 ).fill( 0 ).map( () => Array( 10 ).fill( [] ) ) );
+  const updateBoxState = ( boxIndex : number, value : string[][] ) => {
+    const newBoxState = [ ...boxState ];
+    newBoxState[boxIndex] = value;
+    setBoxState( newBoxState );
+  };
+
   useEventsStore( ( state ) => state.selectedEvent );
   useEffect( () => {
     //on unload of the page, warn the user if they have unsaved changes
@@ -280,6 +314,22 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
   };
 
   const createReport = () : string => {
+    ///match form selected states to the box state matrix
+    form.values.boxes.forEach( ( box, boxIndex ) => {
+      box.frames.forEach( ( frame, frameIndex ) => {
+        //loop over frame items
+        Object.entries( frame ).forEach( ( [ key, value ] ) => {
+          //if the frame item is a boolean
+          //set the selected property to the value in the box state matrix
+          if ( typeof frame[key as keyof Frame] !== "string" && "selected" in value ) {
+            if ( value instanceof Object ) {
+              value.selected = boxState[boxIndex][frameIndex].includes( value.label );
+            }
+          }
+        } );
+      } );
+    } );
+
     const report = [];
     report.push( "# Inspection Report" );
     report.push( " " );
@@ -368,7 +418,13 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
     <Accordion.Item value={box.box.toString()} key={box.box.toString() + index}>
       <Accordion.Control>Box #{box.box}</Accordion.Control>
       <Accordion.Panel>
-        <BoxForm box={box} index={index} form={form}/>
+        <BoxForm
+          box={box}
+          index={index}
+          form={form}
+          initialState = {boxState[index] || []}
+          updateBoxState={updateBoxState}
+        />
       </Accordion.Panel>
     </Accordion.Item>
   ) );
@@ -429,8 +485,7 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       for ( let i = boxes; i > 0; i-- ) {
         newBoxes.push( createBroodBox( i ) );
       }
-      setBoxNames( newBoxes );
-      form.setValues( { ...form.values, boxes: newBoxes } );
+      setBoxes( newBoxes );
     }
   };
   const setHoneyBoxes = ( boxes:number | "" ) => {
@@ -443,17 +498,19 @@ const JobForm = ( { trelloMembers, id } : JobFormProps ) : React.JSX.Element => 
       for ( let i = 0; i < boxes; i++ ) {
         newBoxes.unshift( createHoneyBox( i + 1 + broodQty ) );
       }
-      setBoxNames( newBoxes );
-      form.setValues( { ...form.values, boxes: newBoxes } );
+      setBoxes( newBoxes );
     }
   };
 
-  const setBoxNames = ( boxes : Box[] ) => {
+  const setBoxes = ( boxes : Box[] ) => {
     //reverse loop through boxes,
     //set box name to index + type
     for ( let i = boxes.length - 1; i >= 0; i-- ) {
       boxes[i].box = `${boxes.length-i}-${boxes[i].type.toLowerCase()}`;
     }
+    form.setValues( { ...form.values, boxes } );
+    const newBoxState = Array( boxes.length ).fill( 0 ).map( () => Array( 10 ).fill( [] ) );
+    setBoxState( newBoxState );
   };
 
   const getBoxTypeQuantity = ( boxes:Box[], type:BoxType ) : number => {
