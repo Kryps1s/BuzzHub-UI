@@ -11,79 +11,102 @@ describe('InspectFrame', () => {
       }
     beforeEach(() => {
         const frame = {
-            eggs: {
-              label: "Eggs",
-              values: [ "0", "0" ],
-              type: FrameItemType.RADIO,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            queen: {
-              label: "Queen",
-              values: [ "0", "0" ],
-              type: FrameItemType.RADIO,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            honey: {
-              label: "Honey",
-              values: [ "0", "0" ],
-              type: FrameItemType.PERCENTAGE,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            pollen: {
-              label: "Pollen",
-              values: [ "0", "0" ],
-              type: FrameItemType.PERCENTAGE,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            brood: {
-              label: "Brood",
-              values: [ "0", "0" ],
-              type: FrameItemType.PERCENTAGE,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            drone: {
-              label: "Drone Cells",
-              value:  1,
-              type: FrameItemType.QUANTITY,
-              group: FrameItemGroup.BROOD,
-              selected: false,
-              destroyed: false
-            },
-            queenCups: {
-              label: "Queen Cups",
-              values: [ "0", "0" ],
-              type: FrameItemType.RADIO,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            nectar: {
-              label: "Nectar",
-              values: [ "0", "0" ],
-              type: FrameItemType.PERCENTAGE,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            larvae: {
-              label: "Larvae",
-              values: [ "0", "0" ],
-              type: FrameItemType.RADIO,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            empty: {
-              label: "Empty",
-              values: [ "0", "0" ],
-              type: FrameItemType.RADIO,
-              group: FrameItemGroup.BROOD,
-              selected: false
-            },
-            notes: ""
-          }as BroodFrame;
+          eggs: {
+            label: "Eggs",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.BROOD,
+            selected: false
+          },
+          cappedHoney: {
+            label: "Capped Honey",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.HONEY,
+            selected: false
+          },
+          uncappedHoney: {
+            label: "Uncapped Honey",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.HONEY,
+            selected: false
+          },
+          pollen: {
+            label: "Pollen",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.HONEY,
+            selected: false
+          },
+          brood: {
+            label: "Capped Brood",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.BROOD,
+            selected: false
+          },
+          droneCells: {
+            label: "Drone Cells",
+            value:  1,
+            type: FrameItemType.QUANTITY,
+            destroyed: false,
+            group: FrameItemGroup.BROOD,
+            selected: false
+          },
+          droneFrame: {
+            label: "Drone Frame",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.BROOD,
+            selected: false
+          },
+          practiceQueenCells: {
+            label: "Practice Queen Cups",
+            value: 1,
+            type: FrameItemType.QUANTITY,
+            destroyed: false,
+            group: FrameItemGroup.QUEEN,
+            selected: false
+          },
+          supercedureQueenCells: {
+            label: "Supercedure Queen Cups",
+            value: 1,
+            type: FrameItemType.QUANTITY,
+            destroyed: false,
+            group: FrameItemGroup.QUEEN,
+            selected: false
+          },
+          nectar: {
+            label: "Nectar",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.HONEY,
+            selected: false
+          },
+          larvae: {
+            label: "Larvae",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.BROOD,
+            selected: false
+          },
+          empty: {
+            label: "Empty",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.EMPTY,
+            selected: false
+          },
+          unbuilt: {
+            label: "Unbuilt",
+            values: [ "0", "0" ],
+            type: FrameItemType.PERCENTAGE,
+            group: FrameItemGroup.EMPTY,
+            selected: false
+          },
+          notes: ""
+        } as BroodFrame;
         const index = 0;
         const frameIndex = 0;
         const form = {
@@ -99,7 +122,7 @@ describe('InspectFrame', () => {
         } as UseFormReturnType<InspectionJobFormValues>
          ;
        const props = {
-              frame,index,frameIndex,form
+              frame,index,frameIndex,form,initialState:[],updateFrameState:()=>{}
             };
 
         cy.viewport(1920, 1080);
