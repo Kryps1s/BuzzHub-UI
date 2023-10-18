@@ -72,7 +72,6 @@ export enum FrameItemGroup {
 
 export interface FrameItem
 {
-  name: string;
   label: string;
   type: FrameItemType;
   values?: ( string | number )[];
@@ -85,19 +84,21 @@ export interface FrameItem
 
 export interface Frame {
   frame: string;
-  honey : FrameItem
+  uncappedHoney : FrameItem
   cappedHoney : FrameItem
   pollen : FrameItem
   nectar : FrameItem
   empty : FrameItem
+  unbuilt : FrameItem
   notes : string
 }
 
 export interface BroodFrame extends Frame {
-  queenCups : FrameItem,
-  drone : FrameItem
+  practiceQueenCells : FrameItem,
+  supercedureQueenCells : FrameItem,
+  droneCells : FrameItem
+  droneFrame : FrameItem
   eggs : FrameItem
-  queen : FrameItem
   larvae : FrameItem
   brood : FrameItem
 }

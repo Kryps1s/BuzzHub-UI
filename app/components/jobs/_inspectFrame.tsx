@@ -9,42 +9,36 @@ interface FrameFormProps {
   index: number;
   frameIndex: number;
   form: UseFormReturnType<InspectionJobFormValues>;
+  initialState: string[];
+  updateFrameState: ( frameIndex : number, value : string[] ) => void;
   }
 
-const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
-  //get all properties with type FrameItem
+const FrameForm = ( { frame, index, frameIndex, form, initialState, updateFrameState } : FrameFormProps ) => {
   const keys = Object.keys( frame ).filter( ( key ) => {
     const propertyValue = frame[key as keyof Frame];
     return typeof propertyValue === "object";
   } );
   const frameItems = keys.map( ( key ) => frame[key as keyof Frame] ) as FrameItem[];
-  const labels = frameItems.map( item => item.label );
-  //init to all frame items selected
-  const getInitialValue = ( items: FrameItem[] ) => {
-    const initialValue: string[] = [];
-    items.forEach( item => {
-      if ( item.selected ) {
-        initialValue.push( item.label );
-      }
-    } );
-    return initialValue;
-  };
+  const labels = frameItems.map( item => ( {
+    value: item.label,
+    label: item.label,
+    group: item.group as string
+  } ) );
 
-  const [ selected, setSelected ] = useState<string[]>( getInitialValue( frameItems ) );
-
-  const handlers = useRef<NumberInputHandlers>();
-
+  const [ selected, setSelected ] = useState<string[]>( initialState );
+  // eslint-disable-next-line
+  const handlersArray = frameItems.map( () => useRef<NumberInputHandlers>() );
   const updateValue = ( value: string[] ) => {
     setSelected( value );
-    //set all frame items to not selected
+    updateFrameState( frameIndex, value );
     frameItems.forEach( item => item.selected = false );
-    //set selected frame items to selected
     value.forEach( label => {
       const item = frameItems.find( item => item.label === label );
       if ( item ) {
         item.selected = true;
       }
-    } );};
+    } );
+  };
   //build the checkboxes when selected changes
   const items = selected.map( ( label ) => {
 
@@ -63,6 +57,7 @@ const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
       val = frameItem.value as number;
       destroyed = frameItem.destroyed as boolean;
     }
+    const itemIndex = selected.indexOf( label );
 
     return (
       <div id={`frameItem-${index}-${frameIndex}-${itemKey}`} key={label} className="row-span-1 flex items-center flex-col h-32 border rounded-md border-buzzhub-green">
@@ -81,14 +76,14 @@ const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
           item?.type === FrameItemType.QUANTITY && (
             <Group position="center" className="flex flex-col">
               <Group className="flex justify-center mx-auto my-1" spacing={5}>
-                <ActionIcon size={42} variant="default" onClick={() => handlers.current?.decrement()}>
+                <ActionIcon size={42} variant="default" onClick={( () => handlersArray[itemIndex].current?.decrement() ) }>
             –
                 </ActionIcon>
                 <NumberInput
                   hideControls
                   id={`frameItem-${index}-${frameIndex}-${itemKey}-quantity`}
                   {...form.getInputProps( `boxes.${index}.frames.${frameIndex}.${itemKey}.value` )}
-                  handlersRef={handlers}
+                  handlersRef={handlersArray[itemIndex]}
                   max={99}
                   value={val}
                   min={1}
@@ -96,7 +91,7 @@ const FrameForm = ( { frame, index, frameIndex, form } : FrameFormProps ) => {
                   styles={{ input: { width: rem( 54 ), textAlign: "center" } }}
                 />
 
-                <ActionIcon size={42} variant="default" onClick={() => handlers.current?.increment()}>
+                <ActionIcon size={42} variant="default" onClick={() => handlersArray[itemIndex].current?.increment()}>
             +
                 </ActionIcon>
               </Group>
