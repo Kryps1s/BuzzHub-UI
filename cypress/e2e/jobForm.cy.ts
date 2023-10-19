@@ -69,7 +69,7 @@ describe('Inspection Report', () => {
       if (response.body && response.body.data) {
         expect(response.body.data).to.have.property('saveBeekeepingReport');
         expect(response.body.data.saveBeekeepingReport).to.have.property('message');
-        expect(response.body.data.saveBeekeepingReport.message).to.equal('successfully saved report');
+        expect(response.body.data.saveBeekeepingReport.message).to.equal('successfully saved report and created next inspection');
       }
     });
     cy.contains('🐝')
