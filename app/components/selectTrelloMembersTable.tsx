@@ -69,7 +69,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
     return (
       <tr key={item.id} className={cx( { [classes.rowSelected]: selected } )}>
         <td>
-          <Checkbox
+          <Checkbox id={`checkbox-${item.id}`}
             checked={selection.includes( item.id )}
             onChange={() => toggleRow( item.id )}
           />
@@ -83,7 +83,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
         </td>
         {options?.leader &&
         <td>
-          <Radio value={item.fullName}
+          <Radio value={item.fullName} id={`radio-${item.id}`}
           ></Radio>
         </td>}
       </tr>

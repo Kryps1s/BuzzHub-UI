@@ -1,4 +1,3 @@
-import React from 'react'
 import EventRow from '../../app/components/eventRow'
 import { RowType } from '../../app/lib/types/types'
 import { createEvents } from '../../fixtures/events'
@@ -12,13 +11,13 @@ const testProps = {
 
 describe('<EventRow />', () => {
   it('renders a collective row', () => {
+    cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents(["MEETING"],["past","today","future"] ) } }).as('getEvents')
 
     cy.mount(
         <SWRConfig value={{ dedupingInterval: 0}}>
           <EventRow {...testProps}  />
         </SWRConfig>
       )
-    cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents(["MEETING"],["past","today","future"] ) } }).as('getEvents')
     cy.get('#loader')
     cy.contains('See all')
     cy.contains('Collective')
@@ -30,24 +29,26 @@ describe('<EventRow />', () => {
   })
 
   it('renders a row with no events', () => {
+        cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents([""],["past","today","future"] ) } }).as('getEvents')
+
     cy.mount(
       <SWRConfig value={{ dedupingInterval: 0}}>
         <EventRow {...testProps}  />
       </SWRConfig>
     )
-    cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents([""],["past","today","future"] ) } }).as('getEvents')
     cy.get('#loader').should('not.exist')
     cy.get('.mantine-Paper-root').should('have.length', 0)
 
   })
 
   it('renders 2 events', () => {
+          cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents(["MEETING"],["future"] ).slice(1,3) } }).as('getEvents')
+
     cy.mount(
       <SWRConfig value={{ dedupingInterval: 0}}>
         <EventRow {...testProps}  />
       </SWRConfig>
     )
-      cy.intercept('POST', "**/graphql", { data: { getEvents: createEvents(["MEETING"],["future"] ).slice(1,3) } }).as('getEvents')
       cy.get('.mantine-Paper-root').should('have.length', 2)
   })
 

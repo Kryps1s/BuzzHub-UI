@@ -13,6 +13,8 @@ module.exports = {
       colors: {
         'buzzhub-green': '#ECF6EF',
         'buzzhub-green-dark': '#B5D6B2',
+        'buzzhub-green-darker': '#8ABF8A',
+        'buzzhub-green-darkest': '#5F9C5F',
         'buzzhub-yellow': '#FBC86A',
         'buzzhub-yellow-dark': '#FCB017',
         'buzzhub-navy': '#545778',

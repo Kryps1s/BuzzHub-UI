@@ -48,22 +48,63 @@ export interface User {
 
 export interface Box {
   box: string;
+  type: BoxType;
   frames: Frame[];
+}
+
+export enum FrameItemType {
+  QUANTITY = "QUANTITY",
+  PERCENTAGE = "PERCENTAGE",
+  RADIO = "RADIO"
+}
+
+export enum BoxType {
+  BROOD = "BROOD",
+  HONEY = "HONEY",
+}
+
+export enum FrameItemGroup {
+  QUEEN = "QUEEN",
+  EMPTY = "EMPTY",
+  HONEY = "HONEY",
+  BROOD = "BROOD",
+}
+
+export interface FrameItem
+{
+  label: string;
+  type: FrameItemType;
+  values?: ( string | number )[];
+  value?: string | number;
+  group: FrameItemGroup;
+  radioOptions?: string[];
+  selected:boolean;
+  destroyed?:boolean;
 }
 
 export interface Frame {
   frame: string;
-  eggs : boolean
-  queen : boolean
-  honey : boolean
-  pollen : boolean
-  brood : boolean
-  drone : boolean
-  queenCups : boolean
-  nectar : boolean
-  larvae : boolean
-  empty : boolean
+  uncappedHoney : FrameItem
+  cappedHoney : FrameItem
+  pollen : FrameItem
+  nectar : FrameItem
+  empty : FrameItem
+  unbuilt : FrameItem
   notes : string
+}
+
+export interface BroodFrame extends Frame {
+  practiceQueenCells : FrameItem,
+  supercedureQueenCells : FrameItem,
+  droneCells : FrameItem
+  droneFrame : FrameItem
+  eggs : FrameItem
+  larvae : FrameItem
+  brood : FrameItem
+}
+
+export interface HoneyFrame extends Frame {
+  harvested : boolean
 }
 
 export interface TrelloMember{
@@ -75,5 +116,15 @@ export interface TrelloMember{
 export interface InspectionJobFormValues {
   participants: TrelloMember[];
   boxes: Box[];
-  nextSteps: string;
+  nextSteps: {
+    goal: string;
+    full: boolean;
+    date: Date;
+  };
+  general: {
+    weather: string;
+    overview: string;
+    time: Date;
+    temperment: string;
+  }
 }
