@@ -128,3 +128,22 @@ export interface InspectionJobFormValues {
     temperment: string;
   }
 }
+
+export interface Agenda{
+  BEEKEEPING: Category;
+  COLLECTIVE: Category;
+}
+export interface Category{
+  [key:string]: Task[];
+  unassigned: Task[];
+  inProgress: Task[];
+  completed: Task[];
+}
+export interface Task{
+  eventId: string;
+  idList: string;
+  labels: string[];
+  name: string;
+  participants: string[];
+  start: string | null;
+}
