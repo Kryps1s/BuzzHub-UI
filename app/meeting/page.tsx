@@ -1,10 +1,21 @@
 import { NextPage } from "next";
 import Layout from "../layouts/headerContent";
+import type { Metadata } from "next";
+import MeetingDetails from "../components/meeting/details";
+import MeetingAgenda from "../components/meeting/agenda";
+
+export const metadata: Metadata = {
+  title: "BuzzHub - Meeting",
+  icons: "/favicon.ico"
+};
 
 const Page: NextPage = () => (
+
   <Layout>
-    <p className="text-6xl">MEETING PAGE COMING SOON 🐝🐝🐝🐝🐝</p>
+    <MeetingDetails meetingId="123"/>
+    <MeetingAgenda/>
   </Layout>
+
 );
 
 export default Page;
