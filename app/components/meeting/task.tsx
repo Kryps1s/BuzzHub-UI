@@ -15,7 +15,6 @@ function formatDate ( dateString : string ) : string {
   } ) : "";
 }
 
-
 const TaskForm: React.FC<TaskProps> = ( { task } ) => (
   <div className="grid grid-cols-4">
     <div>
