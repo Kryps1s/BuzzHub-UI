@@ -147,3 +147,12 @@ export interface Task{
   participants: string[];
   start: string | null;
 }
+
+interface MeetingAgendaRole<T>{
+  name: string;
+  value: T;
+}
+export interface MeetingAgendaDetails<T>{
+  date: string;
+  roles: MeetingAgendaRole<T>[];
+}

@@ -5,7 +5,7 @@ import MeetingDetails from "../components/meeting/details";
 import MeetingAgenda from "../components/meeting/agenda";
 import { POST } from "../api/graphql/route";
 import { use } from "react";
-import { Agenda, TrelloMember } from "../lib/types/types";
+import { Agenda, TrelloMember, MeetingAgendaDetails } from "../lib/types/types";
 
 const demoAgenda : Agenda = {
 
@@ -913,6 +913,24 @@ const demoAgenda : Agenda = {
 
 };
 
+const demoDetails: MeetingAgendaDetails<string> = {
+  date: "2023-07-03T15:36:00.000Z",
+  roles: [
+    {
+      name: "Facilitator",
+      value: "626194d4c9873f601f82fd0f"
+    },
+    {
+      name: "Scribe",
+      value: "64df9d1a033d3f5a90e76b9e"
+    },
+    {
+      name: "Jockey",
+      value: "64389a7ea19830af9c915dd9"
+    }
+  ]
+};
+
 export const metadata: Metadata = {
   title: "BuzzHub - Meeting",
   icons: "/favicon.ico"
@@ -943,6 +961,20 @@ const parseAgenda = ( agenda: Agenda, trelloMembers:TrelloMember[] ) => {
   return agenda;
 };
 
+const parseDetails = ( details: MeetingAgendaDetails<string>, trelloMembers:TrelloMember[] ) : MeetingAgendaDetails<TrelloMember> => {
+  // Convert each Trello member ID to a participant
+  const newDetails = { date: details.date, roles: [] } as MeetingAgendaDetails<TrelloMember>;
+  details.roles.forEach( ( role ) => {
+    const member = trelloMembers.find( ( member ) => member.id === role.value );
+    if( member ) {
+      newDetails.roles.push( { name: role.name, value: member } );
+      // role.value = member;
+    }
+  } );
+  newDetails.date = new Date( details.date ).toLocaleDateString( "en-CA" );
+  return newDetails;
+};
+
 const Page: NextPage = () => {
   const trelloMembers = use( getData() );
   //TODO: get agenda, for now use fake demoAgenda
@@ -955,10 +987,10 @@ const Page: NextPage = () => {
     );
   }
   const agenda = parseAgenda( demoAgenda, trelloMembers.data );
-
+  const details = parseDetails( demoDetails, trelloMembers.data );
   return (
     <Layout>
-      <MeetingDetails meetingId="123" />
+      <MeetingDetails details={details} />
       <MeetingAgenda agenda={agenda} />
     </Layout>
   );
