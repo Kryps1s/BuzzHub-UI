@@ -921,10 +921,8 @@ const MeetingAgenda = () =>
                       value={`${eventIndex}`}
                       key={`${eventIndex}`}
                     >
-                      <Accordion.Control>{event.name}</Accordion.Control>
-                      <Accordion.Panel>
-                        <TaskForm task={event} />
-                      </Accordion.Panel>
+                      <TaskForm task={event} />
+
                     </Accordion.Item>
                   ) )}
                 </Accordion.Panel>
