@@ -15,6 +15,7 @@ function formatDate ( dateString : string ) : string {
   } ) : "";
 }
 
+
 const TaskForm: React.FC<TaskProps> = ( { task } ) => (
   <div className="grid grid-cols-4">
     <div>
@@ -34,8 +35,8 @@ const TaskForm: React.FC<TaskProps> = ( { task } ) => (
       ) ) }
     </div>
 
-    <div>Etc
-      <IconBrandTrello />
+    <div className="flex my-auto flex-col sm:flex-row">
+      <a href={`https://trello.com/c/${task.eventId}`} target="_blank"><IconBrandTrello /></a>
       <IconDotsVertical />
     </div>
   </div>
