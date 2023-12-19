@@ -15,6 +15,17 @@ export enum RowType {
   COLLECTIVE= "COLLECTIVE",
 }
 
+export enum BuzzhubColors {
+  GREEN_DARK = "#B5D6B2",
+  GREEN_DARKER = "#8ABF8A",
+  GREEN_DARKEST = "#5F9C5F",
+  YELLOW = "#FBC86A",
+  YELLOW_DARK = "#FCB017",
+  NAVY = "#545778",
+  NAVY_DARK = "#2B2D42",
+  GREY_LIGHT = "#F8F9FA"
+}
+
 export interface Event {
     eventId: string;
     type: EventType;
@@ -146,4 +157,13 @@ export interface Task{
   name: string;
   participants: string[];
   start: string | null;
+}
+
+interface MeetingAgendaRole<T>{
+  name: string;
+  value: T;
+}
+export interface MeetingAgendaDetails<T>{
+  date: string;
+  roles: MeetingAgendaRole<T>[];
 }

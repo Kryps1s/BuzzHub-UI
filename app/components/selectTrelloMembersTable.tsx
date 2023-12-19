@@ -38,10 +38,12 @@ interface SelectTrelloMembersTableProps {
   formValueName: string;
   preselectedValues: TrelloMember[];
   options?: {
-    leader: {
+    leader?: {
       leader: string;
       setLeader: ( value: string ) => void;
     }
+    singleSelect?: boolean | string;
+    setSingleSelect?: ( value: string ) => void;
   };
 }
 const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselectedValues, options }: SelectTrelloMembersTableProps ) : JSX.Element => {
@@ -69,10 +71,16 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
     return (
       <tr key={item.id} className={cx( { [classes.rowSelected]: selected } )}>
         <td>
-          <Checkbox id={`checkbox-${item.id}`}
-            checked={selection.includes( item.id )}
-            onChange={() => toggleRow( item.id )}
-          />
+          { options?.singleSelect !== undefined ? <Radio
+            value={item.fullName}
+            onClick={() => options?.setSingleSelect?.( "assigned" ) ?? undefined}
+            disabled={selection.includes( item.id )} id={`radio-${item.id}`}></Radio>
+            :
+            <Checkbox id={`checkbox-${item.id}`}
+              checked={selection.includes( item.id )}
+              onChange={() => toggleRow( item.id )}
+            />
+          }
         </td>
         <td>
           <Group spacing="sm">
