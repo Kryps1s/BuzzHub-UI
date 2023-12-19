@@ -990,7 +990,7 @@ const Page: NextPage = () => {
   const details = parseDetails( demoDetails, trelloMembers.data );
   return (
     <Layout>
-      <MeetingDetails details={details} />
+      <MeetingDetails details={details} trelloMembers={trelloMembers.data} />
       <MeetingAgenda agenda={agenda} />
     </Layout>
   );
