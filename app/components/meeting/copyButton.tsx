@@ -35,21 +35,21 @@ Meeting: ${details.date} - ${details.location}
 
 
 ${Object.keys( agenda ).map( ( category ) => {
-const categoryObject = agenda[category as keyof Agenda];
-return `**${category}**
+    const categoryObject = agenda[category as keyof Agenda];
+    return `**${category}**
 
 ${Object.keys( categoryObject ).map( ( subcategory ) => {
-const subcategoryObject = categoryObject[subcategory];
-return `*${toHeading( subcategory )}*
+    const subcategoryObject = categoryObject[subcategory];
+    return `*${toHeading( subcategory )}*
 
 ${subcategoryObject.map( ( task ) => `[${task.name}] (https://trello.com/c/${task.eventId}) ${task.participants.length > 0 ? ` - ${task.participants.join( ", " )}` : ""}
 ` ).join( `
 ` )}
 `;
-} ).join( `
+  } ).join( `
 ` )}
 `;
-} ).join( `
+  } ).join( `
 ` )}
 
 CHECK OUT:`;
