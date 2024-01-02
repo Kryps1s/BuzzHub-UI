@@ -2,6 +2,7 @@
 import { Accordion, Badge } from "@mantine/core";
 import TaskForm from "./task";
 import { Agenda, Category } from "@/app/lib/types/types";
+import { toHeading } from "@/app/lib/services/agendaService";
 
 interface AgendaProps {
   agenda: Agenda
@@ -25,7 +26,7 @@ const MeetingAgenda = ( { agenda } : AgendaProps ) =>
                 value={`${subIndex}`}
                 key={`${subIndex}`}
               >
-                <Accordion.Control>{subCategory} <Badge>{agenda[category][subCategory].length}</Badge></Accordion.Control>
+                <Accordion.Control>{toHeading( subCategory )} <Badge>{agenda[category][subCategory].length}</Badge></Accordion.Control>
                 <Accordion.Panel>
                   {agenda[category][subCategory].map( ( event, eventIndex: number ) => (
                     <Accordion.Item
@@ -47,9 +48,11 @@ const MeetingAgenda = ( { agenda } : AgendaProps ) =>
   ) );
 
   return (
+
     <Accordion className='overflow-scroll'>
       {accordionItems}
     </Accordion>
+
   );
 };
 

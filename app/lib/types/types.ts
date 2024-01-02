@@ -165,5 +165,13 @@ interface MeetingAgendaRole<T>{
 }
 export interface MeetingAgendaDetails<T>{
   date: string;
+  location: string;
+  id: string;
+  isMonthly: boolean;
   roles: MeetingAgendaRole<T>[];
+}
+
+export interface Meeting<T> {
+  details : MeetingAgendaDetails<T>;
+  agenda: Agenda;
 }

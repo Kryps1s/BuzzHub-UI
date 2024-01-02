@@ -73,7 +73,7 @@ const SelectTrelloMembersTable = ( { data, setFormValue, formValueName, preselec
         <td>
           { options?.singleSelect !== undefined ? <Radio
             value={item.fullName}
-            onClick={() => options?.setSingleSelect?.( "assigned" ) ?? undefined}
+            onClick={() => options?.setSingleSelect?.( item.username ) ?? undefined}
             disabled={selection.includes( item.id )} id={`radio-${item.id}`}></Radio>
             :
             <Checkbox id={`checkbox-${item.id}`}

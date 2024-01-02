@@ -1,16 +1,18 @@
 "use client";
 import { TrelloMember } from "@/app/lib/types/types";
-import { Button, Modal } from "@mantine/core";
+import { Button, Loader, Modal } from "@mantine/core";
 import { IconPencil, IconSpeakerphone, IconTool } from "@tabler/icons-react";
 import { useState } from "react";
 import { BuzzhubColors } from "@/app/lib/types/types";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import SelectTrelloMembersTable from "../selectTrelloMembersTable";
+import { POST } from "@/app/api/graphql/route";
 
 interface MeetingDetailsProps {
   details : {
     date: string;
     roles: { name: string; value: TrelloMember }[];
+    id: string;
   },
   trelloMembers: TrelloMember[];
 }
@@ -20,14 +22,17 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
   const isMobile = useMediaQuery( "(max-width: 50em)" );
   const [ selectedRole, setSelectedRole ] = useState( "" );
   const [ singleSelect, setSingleSelect ] = useState( "" );
-  const getRoleIcon = ( name : string ) => {
+  const [ loading, setLoading ] = useState( false );
+  const [ error, setError ] = useState( "" );
+
+  const getRoleIcon = ( name : string, emoji = false ) => {
     switch ( name.toLowerCase() ) {
     case "scribe":
-      return <IconPencil color={BuzzhubColors.YELLOW} />;
+      return emoji ? "✏️" : <IconPencil color={BuzzhubColors.YELLOW} />;
     case "jockey":
-      return <IconTool color={BuzzhubColors.YELLOW}/>;
+      return emoji ? "🔧" : <IconTool color={BuzzhubColors.YELLOW}/>;
     case "facilitator":
-      return <IconSpeakerphone color={BuzzhubColors.YELLOW} />;
+      return emoji? "📣" : <IconSpeakerphone color={BuzzhubColors.YELLOW} />;
     }
   };
 
@@ -39,13 +44,63 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
     return [];
   };
 
-  const assignRole = () => {
-    closeModal();
+  const assignRole = async () => {
+    const newRoles = details.roles.map( role => {
+      const emoji = getRoleIcon( role.name, true );
+      if ( role.name === selectedRole ) {
+        return `${emoji}${role.name}: @${singleSelect}`;
+      } else {
+        return `${emoji}${role.name}: @${role.value.username}`;
+      }
+    } );
+    const resultString = newRoles.join( "\\n\\n" );
+
+    const gql = `
+    mutation MyMutation {
+      updateEvent(eventId: "${details.id}", updates: {desc: "${resultString}"})
+    }
+    `;
+
+    try {
+      setLoading( true );
+      const req = new Request( "http://buzzhub.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify( {
+          query: gql
+        } )
+      } );
+
+      const response = await POST( req );
+
+      if ( !response.errors ) {
+        //update the details prop
+        details.roles[details.roles.findIndex( role => role.name === selectedRole )].value = trelloMembers.find( member => member.username === singleSelect ) as TrelloMember;
+
+        close();
+      } else {
+        setError( response.errors ? response.errors[0].message : "Unknown error" );
+      }
+    } catch ( error ) {
+      if ( error instanceof Error ) {
+        setError( error.message );
+      }
+    } finally {
+      setLoading( false );
+    }
   };
 
   const closeModal = () => {
     close();
     setSingleSelect( "" );
+  };
+
+  const openModal = ( role : string ) : void => {
+    setSelectedRole( role );
+    setError( "" );
+    open();
   };
 
   const { date, roles } = details;
@@ -60,38 +115,40 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
           formValueName={""}
           preselectedValues={getAssigned( selectedRole )}
           options={{ singleSelect, setSingleSelect }}/>
-        <section className="float-right">
+        <section className="flex flex-row-reverse gap-2">
+          <Button className="mt-4 border bg-cyan-700 border-slate-200" disabled={singleSelect === "" || loading} onClick={assignRole}>{loading ? <Loader className="my-auto" size={"sm"} /> : <p>Assign</p> }</Button>
           <Button className="mt-4 border bg-cyan-700 border-slate-200" onClick={closeModal}>Close</Button>
-          <Button className="mt-4 border bg-cyan-700 border-slate-200" disabled={singleSelect === ""} onClick={assignRole}>Assign</Button>
+          {error && <div>{error}</div>}
         </section>
-
       </Modal>
-      <div className="flex flex-col align-middle justify-center">
+
+      <header className="flex flex-col align-middle justify-center">
         <section className="mx-auto">
-          <h1 >Next Meeting: {date}</h1>
+          <h1 className="text-xl" >Next Meeting: {date}</h1>
         </section>
         <section className="mx-auto">
-          <div className="mx-auto">
+          <article className="mx-auto">
             <span className="flex">
               <h2 className="mr-2">Roles:</h2>
-              {roles.map( ( role ) => (
-                <>
-                  <Button className="mr-2"
-                    color={BuzzhubColors.GREEN_DARK}
-                    variant="outline" key={role.value.id}
-                    onClick={() => {open();setSelectedRole( role.name );}}>
-                    {getRoleIcon( role.name )} {role.name} : {role.value.fullName}
-                  </Button>
-                </>
-
+              {roles.map( ( role, index ) => (
+                <Button
+                  className="mr-2"
+                  color={BuzzhubColors.GREEN_DARK}
+                  variant="outline"
+                  key={index}
+                  onClick={() => {
+                    openModal( role.name );
+                  }}
+                >
+                  {getRoleIcon( role.name )} {role.name} : {role.value.fullName}
+                </Button>
               ) )}
             </span>
-          </div>
+          </article>
         </section>
 
-      </div>
+      </header>
     </>
-
   );
 };
 
