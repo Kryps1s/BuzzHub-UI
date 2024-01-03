@@ -15,6 +15,17 @@ export enum RowType {
   COLLECTIVE= "COLLECTIVE",
 }
 
+export enum BuzzhubColors {
+  GREEN_DARK = "#B5D6B2",
+  GREEN_DARKER = "#8ABF8A",
+  GREEN_DARKEST = "#5F9C5F",
+  YELLOW = "#FBC86A",
+  YELLOW_DARK = "#FCB017",
+  NAVY = "#545778",
+  NAVY_DARK = "#2B2D42",
+  GREY_LIGHT = "#F8F9FA"
+}
+
 export interface Event {
     eventId: string;
     type: EventType;
@@ -127,4 +138,41 @@ export interface InspectionJobFormValues {
     time: Date;
     temperment: string;
   }
+}
+
+export interface Agenda{
+  BEEKEEPING: Category;
+  COLLECTIVE: Category;
+}
+export interface Category{
+  [key:string]: Task[];
+  unassigned: Task[];
+  inProgress: Task[];
+  completed: Task[];
+}
+export interface Task{
+  eventId: string;
+  idList: string;
+  labels: string[];
+  name: string;
+  participants: string[];
+  start: string | null;
+}
+
+interface MeetingAgendaRole<T>{
+  name: string;
+  value: T;
+}
+export interface MeetingAgendaDetails<T>{
+  date: string;
+  location: string;
+  id: string;
+  isMonthly: boolean;
+  roles: MeetingAgendaRole<T>[];
+}
+
+export interface Meeting<T> {
+  details : MeetingAgendaDetails<T>;
+  agenda: Agenda;
+  next?: MeetingAgendaDetails<T>;
 }
