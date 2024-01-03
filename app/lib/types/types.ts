@@ -174,4 +174,5 @@ export interface MeetingAgendaDetails<T>{
 export interface Meeting<T> {
   details : MeetingAgendaDetails<T>;
   agenda: Agenda;
+  next?: MeetingAgendaDetails<T>;
 }

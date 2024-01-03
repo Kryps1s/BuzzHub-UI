@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 const parseAgenda = ( agenda: Agenda, trelloMembers:TrelloMember[] ) => {
   // Convert each Trello member ID to a participant
   // For each key in agenda, convert each event to a meeting
-  // console.log( `agenda: ${JSON.stringify(data.meet)}` );
   Object.keys( agenda ).forEach( ( categoryKey ) => {
     const category = agenda[categoryKey as keyof Agenda];
 
@@ -47,6 +46,9 @@ const parseDetails = ( details: Event, trelloMembers:TrelloMember[] ) : MeetingA
     details.roles = [];
   }
   newDetails.roles = details.roles.map( ( role ) => {
+    if( !role.user ) {
+      return { name: role.roleName, value: { fullName: "Unknown", id: "Unknown", username: "Unknown" } };
+    }
     let member = trelloMembers.find( ( member ) => member.id === role.user.id );
     if ( !member ) {
       member = { fullName: "", id: "", username: "" };
@@ -69,8 +71,7 @@ const parseDetails = ( details: Event, trelloMembers:TrelloMember[] ) : MeetingA
 };
 
 const Page: NextPage = () => {
-  const data = use( getData() ) as { meetingDetails: Event, meetingAgenda: Agenda, trelloMembers: TrelloMember[], error?: string };
-  //TODO: get agenda, for now use fake demoAgenda
+  const data = use( getData() ) as { meetingDetails: Event, meetingAgenda: Agenda, trelloMembers: TrelloMember[], nextMeetingDetails: Event, error?: string };
   if( "error" in data ) {
     return (
       <Layout>
@@ -78,21 +79,30 @@ const Page: NextPage = () => {
       </Layout>
     );
   }
-  const agenda = parseAgenda( data.meetingAgenda, data.trelloMembers );
-  const details = parseDetails( data.meetingDetails, data.trelloMembers );
+  const agenda = data.meetingAgenda ? parseAgenda( data.meetingAgenda, data.trelloMembers ) : undefined;
+  const details = data.meetingDetails ? parseDetails( data.meetingDetails, data.trelloMembers ) : undefined;
+  const nextDetails = data.nextMeetingDetails ? parseDetails( data.nextMeetingDetails, data.trelloMembers ) : undefined;
   return (
     <Layout>
-      <MeetingDetails details={details} trelloMembers={data.trelloMembers} />
-      <MeetingCopyButton agenda={agenda} details={details} />
-      <MeetingAgenda agenda={agenda} />
+      { !details ? <header className="flex flex-col align-middle justify-center"><section className="mx-auto">
+        <h1 className="text-xl" >No meetings scheduled at the moment</h1>
+      </section></header> :
+        <MeetingDetails details={details} trelloMembers={data.trelloMembers} />}
+      {details && agenda && <MeetingCopyButton agenda={agenda} details={details} next={nextDetails} />}
+      {!agenda ? <section className="flex flex-col align-middle justify-center"><section className="mx-auto">
+        <h1 className="text-xl" >Unable to retrieve meeting agenda. Please try again later</h1>
+      </section></section> :
+        <MeetingAgenda agenda={agenda} />}
     </Layout>
   );
 
 };
 
 const getData = async () => {
+
   const req = new Request( "http://buzzhub.com", {
     method: "POST",
+    cache: "no-cache",
     body:JSON.stringify( {
       query: `
       fragment MeetingEventFields on MeetingEvent {
@@ -110,7 +120,7 @@ const getData = async () => {
       }
       
       query MyQuery {
-        getEvents(future: true, type: MEETING, limit: 1) {
+        getEvents(future: true, type: MEETING, limit: 2) {
           name
           eventId
           start
@@ -166,7 +176,9 @@ const getData = async () => {
   } );
   try{
     const res = await POST( req );
-    return { meetingDetails: res.getEvents[0],
+    return {
+      meetingDetails: res.getEvents[0],
+      nextMeetingDetails: res.getEvents[1],
       meetingAgenda: res.getMeetingAgenda,
       trelloMembers: res.getTrelloMembers };
   }
