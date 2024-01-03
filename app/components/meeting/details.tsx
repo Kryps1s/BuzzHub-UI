@@ -116,8 +116,8 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
           preselectedValues={getAssigned( selectedRole )}
           options={{ singleSelect, setSingleSelect }}/>
         <section className="flex flex-row-reverse gap-2">
-          <Button className="mt-4 border bg-cyan-700 border-slate-200" disabled={singleSelect === "" || loading} onClick={assignRole}>{loading ? <Loader className="my-auto" size={"sm"} /> : <p>Assign</p> }</Button>
-          <Button className="mt-4 border bg-cyan-700 border-slate-200" onClick={closeModal}>Close</Button>
+          <Button id="assignModal" className="mt-4 border bg-cyan-700 border-slate-200" disabled={singleSelect === "" || loading} onClick={assignRole}>{loading ? <Loader className="my-auto" size={"sm"} /> : <p>Assign</p> }</Button>
+          <Button id="closeModal" className="mt-4 border bg-cyan-700 border-slate-200" onClick={closeModal}>Close</Button>
           {error && <div>{error}</div>}
         </section>
       </Modal>
@@ -129,20 +129,26 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
         <section className="mx-auto">
           <article className="mx-auto">
             <span className="flex">
-              <h2 className="mr-2">Roles:</h2>
-              {roles.map( ( role, index ) => (
-                <Button
-                  className="mr-2"
-                  color={BuzzhubColors.GREEN_DARK}
-                  variant="outline"
-                  key={index}
-                  onClick={() => {
-                    openModal( role.name );
-                  }}
-                >
-                  {getRoleIcon( role.name )} {role.name} : {role.value.fullName}
-                </Button>
-              ) )}
+              {roles.length === 0 ?
+                <p>No roles found</p> :
+                <>
+                  <h2 className="mr-2">Roles:</h2>
+                  {roles.map( ( role, index ) => (
+                    <Button
+                      className="mr-2"
+                      color={BuzzhubColors.GREEN_DARK}
+                      variant="outline"
+                      key={index}
+                      onClick={() => {
+                        openModal( role.name );
+                      }}
+                    >
+                      {getRoleIcon( role.name )} {role.name} : {role.value.fullName}
+                    </Button>
+                  ) )}
+                </>
+              }
+
             </span>
           </article>
         </section>

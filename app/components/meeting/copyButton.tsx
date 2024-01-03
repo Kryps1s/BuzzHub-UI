@@ -4,7 +4,7 @@ import { toHeading } from "@/app/lib/services/agendaService";
 import { TrelloMember, Agenda, Meeting } from "@/app/lib/types/types";
 import { Button, CopyButton } from "@mantine/core";
 
-const agendaToClipboard = ( { details, agenda } : Meeting<TrelloMember> ) : string =>`
+const agendaToClipboard = ( { details, agenda, next } : Meeting<TrelloMember> ) : string =>`
 Meeting: ${details.date} - ${details.location}
 
 **GENERAL**
@@ -12,12 +12,17 @@ Meeting: ${details.date} - ${details.location}
     ${details.roles.map( role => `• ${role.name}: ${role.value.fullName}` ).join( `
     ` )}
 
+    ${
+  next ? `
     *NEXT MEETING*
-    •Date: ${details.date}
-    •Location: ${details.location}
+    •Date: ${next.date}
+    •Location: ${next.location}
     •Roles:
-        ${details.roles.map( role => `• ${role.name}: ${role.value.fullName}` ).join( `
-        ` )}
+        ${next.roles.map( role => `• ${role.name}: ${role.value.fullName}` ).join( `
+        ` )}    `
+    :
+    "*There is no next meeting scheduled.*"
+}
     
     *RECURRING TASKS*
     •Attendance
@@ -51,22 +56,22 @@ ${subcategoryObject.map( ( task ) => `[${task.name}] (https://trello.com/c/${tas
 `;
   } ).join( `
 ` )}
+CHECK OUT`;
 
-CHECK OUT:`;
-
-const MeetingCopyButton = ( meeting : Meeting<TrelloMember> ) => <article className="my-2 pt-2 mx-auto flex justify-center gap-2 border-t-2 w-4/5">
-  <h1 className="text-xl">Agenda: </h1>
-  <CopyButton value={agendaToClipboard( meeting )}>
-    {( { copied, copy } ) => (
-      <Button className={`${
-        copied ? "bg-buzzhub-green-darkest" : "bg-buzzhub-green-dark"
-      } hover:bg-buzzhub-green-darker`}
-      onClick={copy}>
-        {copied ? "Copied to clipboard!" : "Copy agenda"}
-      </Button>
-    )}
-  </CopyButton>
-</article>;
+const MeetingCopyButton = ( meeting : Meeting<TrelloMember> ) =>
+  <article className="my-2 pt-2 mx-auto flex justify-center gap-2 border-t-2 w-4/5">
+    <h1 className="text-xl">Agenda: </h1>
+    <CopyButton value={agendaToClipboard( meeting )}>
+      {( { copied, copy } ) => (
+        <Button className={`${
+          copied ? "bg-buzzhub-green-darkest" : "bg-buzzhub-green-dark"
+        } hover:bg-buzzhub-green-darker`}
+        onClick={copy}>
+          {copied ? "Copied to clipboard!" : "Copy agenda"}
+        </Button>
+      )}
+    </CopyButton>
+  </article>;
 
 export default MeetingCopyButton;
 
