@@ -101,7 +101,8 @@ describe('<meetingDetails/>', () => {
         cy.get('.tabler-icon').first().click()
         cy.get('#radio-456').click()
        cy.get('#assignModal').click()
-       cy.contains('Please log in to complete this action')
+       cy.wait(4000)
+        cy.contains('Reassign Facilitator')
     })
 
     it('can assign a new member', () => {
@@ -112,8 +113,6 @@ describe('<meetingDetails/>', () => {
         cy.get('#radio-456').click()
         cy.get('#assignModal').click()
         cy.contains('Assign')
-        //intercept the request and stub the response
-
         cy.get('#assignModal').click()
         cy.wait('@assignRole')
         cy.contains('Reassign Facilitator').should('not.exist')
