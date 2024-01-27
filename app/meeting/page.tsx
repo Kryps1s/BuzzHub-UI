@@ -57,6 +57,7 @@ const parseDetails = ( details: Event, trelloMembers:TrelloMember[] ) : MeetingA
   } );
   //return a date that includes the day of the week, the month, and the day, and the time
   newDetails.date = new Date( details.start ).toLocaleDateString( "en-CA", {
+    timeZone: "America/Montreal",
     weekday: "short",
     day: "numeric",
     month: "short",
