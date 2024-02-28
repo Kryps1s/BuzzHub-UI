@@ -17,7 +17,7 @@ function formatDate ( dateString : string ) : string {
 
 const TaskForm: React.FC<TaskProps> = ( { task } ) => (
   <div className="grid grid-cols-12 w-full">
-    <div className="col-span-4 my-auto">
+    <div className="col-span-12 sm:col-span-4 my-auto">
       <p>{task.start ? formatDate( task.start ) : ""}</p>
       <p className="truncate">{task.name}</p>
     </div>
