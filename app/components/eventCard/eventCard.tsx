@@ -98,7 +98,7 @@ export function EventCard ( { rowType, index } : EventCardProps )
     titleText = startFormatted;
     categoryText = `${location} MEETING`;
   }
-  if ( jobs.includes( "INSPECT" ) && selectedTab !== "past") {
+  if ( jobs.includes( "INSPECT" ) && selectedTab !== "past" ) {
     return (
       <Link href={`/event/${eventId}`}>
         <Paper
@@ -121,55 +121,55 @@ export function EventCard ( { rowType, index } : EventCardProps )
   }
   return (
     <>
-    <EventNotesModal event={event} onClose={close} opened={opened}/>
+      <EventNotesModal event={event} onClose={close} opened={opened}/>
 
-    <Paper
-      shadow="md"
-      p="sm"
-      radius="md"
-      withBorder
-      className="min-h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow hover:bg-buzzhub-yellow-dark"
-      onClick={() => { if(selectedTab === "past") openModal(); }}
+      <Paper
+        shadow="md"
+        p="sm"
+        radius="md"
+        withBorder
+        className="min-h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow hover:bg-buzzhub-yellow-dark"
+        onClick={() => { if( selectedTab === "past" ) openModal(); }}
 
-    >
-    
-      <Text className={classes.category}>{categoryText}</Text>
-      <Title order={1} className="text-buzzhub-navy text-sm">
-        {titleText}
-      </Title>
-      {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
-        <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32 ">
-          <IconSpeakerphone id="speakerphone" className="h-6 w-4 text-buzzhub-navy" />
-          {mdOrLargerScreen && (
-            <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>
-          )}
-          <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
-            {facilitator?.user.fullName}
-          </p>
-          <IconTool id="tool" className="h-6 w-4 flex text-buzzhub-navy"/>
-          {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Jockey: </p>}
-          <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
-            {jockey?.user.fullName}
-          </p>
-          <IconPencil id="pencil" className="h-6 w-4 text-buzzhub-navy"/>
-          {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Scribe: </p>}
-          <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
-            {scribe?.user.fullName}
-          </p>
-        </div>
-      ) : (
-        type === "MEETING" && selectedTab === "past" && (
-          <div className="h-32 truncate">
-            <p className="whitespace-break-spaces text-buzzhub-navy ">
+      >
+
+        <Text className={classes.category}>{categoryText}</Text>
+        <Title order={1} className="text-buzzhub-navy text-sm">
+          {titleText}
+        </Title>
+        {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
+          <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32 ">
+            <IconSpeakerphone id="speakerphone" className="h-6 w-4 text-buzzhub-navy" />
+            {mdOrLargerScreen && (
+              <p className="col-span-2 text-buzzhub-navy">Facilitator: </p>
+            )}
+            <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
+              {facilitator?.user.fullName}
+            </p>
+            <IconTool id="tool" className="h-6 w-4 flex text-buzzhub-navy"/>
+            {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Jockey: </p>}
+            <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
+              {jockey?.user.fullName}
+            </p>
+            <IconPencil id="pencil" className="h-6 w-4 text-buzzhub-navy"/>
+            {mdOrLargerScreen && <p className="col-span-2 text-buzzhub-navy">Scribe: </p>}
+            <p className="truncate text-buzzhub-navy col-span-5 md:col-span-3">
+              {scribe?.user.fullName}
+            </p>
+          </div>
+        ) : (
+          type === "MEETING" && selectedTab === "past" && (
+            <div className="h-32 truncate">
+              <p className="whitespace-break-spaces text-buzzhub-navy ">
           Click here to see notes
               </p>
             </div>
-          
-        )
-      )}
-    </Paper>
+
+          )
+        )}
+      </Paper>
     </>
-    
+
   );
 
 }
