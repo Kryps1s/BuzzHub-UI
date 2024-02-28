@@ -7,10 +7,11 @@ import Skeleton from "./skeleton";
 import { useSelectedTabStore } from "../../store/selectedTab";
 import useEventsStore from "../../store/events";
 import { IconTool, IconSpeakerphone, IconPencil } from "@tabler/icons-react";
-import { useMediaQuery } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import useSWR from "swr";
 import Error from "./errorMessage";
 import { request } from "graphql-request";
+import EventNotesModal from "./eventNotes";
 const useStyles = createStyles( ( theme ) => ( {
 
   category: {
@@ -53,6 +54,7 @@ interface EventCardProps {
   rowType : RowType;
   index : number;
 }
+
 export function EventCard ( { rowType, index } : EventCardProps )
 {
   const url = process?.env?.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL : "";
@@ -60,9 +62,14 @@ export function EventCard ( { rowType, index } : EventCardProps )
   const { data, error, isLoading } = useSWR( gql, fetcher ) as {data : {getEvents : Event[]}, error : Error | undefined, isLoading : boolean};
   const selectedTab = useSelectedTabStore( ( state ) => state.selectedTab );
   const { classes } = useStyles();
+  const [ opened, { open, close } ] = useDisclosure( false );
   const mdOrLargerScreen = useMediaQuery( "(min-width:768px)" );
   const happeningNow = rowType === "TODAY";
   const selectEvent = useEventsStore( ( state ) => state.selectEvent );
+
+  const openModal = ( ) : void => {
+    open();
+  };
   if( isLoading ) return <Skeleton/>;
   if( error ) return <div><Error message={error.message}/></div>;
   const event = getEvent( data.getEvents, rowType, index, selectedTab === "past" );
@@ -91,7 +98,7 @@ export function EventCard ( { rowType, index } : EventCardProps )
     titleText = startFormatted;
     categoryText = `${location} MEETING`;
   }
-  if ( jobs.includes( "INSPECT" ) ) {
+  if ( jobs.includes( "INSPECT" ) && selectedTab !== "past") {
     return (
       <Link href={`/event/${eventId}`}>
         <Paper
@@ -113,18 +120,23 @@ export function EventCard ( { rowType, index } : EventCardProps )
     );
   }
   return (
+    <>
+    <EventNotesModal event={event} onClose={close} opened={opened}/>
+
     <Paper
       shadow="md"
       p="sm"
       radius="md"
       withBorder
       className="min-h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow hover:bg-buzzhub-yellow-dark"
+      onClick={() => { if(selectedTab === "past") openModal(); }}
+
     >
+    
       <Text className={classes.category}>{categoryText}</Text>
       <Title order={1} className="text-buzzhub-navy text-sm">
         {titleText}
       </Title>
-
       {( !happeningNow && selectedTab === "upcoming" && type === "MEETING" ) || ( type === "MEETING" && happeningNow ) ? (
         <div className="grid grid-cols-6 grid-rows-3 gap-1 max-h-32 ">
           <IconSpeakerphone id="speakerphone" className="h-6 w-4 text-buzzhub-navy" />
@@ -149,12 +161,15 @@ export function EventCard ( { rowType, index } : EventCardProps )
         type === "MEETING" && selectedTab === "past" && (
           <div className="h-32 truncate">
             <p className="whitespace-break-spaces text-buzzhub-navy ">
-          Click here to see meeting notes (🐝Coming Soon🐝)
-            </p>
-          </div>
+          Click here to see notes
+              </p>
+            </div>
+          
         )
       )}
     </Paper>
+    </>
+    
   );
 
 }

@@ -133,19 +133,21 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
                 <p>No roles found</p> :
                 <>
                   <h2 className="mr-2">Roles:</h2>
-                  {roles.map( ( role, index ) => (
-                    <Button
-                      className="mr-2"
-                      color={BuzzhubColors.GREEN_DARK}
-                      variant="outline"
-                      key={index}
-                      onClick={() => {
-                        openModal( role.name );
-                      }}
-                    >
-                      {getRoleIcon( role.name )} {role.name} : {role.value.fullName}
-                    </Button>
-                  ) )}
+                  <div className="flex flex-col gap-2 sm:flex-row ">
+                    {roles.map( ( role, index ) => (
+                      <Button
+                        className="mr-2"
+                        color={BuzzhubColors.GREEN_DARK}
+                        variant="outline"
+                        key={index}
+                        onClick={() => {
+                          openModal( role.name );
+                        }}
+                      >
+                        {getRoleIcon( role.name )} {role.name} : {role.value.fullName}
+                      </Button>
+                    ) )}
+                  </div>
                 </>
               }
 
