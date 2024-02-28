@@ -141,25 +141,25 @@ const getData = async () => {
       
         getMeetingAgenda {
           BEEKEEPING {
-            unassigned {
+            completed {
               ...AgendaEventFields
             }
             inProgress {
               ...AgendaEventFields
             }
-            completed {
+            unassigned {
               ...AgendaEventFields
             }
           }
       
           COLLECTIVE {
-            unassigned {
+            completed {
               ...AgendaEventFields
             }
             inProgress {
               ...AgendaEventFields
             }
-            completed {
+            unassigned {
               ...AgendaEventFields
             }
           }
