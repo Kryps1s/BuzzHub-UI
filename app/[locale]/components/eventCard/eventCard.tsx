@@ -132,7 +132,7 @@ export function EventCard ( { rowType, index } : EventCardProps )
         p="sm"
         radius="md"
         withBorder
-        className="min-h-40 flex max-w-full flex-col items-start bg-cover bg-center bg-buzzhub-yellow hover:bg-buzzhub-yellow-dark"
+        className="min-h-40 flex max-w-full flex-col cursor-pointer items-start bg-cover bg-center bg-buzzhub-yellow hover:bg-buzzhub-yellow-dark"
         onClick={() => { if( selectedTab === "past" ) openModal(); }}
 
       >
