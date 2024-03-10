@@ -6,7 +6,7 @@ describe('<meetingDetails/>', () => {
 
         interface MeetingDetailsProps {
             details: {
-                date: string;
+                date: Date;
                 roles: { name: string; value: TrelloMember }[];
                 id: string;
             };
@@ -16,7 +16,7 @@ describe('<meetingDetails/>', () => {
 
     const props: MeetingDetailsProps = {
                 details: {
-                    date: "date",
+                    date: new Date(),
                     roles: [{ name: "Facilitator", value: { fullName: "fullName", id: "123", username: "username" } },
                             { name: "Jockey", value: { fullName: "fullName", id: "123", username: "username" } },
                             { name: "Scribe", value: { fullName: "fullName", id: "123", username: "username" } }],
@@ -27,7 +27,7 @@ describe('<meetingDetails/>', () => {
                                 { fullName: "test user 2", id: "789", username: "username3" },
                                 { fullName: "fullName4", id: "101112", username: "username4" }]
             };
-    const mountMeetingDetails = (details: { date: string; roles: { name: string; value: TrelloMember }[]; id: string } = props.details, trelloMembers: TrelloMember[] = props.trelloMembers) => {
+    const mountMeetingDetails = (details: { date: Date; roles: { name: string; value: TrelloMember }[]; id: string } = props.details, trelloMembers: TrelloMember[] = props.trelloMembers) => {
         cy.mount(<MeetingDetails details={details} trelloMembers={trelloMembers} />);
     };
 
@@ -44,7 +44,7 @@ describe('<meetingDetails/>', () => {
 
     it('renders with missing roles', () => {
         const details = {
-            date: "date",
+            date: new Date(),
             roles: [{ name: "Facilitator", value: { fullName: "fullName", id: "id", username: "username" } },
             { name: "Jockey", value: { fullName: "fullName", id: "id", username: "username" } }],
             id: "id"
@@ -60,7 +60,7 @@ describe('<meetingDetails/>', () => {
 
     it ('renders with no roles', () => {
         const details = {
-            date: "date",
+            date: new Date(),
             roles: [],
             id: "id"
         };
