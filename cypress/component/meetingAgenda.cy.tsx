@@ -1,5 +1,5 @@
 import { Agenda } from '@/app/lib/types/types'
-import MeetingAgenda from '../../app/components/meeting/agenda'
+import MeetingAgenda from '../../app/[locale]/components/meeting/agenda'
 
 describe('Meeting Agenda', () => {
 

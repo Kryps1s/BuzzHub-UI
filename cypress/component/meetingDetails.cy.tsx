@@ -1,5 +1,5 @@
 import { TrelloMember } from '@/app/lib/types/types'
-import MeetingDetails from '../../app/components/meeting/details'
+import MeetingDetails from '../../app/[locale]/components/meeting/details'
 
 describe('<meetingDetails/>', () => {
 

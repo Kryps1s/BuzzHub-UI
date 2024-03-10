@@ -1,9 +1,9 @@
+const createNextIntlPlugin = require('next-intl/plugin');
+const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
       output: 'standalone',
-      i18n: {
-        locales: ['en-CA'],
-        defaultLocale: 'en-CA',
-      },
+      locales: ['en', 'fr'],
 }
 
-module.exports = nextConfig
+
+module.exports = withNextIntl(nextConfig);
