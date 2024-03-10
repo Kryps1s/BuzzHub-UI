@@ -1,4 +1,4 @@
-import InspectFrame from '@/app/components/jobs/_inspectFrame';
+import InspectFrame from '@/app/[locale]/components/jobs/_inspectFrame';
 import { Box, BroodFrame, Frame, FrameItemGroup, FrameItemType, InspectionJobFormValues } from '@/app/lib/types/types';
 import { UseFormReturnType } from '@mantine/form';
 
