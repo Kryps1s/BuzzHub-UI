@@ -8,18 +8,17 @@ interface TaskProps {
     task: Task
 }
 
-
 const TaskForm: React.FC<TaskProps> = ( { task } ) => {
   const formatter = useFormatter();
   function formatDate ( dateString : string ) : string {
-    
-    return dateString ? formatter.dateTime(new Date(dateString), {
+
+    return dateString ? formatter.dateTime( new Date( dateString ), {
       weekday: "short",
       month: "long",
       day: "numeric"
-    }) : "";
+    } ) : "";
   }
-  
+
   return (
     <div className="grid grid-cols-12 w-full">
       <div className="col-span-12 sm:col-span-4 my-auto">
@@ -52,7 +51,7 @@ const TaskForm: React.FC<TaskProps> = ( { task } ) => {
               key={ label }
               color={ label }
               style={ { marginRight: 5 } }
-            >{label.includes(":") ? label.split(":")[1] : label}</Badge>
+            >{label.includes( ":" ) ? label.split( ":" )[1] : label}</Badge>
           ) ) }
         </div>
       </div>
@@ -62,6 +61,6 @@ const TaskForm: React.FC<TaskProps> = ( { task } ) => {
       </div>
     </div>
   );
-}
+};
 
 export default TaskForm;

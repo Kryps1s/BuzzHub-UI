@@ -58,7 +58,7 @@ const parseDetails = ( details: Event, trelloMembers:TrelloMember[] ) : MeetingA
     return { name: role.roleName, value: member };
   } );
   //return a date that includes the day of the week, the month, and the day, and the time
-  newDetails.date = new Date( details.start )
+  newDetails.date = new Date( details.start );
   newDetails.id = details.eventId;
   newDetails.location = details.location ?? "";
   newDetails.isMonthly = details.isMonthly ?? false;

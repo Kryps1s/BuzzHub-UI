@@ -13,13 +13,13 @@ const TranslationSelector = ( ) => {
         onClick={()=> {
           setCookie( "NEXT_LOCALE", "fr" );
 
-            router.replace(`/fr${path.slice(3)}`);
+          router.replace( `/fr${path.slice( 3 )}` );
         }} > fr </Button>:
       <Button
         className="flex mr-2 items-center w-2 bg-buzzhub-green-dark hover:bg-buzzhub-green-darker text-center justify-center align-middle my-auto center"
         onClick={()=> {
           setCookie( "NEXT_LOCALE", "en" );
-          router.replace(`/en${path.slice(3)}`);
+          router.replace( `/en${path.slice( 3 )}` );
         }
         }> en </Button>
 

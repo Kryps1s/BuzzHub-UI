@@ -7,7 +7,7 @@ import { BuzzhubColors } from "@/app/lib/types/types";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import SelectTrelloMembersTable from "../selectTrelloMembersTable";
 import { POST } from "@/app/[locale]/api/graphql/route";
-import { useTranslations, useFormatter } from "next-intl";
+import { useTranslations } from "next-intl";
 import { getCookie, hasCookie } from "cookies-next";
 
 interface MeetingDetailsProps {
@@ -21,22 +21,21 @@ interface MeetingDetailsProps {
 
 const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers } : MeetingDetailsProps ) => {
   const t = useTranslations( "Meeting" );
-  const formatter = useFormatter();
   const [ displayDate, setDisplayDate ] = useState( details.date.toUTCString() );
   useEffect( () => {
     // This effect runs after the component is mounted on the client
     if ( hasCookie( "NEXT_LOCALE" ) ) {
-        setDisplayDate( new Date( details.date ).toLocaleDateString( getCookie( "NEXT_LOCALE" ) as string, {
-          timeZone: "America/Montreal",
-          weekday: "short",
-          day: "numeric",
-          month: "short",
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true
-      }));
+      setDisplayDate( new Date( details.date ).toLocaleDateString( getCookie( "NEXT_LOCALE" ) as string, {
+        timeZone: "America/Montreal",
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true
+      } ) );
     }
-  }, [] );
+  }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
   const [ opened, { open, close } ] = useDisclosure( false );
   const isMobile = useMediaQuery( "(max-width: 50em)" );
   const [ selectedRole, setSelectedRole ] = useState( "" );
