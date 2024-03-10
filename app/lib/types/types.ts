@@ -164,7 +164,7 @@ interface MeetingAgendaRole<T>{
   value: T;
 }
 export interface MeetingAgendaDetails<T>{
-  date: string;
+  date: Date;
   location: string;
   id: string;
   isMonthly: boolean;

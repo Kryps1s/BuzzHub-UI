@@ -1,4 +1,4 @@
-import JobForm from "@/app/components/jobForm";
+import JobForm from "@/app/[locale]/components/jobForm";
 
 describe('Inspection Form Tests', () => {
 

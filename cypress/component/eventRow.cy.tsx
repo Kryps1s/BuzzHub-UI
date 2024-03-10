@@ -1,4 +1,4 @@
-import EventRow from '../../app/components/eventRow'
+import EventRow from '../../app/[locale]/components/eventRow'
 import { RowType } from '../../app/lib/types/types'
 import { createEvents } from '../../fixtures/events'
 import { SWRConfig } from 'swr'

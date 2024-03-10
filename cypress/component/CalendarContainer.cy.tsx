@@ -1,4 +1,4 @@
-import CalendarContainer from "@/app/components/calendarContainer"
+import CalendarContainer from "@/app/[locale]/components/calendarContainer"
 import { CalendarEvent } from "@/app/lib/types/types"
 
 describe('CalendarContainer.cy.tsx', () => {
