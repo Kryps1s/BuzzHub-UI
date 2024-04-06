@@ -8,7 +8,7 @@ describe('Meeting Agenda', () => {
             "eventId": Math.random().toString(),
             "name": `name${Math.random().toString()}`,
             "participants": [],
-            "idList": "123",
+            "status": "123",
             "labels": [],
             "start": null
         }

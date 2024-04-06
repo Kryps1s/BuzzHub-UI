@@ -75,7 +75,7 @@ const MeetingDetails: React.FC<MeetingDetailsProps> = ( { details, trelloMembers
 
     const gql = `
     mutation MyMutation {
-      updateEvent(eventId: "${details.id}", updates: {desc: "${resultString}"})
+      updateEvent(eventId: "${details.id}", updates: {description: "${resultString}"})
     }
     `;
 

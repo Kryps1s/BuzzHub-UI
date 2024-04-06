@@ -65,9 +65,10 @@ const MeetingCopyButton = ( meeting : Meeting<TrelloMember> ) =>{
     
     ${Object.keys( categoryObject ).map( ( subcategory ) => {
     const subcategoryObject = categoryObject[subcategory];
+    const project = category === "COLLECTIVE" ? process.env.NEXT_PUBLIC_TAIGA_COLLECTIVE : process.env.NEXT_PUBLIC_TAIGA_BEEKEEPING;
     return `*${toHeading( subcategory )}*
     
-    ${subcategoryObject.map( ( task ) => `[${task.name}] (https://trello.com/c/${task.eventId}) ${task.participants.length > 0 ? ` - ${task.participants.join( ", " )}` : ""}
+    ${subcategoryObject.map( ( task ) => `[${task.name}] (https://tree.taiga.io/project/${project}/us/${task.eventId}) ${task.participants.length > 0 ? ` - ${task.participants.join( ", " )}` : ""}
     ` ).join( `
     ` )}
     `;
